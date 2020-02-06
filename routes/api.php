@@ -12,7 +12,8 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Route::post('login', 'API\AuthController@login');
+Route::get('get/terms-conditions', 'API\SiteController@getTermsConditions');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
