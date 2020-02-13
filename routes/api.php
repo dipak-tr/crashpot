@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 */
 Route::post('login', 'API\AuthController@login');
 Route::get('get/terms-conditions', 'API\SiteController@getTermsConditions');
+Route::get('get/privacy-policy', 'API\SiteController@getPrivacyPolicy');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

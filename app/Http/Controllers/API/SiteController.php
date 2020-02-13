@@ -27,4 +27,23 @@ class SiteController extends BaseController
         $status_code = config('response_status_code.terms_and_conditions_fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.terms_and_conditions_fetched_success'), $records);
     }
+
+    /**
+     * Get Privacy policy details of site.  (created date: 13-02-2020, created by: Tridhya Tech)
+     * @param  Request  $request
+     * @return [json] Privacy policy data as array
+     * @return [int] status_code
+     * @return [bool] success
+     * @return [string] message
+    */
+    public function getPrivacyPolicy(Request $request) {
+
+        $privacy_policy = setting('site.privacy_policy');
+        $records = [
+            "privacyPolicy" => $privacy_policy ? $privacy_policy : ""
+        ];
+    
+        $status_code = config('response_status_code.privacy_policy_fetched_success');
+        return $this->sendResponse(true, $status_code, trans('message.privacy_policy_fetched_success'), $records);
+    }
 }
