@@ -13,8 +13,8 @@ return [
     'user' => [
         'add_default_role_on_register' => true,
         'default_role'                 => 'user',
-        'default_avatar'               => 'users/default.png',
-        'redirect'                     => '/admin',
+        'admin_permission'             => 'browse_admin',
+        'namespace'                    => App\User::class,
     ],
 
     /*
@@ -27,7 +27,7 @@ return [
     */
 
     'controllers' => [
-        'namespace' => 'TCG\\Voyager\\Http\\Controllers',
+        'namespace' => 'App\\Http\\Controllers\\Voyager',
     ],
 
     /*
@@ -45,6 +45,7 @@ return [
         //'namespace' => 'App\\',
     ],
 
+    'assets_path' => '/vendor/tcg/voyager/assets',
     /*
     |--------------------------------------------------------------------------
     | Storage Config
@@ -55,7 +56,7 @@ return [
     */
 
     'storage' => [
-        'disk' => env('FILESYSTEM_DRIVER', 'public'),
+        'disk' => env('FILESYSTEM_DRIVER', 'custom_voyager'),
     ],
 
     /*
