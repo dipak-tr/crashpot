@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 Route::post('login', 'API\AuthController@login');
 Route::get('get/terms-conditions', 'API\SiteController@getTermsConditions');
 Route::get('get/privacy-policy', 'API\SiteController@getPrivacyPolicy');
-Route::get('get/guest-random-number', 'API\CommonController@getGuestRandomNumber');
+Route::post('guest-random-number', 'API\AuthController@getGuestRandomNumber');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
