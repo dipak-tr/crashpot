@@ -5,6 +5,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\User;
 use Validator;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends BaseController
 {
