@@ -21,6 +21,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::group(['prefix' => 'admin'], function () {
+    
     Voyager::routes();
 
     Route::post('users/change-activation-status','Voyager\VoyagerUserController@changeActivationStatus')->name('users.changeActivationStatus');

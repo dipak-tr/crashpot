@@ -19,3 +19,6 @@ Route::post('guest-random-number', 'API\AuthController@getGuestRandomNumber');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('add/user-coins', 'API\UserCoinsControllers@addUserCoins');
+
