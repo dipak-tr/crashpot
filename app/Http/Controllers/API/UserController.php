@@ -51,7 +51,7 @@ class UserController extends Controller
                     $responseData['status_code'] = 201;
                     $responseData['success'] 	 = true;
                     $responseData['message'] 	 = "User Name Update Success fully."; 
-                    $responseData['data'] 	     =  $User->name;
+                    $responseData['data'] 	     =  ['userName' => $User->name];
                         
                 }
                 else
