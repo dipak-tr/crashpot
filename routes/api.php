@@ -21,4 +21,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('add/user-coins', 'API\UserCoinsControllers@addUserCoins');
+Route::put('update/user-name', 'API\UserController@updateUserName');
 
