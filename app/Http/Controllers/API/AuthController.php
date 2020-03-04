@@ -95,6 +95,7 @@ class AuthController extends BaseController {
         $records = [
             "userID" => $user->id,
             "userName" => $user->name,
+            "socialMediaType"=>$user->social_media_type
          ];
         $status_code = config('response_status_code.login_success');
         return $this->sendResponse(true, $status_code, trans('message.login_success'),$records);
@@ -125,7 +126,8 @@ class AuthController extends BaseController {
             "guestNumber" => $user->name,
             "userID" => $user->id,
             "userName" => $user->name,
-            "isRegister" =>$isRegister
+            "isRegister" =>$isRegister,
+            "socialMediaType"=>$user->social_media_type
         ];
         $status_code = config('response_status_code.random_number_fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.random_number_fetched_success'), $records);
