@@ -24,7 +24,7 @@ class AuthController extends BaseController {
                     'socialMediaId' => 'required',
                     'deviceType' => 'required',
                     'deviceToken' => 'required',
-                    'userType' => 'required',
+                 //   'userType' => 'required',
                     'IMEI' => 'required',
         ]);
 
@@ -62,7 +62,7 @@ class AuthController extends BaseController {
                 $user->social_media_id = $request['socialMediaId'];
                 $user->device_type = $request['deviceType'];
                 $user->device_token = $request['deviceToken'];
-                $user->user_type = $request['userType'];
+               // $user->user_type = $request['userType'];
                 $user->IMEI = $request['IMEI'];
                 $user->is_active = 1;
                 $user->save();
@@ -86,7 +86,7 @@ class AuthController extends BaseController {
             $user->social_media_id = $request['socialMediaId'];
             $user->device_type = $request['deviceType'];
             $user->device_token = $request['deviceToken'];
-            $user->user_type = $request['userType'];
+            //$user->user_type = $request['userType'];
             $user->IMEI = $request['IMEI'];
             $user->is_active = 1;
             $user->save();
