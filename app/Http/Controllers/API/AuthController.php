@@ -91,7 +91,7 @@ class AuthController extends BaseController {
             $user->is_active = 1;
             $user->save();
         }
-        $records=[];
+        $records= array();
         $status_code = config('response_status_code.login_success');
         return $this->sendResponse(true, $status_code, trans('message.login_success'),$records);
     }
