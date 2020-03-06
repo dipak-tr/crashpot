@@ -88,7 +88,6 @@ class UserController extends Controller {
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
-                    "isRegister" => $isRegister,
                     "totalXP" => $user->totalXP,
                     "totalCoins" => $user->totalCoins,
                     "profit" => $user->profit,
