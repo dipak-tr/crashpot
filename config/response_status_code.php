@@ -8,5 +8,6 @@ return [
     'terms_and_conditions_fetched_success' => 4,
     'privacy_policy_fetched_success' => 5,
     'random_number_fetched_success' => 6,
-	'dashboard_fetched_success'=>7
+	'dashboard_fetched_success'=>7,
+	'coin_add'=>8
 ];

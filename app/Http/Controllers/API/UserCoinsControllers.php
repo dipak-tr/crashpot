@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use Validator;
 use App\Usercoin;
 
-class UserCoinsControllers extends Controller {
+class UserCoinsControllers extends BaseController {
 
     /**
      * Add User Coins using Api
@@ -31,11 +31,8 @@ class UserCoinsControllers extends Controller {
             foreach ($validator->messages()->getMessages() as $key => $value) {
                 $errors[$key] = $value;
             }
-
-            $responseData['status_code'] = 406;
-            $responseData['success'] = false;
-            $responseData['message'] = "Invalid Coins Data !";
-            $responseData['data'] = $errors;
+            $status_code = config('response_status_code.invalid_input');
+            return $this->sendResponse(true, $status_code, trans('message.invalid_input'));
         } else {
 
             $Usercoin = new Usercoin;
@@ -47,19 +44,13 @@ class UserCoinsControllers extends Controller {
             $Usercoin->save();
 
             if ($Usercoin != NULL) {
-                $responseData['status_code'] = 201;
-                $responseData['success'] = true;
-                $responseData['message'] = "Coins Add Successfully..";
-                $responseData['data'] = $Usercoin;
+                $status_code = config('response_status_code.coin_add');
+                return $this->sendResponse(true, $status_code, trans('message.coin_add'), $responseData);
             } else {
-                $responseData['status_code'] = 400;
-                $responseData['success'] = false;
-                $responseData['message'] = "Faild To Add Coins !";
-                $responseData['data'] = "";
+                $status_code = config('response_status_code.invalid_input');
+                return $this->sendResponse(true, $status_code, trans('message.invalid_input'));
             }
         }
-
-        echo json_encode($responseData);
     }
 
 }
