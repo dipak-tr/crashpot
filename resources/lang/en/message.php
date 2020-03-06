@@ -7,5 +7,6 @@ return [
  'privacy_policy_fetched_success' => 'Privacy Policy Is Fetched Successfully.',
  'random_number_fetched_success' => 'Guest Random Number Is Fetched Successfully.',
  'dashboard_fetched_success' => 'Dashboard Data Is Fetch Success',
- 'coin_add'=>'Coins Add Successfully..'
+ 'coin_add'=>'Coins Add Successfully..',
+ 'xp_add'=>'XP Add Successfully..'
 ];

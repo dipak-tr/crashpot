@@ -6,6 +6,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use Validator;
 use App\Usercoin;
+use App\User;
 
 class UserCoinsControllers extends BaseController {
 
@@ -45,12 +46,61 @@ class UserCoinsControllers extends BaseController {
             $Usercoin->save();
 
             if ($Usercoin != NULL) {
-                $status_code = config('response_status_code.coin_add');
-                return $this->sendResponse(true, $status_code, trans('message.coin_add'), $responseData);
+                if ($request->is_xp_or_coin == 1) {
+                    if ($request->status == 1) {
+                        $User = User::find($request->userId);
+                        $User->totalXP += $request->coins;
+                        $User->save();
+                    } else {
+                        $User = User::find($request->userId);
+                        $User->totalXP -= $request->coins;
+                        $User->save();
+                    }
+                    $user = User::find($request->userId);
+                    $responseData = ["guestNumber" => $user->name,
+                    "userID" => $user->id,
+                    "userName" => $user->name,
+                    "totalXP" => $user->totalXP,
+                    "totalCoins" => $user->totalCoins,
+                    "profit" => $user->profit,
+                    "wagered" => $user->wagered,
+                    "playedGames" => $user->playedGames,
+                    "rankingByLevel" => $user->rankingByLevel,
+                    "rankingByProfit" => $user->rankingByProfit
+                ];
+                    
+                    $status_code = config('response_status_code.xp_add');
+                    return $this->sendResponse(true, $status_code, trans('message.xp_add'), $responseData);
+                } else {
+                    if ($request->status == 1) {
+                        $User = User::find($request->userId);
+                        $User->totalCoins += $request->coins;
+                        $User->save();
+                    } else {
+                        $User = User::find($request->userId);
+                        $User->totalCoins -= $request->coins;
+                        $User->save();
+                    }
+                    $user = User::find($request->userId);
+                    $responseData = ["guestNumber" => $user->name,
+                    "userID" => $user->id,
+                    "userName" => $user->name,
+                    "totalXP" => $user->totalXP,
+                    "totalCoins" => $user->totalCoins,
+                    "profit" => $user->profit,
+                    "wagered" => $user->wagered,
+                    "playedGames" => $user->playedGames,
+                    "rankingByLevel" => $user->rankingByLevel,
+                    "rankingByProfit" => $user->rankingByProfit
+                ];
+                    $status_code = config('response_status_code.coin_add');
+                    return $this->sendResponse(true, $status_code, trans('message.coin_add'), $responseData);
+                }
             } else {
                 $status_code = config('response_status_code.invalid_input');
                 return $this->sendResponse(true, $status_code, trans('message.invalid_input'));
             }
         }
     }
+
 }

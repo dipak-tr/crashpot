@@ -9,5 +9,6 @@ return [
     'privacy_policy_fetched_success' => 5,
     'random_number_fetched_success' => 6,
 	'dashboard_fetched_success'=>7,
-	'coin_add'=>8
+	'coin_add'=>8,
+	'xp_add'=>9
 ];
