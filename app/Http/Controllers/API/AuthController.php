@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\User;
+use App\User;
 use Validator;
 use Illuminate\Support\Facades\DB;
 
@@ -64,8 +65,24 @@ class AuthController extends BaseController {
                 $user->device_token = $request['deviceToken'];
                 // $user->user_type = $request['userType'];
                 $user->IMEI = $request['IMEI'];
+                $user->totalCoins = (setting('site.welcome_bonus') + setting('site.social_media_bonus'));
                 $user->is_active = 1;
                 $user->save();
+
+                $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
+                $userCoind = new Usercoin;
+                $userCoind->user_id = $user->id;
+                $userCoind->coins = setting('site.site.welcome_bonus');
+                $userCoind->game_type = 6;
+                $userCoind->status = 1;
+                $userCoind->save();
+
+                $userCoind = new Usercoin;
+                $userCoind->user_id = $user->id;
+                $userCoind->coins = setting('site.social_media_bonus');
+                $userCoind->game_type = 7;
+                $userCoind->status = 1;
+                $userCoind->save();
             } else {
 
                 DB::table('users')
@@ -77,6 +94,14 @@ class AuthController extends BaseController {
                             'device_type' => $request['deviceType'],
                             'device_token' => $request['deviceToken']
                 ]);
+
+                $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
+                $userCoind = new Usercoin;
+                $userCoind->user_id = $user->id;
+                $userCoind->coins = setting('site.social_media_bonus');
+                $userCoind->game_type = 7;
+                $userCoind->status = 1;
+                $userCoind->save();
             }
         } else {
             $user = new User;
@@ -88,8 +113,24 @@ class AuthController extends BaseController {
             $user->device_token = $request['deviceToken'];
             //$user->user_type = $request['userType'];
             $user->IMEI = $request['IMEI'];
+            $user->totalCoins = setting('site.site.welcome_bonus');
             $user->is_active = 1;
             $user->save();
+
+            $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
+            $userCoind = new Usercoin;
+            $userCoind->user_id = $user->id;
+            $userCoind->coins = setting('site.site.welcome_bonus');
+            $userCoind->game_type = 6;
+            $userCoind->status = 1;
+            $userCoind->save();
+
+            $userCoind = new Usercoin;
+            $userCoind->user_id = $user->id;
+            $userCoind->coins = setting('site.social_media_bonus');
+            $userCoind->game_type = 7;
+            $userCoind->status = 1;
+            $userCoind->save();
         }
         $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
         $records = [
@@ -126,21 +167,29 @@ class AuthController extends BaseController {
             //$user->user_type = $request['userType'];
             $user->IMEI = $request['IMEI'];
             $user->is_active = 1;
+            $user->totalCoins = setting('site.site.welcome_bonus');
             $user->save();
             $isRegister = 0;
+
+            $userCoind = new Usercoin;
+            $userCoind->user_id = $user->id;
+            $userCoind->coins = setting('site.site.welcome_bonus');
+            $userCoind->game_type = 6;
+            $userCoind->status = 1;
+            $userCoind->save();
         }
         $records = [
-        "guestNumber" => $user->name,
-        "userID" => $user->id,
-        "userName" => $user->name,
-        "isRegister" => $isRegister,
-        "totalXP" => $user->totalXP,
-        "totalCoins" => $user->totalCoins,
-        "profit" => $user->profit,
-        "wagered" => $user->wagered,
-        "playedGames" => $user->playedGames,
-        "rankingByLevel" => $user->rankingByLevel,
-        "rankingByProfit" => $user->rankingByProfit        
+            "guestNumber" => $user->name,
+            "userID" => $user->id,
+            "userName" => $user->name,
+            "isRegister" => $isRegister,
+            "totalXP" => $user->totalXP,
+            "totalCoins" => $user->totalCoins,
+            "profit" => $user->profit,
+            "wagered" => $user->wagered,
+            "playedGames" => $user->playedGames,
+            "rankingByLevel" => $user->rankingByLevel,
+            "rankingByProfit" => $user->rankingByProfit
         ];
         $status_code = config('response_status_code.random_number_fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.random_number_fetched_success'), $records);

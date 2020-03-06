@@ -41,6 +41,7 @@ class UserCoinsControllers extends BaseController {
             $Usercoin->game_type = $request->gameType;
             $Usercoin->status = $request->status;
             $Usercoin->from_userid = $request->fromUserId;
+            $Usercoin->is_xp_or_coin = $request->is_xp_or_coin;
             $Usercoin->save();
 
             if ($Usercoin != NULL) {
