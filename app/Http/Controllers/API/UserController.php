@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\User;
 use Validator;
 use Illuminate\Support\Facades\DB;
 
 
-class UserController extends Controller {
+class UserController extends BaseController {
 
     /**
      * Update User Name using id
