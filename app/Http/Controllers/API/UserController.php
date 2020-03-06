@@ -67,6 +67,7 @@ class UserController extends Controller {
         $validator = Validator::make($request->all(), [
                     'userId' => 'required|digits_between:1,11'
         ]);
+        $status_code = 200;
 
         $responseData = [];
         $errors = [];
@@ -76,10 +77,8 @@ class UserController extends Controller {
                 $errors[$key] = $value;
             }
 
-            $responseData['status_code'] = 406;
-            $responseData['success'] = false;
-            $responseData['message'] = "Invalid User Data !";
-            $responseData['data'] = $errors;
+            $status_code = config('response_status_code.no_records_found');
+            return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
         } else {
 
             $user = User::find($request->userId);
@@ -97,16 +96,13 @@ class UserController extends Controller {
                     "rankingByProfit" => $user->rankingByProfit
                 ];
             } else {
-                $responseData['status_code'] = 404;
-                $responseData['success'] = false;
-                $responseData['message'] = "User Id Not Found !";
-                $responseData['data'] = "";
+                $status_code = config('response_status_code.no_records_found');
+                return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
             }
         }
 
-        echo json_encode($responseData);
-        //$status_code = config('response_status_code.random_number_fetched_success');
-        //return $this->sendResponse(true, $status_code, trans('message.random_number_fetched_success'), $responseData);
+        $status_code = config('response_status_code.dashboard_fetched_success');
+        return $this->sendResponse(true, $status_code, trans('message.dashboard_fetched_success'), $responseData);
     }
 
 }

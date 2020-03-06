@@ -140,9 +140,7 @@ class AuthController extends BaseController {
         "wagered" => $user->wagered,
         "playedGames" => $user->playedGames,
         "rankingByLevel" => $user->rankingByLevel,
-        "rankingByProfit" => $user->rankingByProfit,
-        "success" => true,
-        "message" => "Get Dashboard Details Successfully.."
+        "rankingByProfit" => $user->rankingByProfit        
         ];
         $status_code = config('response_status_code.random_number_fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.random_number_fetched_success'), $records);
