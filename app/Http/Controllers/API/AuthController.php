@@ -190,6 +190,7 @@ class AuthController extends BaseController {
             "profit" => $user->profit,
             "wagered" => $user->wagered,
             "playedGames" => $user->playedGames,
+            "socialMediaType" => $user->socialMediaType,
             "rankingByLevel" => $user->rankingByLevel,
             "rankingByProfit" => $user->rankingByProfit
         ];
