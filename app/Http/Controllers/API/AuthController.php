@@ -113,7 +113,7 @@ class AuthController extends BaseController {
             $user->device_token = $request['deviceToken'];
             //$user->user_type = $request['userType'];
             $user->IMEI = $request['IMEI'];
-            $user->totalCoins = setting('site.site.welcome_bonus');
+             $user->totalCoins = (setting('site.welcome_bonus') + setting('site.social_media_bonus'));
             $user->is_active = 1;
             $user->save();
 
