@@ -10,5 +10,6 @@ return [
     'random_number_fetched_success' => 6,
 	'dashboard_fetched_success'=>7,
 	'coin_add'=>8,
-	'xp_add'=>9
+	'xp_add'=>9,
+    'fetched_success'=>10,
 ];

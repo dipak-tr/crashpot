@@ -136,6 +136,7 @@ class AuthController extends BaseController {
         $records = [
             "userID" => $user->id,
             "userName" => $user->name,
+            "is_block" => $user->is_block,
             "socialMediaType" => $user->social_media_type,
             "totalXP" => $user->totalXP,
             "totalCoins" => $user->totalCoins,
@@ -184,6 +185,7 @@ class AuthController extends BaseController {
             "guestNumber" => $user->name,
             "userID" => $user->id,
             "userName" => $user->name,
+            "is_block" => $user->is_block,
             "isRegister" => $isRegister,
             "totalXP" => $user->totalXP,
             "totalCoins" => $user->totalCoins,

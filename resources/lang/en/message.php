@@ -8,5 +8,6 @@ return [
  'random_number_fetched_success' => 'Guest Random Number Is Fetched Successfully.',
  'dashboard_fetched_success' => 'Dashboard Data Is Fetch Success',
  'coin_add'=>'Coins Add Successfully..',
- 'xp_add'=>'XP Add Successfully..'
+ 'xp_add'=>'XP Add Successfully..',
+    'fetched_success'=>'Fetched Successfully...'
 ];

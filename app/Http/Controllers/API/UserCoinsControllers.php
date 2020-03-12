@@ -50,16 +50,19 @@ class UserCoinsControllers extends BaseController {
                     if ($request->status == 1) {
                         $User = User::find($request->userId);
                         $User->totalXP += $request->coins;
+                       $User->rankingByLevel= round(($User->totalXP+$request->coins)/1000);
                         $User->save();
                     } else {
                         $User = User::find($request->userId);
                         $User->totalXP -= $request->coins;
+                         $User->rankingByLevel= round(($User->totalXP-$request->coins)/1000);
                         $User->save();
                     }
                     $user = User::find($request->userId);
                     $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
+                        "is_block" => $user->is_block,
                     "totalXP" => $user->totalXP,
                     "totalCoins" => $user->totalCoins,
                     "profit" => $user->profit,
@@ -75,16 +78,19 @@ class UserCoinsControllers extends BaseController {
                     if ($request->status == 1) {
                         $User = User::find($request->userId);
                         $User->totalCoins += $request->coins;
+                         $User->rankingByLevel= round(($User->totalXP+$request->coins)/1000);
                         $User->save();
                     } else {
                         $User = User::find($request->userId);
                         $User->totalCoins -= $request->coins;
+                         $User->rankingByLevel= round(($User->totalXP-$request->coins)/1000);
                         $User->save();
                     }
                     $user = User::find($request->userId);
                     $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
+                    "is_block" => $user->is_block,
                     "totalXP" => $user->totalXP,
                     "totalCoins" => $user->totalCoins,
                     "profit" => $user->profit,

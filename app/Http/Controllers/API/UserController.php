@@ -88,6 +88,7 @@ class UserController extends BaseController {
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
+                    "is_block" => $user->is_block,
                     "totalXP" => $user->totalXP,
                     "totalCoins" => $user->totalCoins,
                     "profit" => $user->profit,
@@ -104,5 +105,46 @@ class UserController extends BaseController {
 
         $status_code = config('response_status_code.dashboard_fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.dashboard_fetched_success'), $responseData);
+    }
+    public function getUserProfile(Request $request) {
+        $validator = Validator::make($request->all(), [
+                    'userId' => 'required|digits_between:1,11'
+        ]);
+        
+        $responseData = [];
+        $errors = [];
+
+        if ($validator->fails()) {
+            foreach ($validator->messages()->getMessages() as $key => $value) {
+                $errors[$key] = $value;
+            }
+
+            $status_code = config('response_status_code.no_records_found');
+            return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
+        } else {
+
+            $user = User::find($request->userId);
+
+            if ($user != NULL) {
+                $responseData = ["guestNumber" => $user->name,
+                    "userID" => $user->id,
+                    "userName" => $user->name,
+                    "is_block" => $user->is_block,
+                    "totalXP" => $user->totalXP,
+                    "totalCoins" => $user->totalCoins,
+                    "profit" => $user->profit,
+                    "wagered" => $user->wagered,
+                    "playedGames" => $user->playedGames,
+                    "rankingByLevel" => $user->rankingByLevel,
+                    "rankingByProfit" => $user->rankingByProfit
+                ];
+            } else {
+                $status_code = config('response_status_code.no_records_found');
+                return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
+            }
+        }
+
+        $status_code = config('response_status_code.fetched_success');
+        return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $responseData);
     }
 }
