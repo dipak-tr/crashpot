@@ -24,4 +24,5 @@ Route::post('add/user-coins', 'API\UserCoinsControllers@addUserCoins');
 Route::put('update/user-name', 'API\UserController@updateUserName');
 Route::get('dashboard', 'API\UserController@getDashboard');
 Route::get('get/user-profile', 'API\UserController@getUserProfile');
+Route::post('report-user', 'API\UserController@reportUser');
 

@@ -5,9 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\User;
+use App\Reportusers;
 use Validator;
 use Illuminate\Support\Facades\DB;
-
 
 class UserController extends BaseController {
 
@@ -69,7 +69,7 @@ class UserController extends BaseController {
         $validator = Validator::make($request->all(), [
                     'userId' => 'required|digits_between:1,11'
         ]);
-        
+
         $responseData = [];
         $errors = [];
 
@@ -106,11 +106,12 @@ class UserController extends BaseController {
         $status_code = config('response_status_code.dashboard_fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.dashboard_fetched_success'), $responseData);
     }
+
     public function getUserProfile(Request $request) {
         $validator = Validator::make($request->all(), [
                     'userId' => 'required|digits_between:1,11'
         ]);
-        
+
         $responseData = [];
         $errors = [];
 
@@ -147,4 +148,35 @@ class UserController extends BaseController {
         $status_code = config('response_status_code.fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $responseData);
     }
+
+    public function reportUser(Request $request) {
+        $validator = Validator::make($request->all(), [
+                    'userId' => 'required|digits_between:1,11',
+                    'reportUserId' => 'required|digits_between:1,11',
+                    'chatMessage' => 'required|string|max:1000'
+        ]);
+
+        $responseData = [];
+        $errors = [];
+
+        if ($validator->fails()) {
+            foreach ($validator->messages()->getMessages() as $key => $value) {
+                $errors[$key] = $value;
+            }
+
+            $status_code = config('response_status_code.no_records_found');
+            return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
+        } else {
+
+            $reportUser = new Reportusers;
+            $reportUser->user_id = $request->reportUserId;
+            $reportUser->chat_message = $request->chatMessage;
+            $reportUser->created_by = $request->userId;            
+            $reportUser->save();
+        }
+
+        $status_code = config('response_status_code.fetched_success');
+        return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $responseData);
+    }
+
 }
