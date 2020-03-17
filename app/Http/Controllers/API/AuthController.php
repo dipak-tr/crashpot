@@ -58,6 +58,7 @@ class AuthController extends BaseController {
             if (empty($user)) {
                 $user = new User;
                 $user->name = $request['name'];
+                $user->email = $request['email'];
                 $user->avatar = $request['avatar'];
                 $user->social_media_type = $request['socialMediaType'];
                 $user->social_media_id = $request['socialMediaId'];
@@ -89,6 +90,7 @@ class AuthController extends BaseController {
                         ->where('id', $request['userID'])
                         ->update(['name' => $request['name'],
                             'avatar' => $request['avatar'],
+                            'email' => $request['email'],
                             'social_media_type' => $request['socialMediaType'],
                             'social_media_id' => $request['socialMediaId'],
                             'device_type' => $request['deviceType'],
@@ -107,6 +109,7 @@ class AuthController extends BaseController {
             $user = new User;
             $user->name = $request['name'];
             $user->avatar = $request['avatar'];
+            $user->email = $request['email'];
             $user->social_media_type = $request['socialMediaType'];
             $user->social_media_id = $request['socialMediaId'];
             $user->device_type = $request['deviceType'];
@@ -136,6 +139,7 @@ class AuthController extends BaseController {
         $records = [
             "userID" => $user->id,
             "userName" => $user->name,
+            "email" => $user->email,
             "is_block" => $user->is_block,
             "socialMediaType" => $user->social_media_type,
             "totalXP" => $user->totalXP,
