@@ -95,7 +95,8 @@ class UserController extends BaseController {
                     "wagered" => $user->wagered,
                     "playedGames" => $user->playedGames,
                     "rankingByLevel" => $user->rankingByLevel,
-                    "rankingByProfit" => $user->rankingByProfit
+                    "rankingByProfit" => $user->rankingByProfit,
+                    "last_read_id" => $user->last_read_id
                 ];
             } else {
                 $status_code = config('response_status_code.no_records_found');
@@ -137,7 +138,8 @@ class UserController extends BaseController {
                     "wagered" => $user->wagered,
                     "playedGames" => $user->playedGames,
                     "rankingByLevel" => $user->rankingByLevel,
-                    "rankingByProfit" => $user->rankingByProfit
+                    "rankingByProfit" => $user->rankingByProfit,
+                    "last_read_id" => $user->last_read_id
                 ];
             } else {
                 $status_code = config('response_status_code.no_records_found');
@@ -171,7 +173,7 @@ class UserController extends BaseController {
             $reportUser = new Reportusers;
             $reportUser->user_id = $request->reportUserId;
             $reportUser->chat_message = $request->chatMessage;
-            $reportUser->created_by = $request->userId;            
+            $reportUser->created_by = $request->userId;
             $reportUser->save();
         }
 

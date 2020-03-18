@@ -148,7 +148,8 @@ class AuthController extends BaseController {
             "wagered" => $user->wagered,
             "playedGames" => $user->playedGames,
             "rankingByLevel" => $user->rankingByLevel,
-            "rankingByProfit" => $user->rankingByProfit
+            "rankingByProfit" => $user->rankingByProfit,
+            "last_read_id" => $user->last_read_id
         ];
         $status_code = config('response_status_code.login_success');
         return $this->sendResponse(true, $status_code, trans('message.login_success'), $records);
@@ -198,7 +199,8 @@ class AuthController extends BaseController {
             "playedGames" => $user->playedGames,
             "socialMediaType" => $user->social_media_type,
             "rankingByLevel" => $user->rankingByLevel,
-            "rankingByProfit" => $user->rankingByProfit
+            "rankingByProfit" => $user->rankingByProfit,
+            "last_read_id" => $user->last_read_id
         ];
         $status_code = config('response_status_code.random_number_fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.random_number_fetched_success'), $records);

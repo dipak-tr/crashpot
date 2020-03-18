@@ -50,55 +50,57 @@ class UserCoinsControllers extends BaseController {
                     if ($request->status == 1) {
                         $User = User::find($request->userId);
                         $User->totalXP += $request->coins;
-                       $User->rankingByLevel= round(($User->totalXP+$request->coins)/1000);
+                        $User->rankingByLevel = round(($User->totalXP + $request->coins) / 1000);
                         $User->save();
                     } else {
                         $User = User::find($request->userId);
                         $User->totalXP -= $request->coins;
-                         $User->rankingByLevel= round(($User->totalXP-$request->coins)/1000);
+                        $User->rankingByLevel = round(($User->totalXP - $request->coins) / 1000);
                         $User->save();
                     }
                     $user = User::find($request->userId);
                     $responseData = ["guestNumber" => $user->name,
-                    "userID" => $user->id,
-                    "userName" => $user->name,
+                        "userID" => $user->id,
+                        "userName" => $user->name,
                         "is_block" => $user->is_block,
-                    "totalXP" => $user->totalXP,
-                    "totalCoins" => $user->totalCoins,
-                    "profit" => $user->profit,
-                    "wagered" => $user->wagered,
-                    "playedGames" => $user->playedGames,
-                    "rankingByLevel" => $user->rankingByLevel,
-                    "rankingByProfit" => $user->rankingByProfit
-                ];
-                    
+                        "totalXP" => $user->totalXP,
+                        "totalCoins" => $user->totalCoins,
+                        "profit" => $user->profit,
+                        "wagered" => $user->wagered,
+                        "playedGames" => $user->playedGames,
+                        "rankingByLevel" => $user->rankingByLevel,
+                        "rankingByProfit" => $user->rankingByProfit,
+                        "last_read_id" => $user->last_read_id
+                    ];
+
                     $status_code = config('response_status_code.xp_add');
                     return $this->sendResponse(true, $status_code, trans('message.xp_add'), $responseData);
                 } else {
                     if ($request->status == 1) {
                         $User = User::find($request->userId);
                         $User->totalCoins += $request->coins;
-                         $User->rankingByLevel= round(($User->totalXP+$request->coins)/1000);
+                        $User->rankingByLevel = round(($User->totalXP + $request->coins) / 1000);
                         $User->save();
                     } else {
                         $User = User::find($request->userId);
                         $User->totalCoins -= $request->coins;
-                         $User->rankingByLevel= round(($User->totalXP-$request->coins)/1000);
+                        $User->rankingByLevel = round(($User->totalXP - $request->coins) / 1000);
                         $User->save();
                     }
                     $user = User::find($request->userId);
                     $responseData = ["guestNumber" => $user->name,
-                    "userID" => $user->id,
-                    "userName" => $user->name,
-                    "is_block" => $user->is_block,
-                    "totalXP" => $user->totalXP,
-                    "totalCoins" => $user->totalCoins,
-                    "profit" => $user->profit,
-                    "wagered" => $user->wagered,
-                    "playedGames" => $user->playedGames,
-                    "rankingByLevel" => $user->rankingByLevel,
-                    "rankingByProfit" => $user->rankingByProfit
-                ];
+                        "userID" => $user->id,
+                        "userName" => $user->name,
+                        "is_block" => $user->is_block,
+                        "totalXP" => $user->totalXP,
+                        "totalCoins" => $user->totalCoins,
+                        "profit" => $user->profit,
+                        "wagered" => $user->wagered,
+                        "playedGames" => $user->playedGames,
+                        "rankingByLevel" => $user->rankingByLevel,
+                        "rankingByProfit" => $user->rankingByProfit,
+                        "last_read_id" => $user->last_read_id
+                    ];
                     $status_code = config('response_status_code.coin_add');
                     return $this->sendResponse(true, $status_code, trans('message.coin_add'), $responseData);
                 }
