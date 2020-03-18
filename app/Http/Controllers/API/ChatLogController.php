@@ -20,7 +20,6 @@ class ChatLogController extends BaseController {
 
         $responseData = [];
         $errors = [];
-
         if ($validator->fails()) {
             foreach ($validator->messages()->getMessages() as $key => $value) {
                 $errors[$key] = $value;
@@ -30,7 +29,7 @@ class ChatLogController extends BaseController {
             return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
         } else {
             $last_read_id = 0;
-
+ 
             $chatLogs = DB::table('chat_logs')
                     ->where('id', '>', $request->last_read_id)
                     ->where('user_id', '<>', $request->userId)
