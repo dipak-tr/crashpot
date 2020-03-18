@@ -59,6 +59,9 @@ class UserCoinsControllers extends BaseController {
                         $User->save();
                     }
                     $user = User::find($request->userId);
+                    $userLevel = round(($user->totalXP - $request->coins) / 10000);
+                    $userLevelnew=round((($user->totalXP - $request->coins) / 10000),3);
+                    
                     $responseData = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
@@ -70,7 +73,8 @@ class UserCoinsControllers extends BaseController {
                         "playedGames" => $user->playedGames,
                         "rankingByLevel" => $user->rankingByLevel,
                         "rankingByProfit" => $user->rankingByProfit,
-                        "last_read_id" => $user->last_read_id
+                        "last_read_id" => $user->last_read_id,
+                        "remainXP"=>round(($userLevelnew-$userLevel)*10000)
                     ];
 
                     $status_code = config('response_status_code.xp_add');
@@ -88,6 +92,9 @@ class UserCoinsControllers extends BaseController {
                         $User->save();
                     }
                     $user = User::find($request->userId);
+                    $userLevel = round(($user->totalXP - $request->coins) / 10000);
+                    $userLevelnew=round((($user->totalXP - $request->coins) / 10000),3);
+                    
                     $responseData = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
@@ -99,7 +106,8 @@ class UserCoinsControllers extends BaseController {
                         "playedGames" => $user->playedGames,
                         "rankingByLevel" => $user->rankingByLevel,
                         "rankingByProfit" => $user->rankingByProfit,
-                        "last_read_id" => $user->last_read_id
+                        "last_read_id" => $user->last_read_id,
+                        "remainXP"=>round(($userLevelnew-$userLevel)*10000)
                     ];
                     $status_code = config('response_status_code.coin_add');
                     return $this->sendResponse(true, $status_code, trans('message.coin_add'), $responseData);
