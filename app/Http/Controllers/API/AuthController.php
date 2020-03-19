@@ -136,6 +136,10 @@ class AuthController extends BaseController {
             $userCoind->save();
         }
         $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
+        $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 10000);
+        $userLevelnew = ($user->totalXP) ? 0 : round(($user->totalXP / 10000), 3);
+        $remainXP = round(($userLevelnew - $userLevel) * 10000);
+
         $records = [
             "userID" => $user->id,
             "userName" => $user->name,
@@ -150,7 +154,8 @@ class AuthController extends BaseController {
             "rankingByLevel" => $user->rankingByLevel,
             "rankingByProfit" => $user->rankingByProfit,
             "last_read_id" => $user->last_read_id,
-            "remainXP" => 0
+            "remainXP" => $remainXP,
+            "is_level_up" => $user->is_level_up
         ];
         $status_code = config('response_status_code.login_success');
         return $this->sendResponse(true, $status_code, trans('message.login_success'), $records);
@@ -190,6 +195,11 @@ class AuthController extends BaseController {
             $userCoind->save();
             $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
         }
+
+        $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 10000);
+        $userLevelnew = ($user->totalXP) ? 0 : round(($user->totalXP / 10000), 3);
+        $remainXP = round(($userLevelnew - $userLevel) * 10000);
+
         $records = [
             "guestNumber" => $user->name,
             "userID" => $user->id,
@@ -204,7 +214,9 @@ class AuthController extends BaseController {
             "socialMediaType" => $user->social_media_type,
             "rankingByLevel" => $user->rankingByLevel,
             "rankingByProfit" => $user->rankingByProfit,
-            "last_read_id" => $user->last_read_id
+            "last_read_id" => $user->last_read_id,
+            "remainXP" => $remainXP,
+            "is_level_up" => $user->is_level_up
         ];
         $status_code = config('response_status_code.random_number_fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.random_number_fetched_success'), $records);

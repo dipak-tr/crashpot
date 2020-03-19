@@ -51,17 +51,28 @@ class UserCoinsControllers extends BaseController {
                         $User = User::find($request->userId);
                         $User->totalXP += $request->coins;
                         $User->rankingByLevel = round(($User->totalXP + $request->coins) / 10000);
+                        if ($User->rankingByLevel != round(($User->totalXP + $request->coins) / 10000)) {
+                            $User->is_level_up = 1;
+                        } else {
+                            $User->is_level_up = 0;
+                        }
                         $User->save();
                     } else {
                         $User = User::find($request->userId);
                         $User->totalXP -= $request->coins;
                         $User->rankingByLevel = round(($User->totalXP - $request->coins) / 10000);
+                        if ($User->rankingByLevel != round(($User->totalXP - $request->coins) / 10000)) {
+                            $User->is_level_up = 1;
+                        } else {
+                            $User->is_level_up = 0;
+                        }
                         $User->save();
                     }
                     $user = User::find($request->userId);
-                    $userLevel = round(($user->totalXP - $request->coins) / 10000);
-                    $userLevelnew=round((($user->totalXP - $request->coins) / 10000),3);
-                    
+                    $userLevel = round($user->totalXP / 10000);
+                    $userLevelnew = round(($user->totalXP / 10000), 3);
+                    $remainXP = round(($userLevelnew - $userLevel) * 10000);
+
                     $responseData = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
@@ -74,7 +85,8 @@ class UserCoinsControllers extends BaseController {
                         "rankingByLevel" => $user->rankingByLevel,
                         "rankingByProfit" => $user->rankingByProfit,
                         "last_read_id" => $user->last_read_id,
-                        "remainXP"=>round(($userLevelnew-$userLevel)*10000)
+                        "remainXP" => $remainXP,
+                        "is_level_up" => $user->is_level_up
                     ];
 
                     $status_code = config('response_status_code.xp_add');
@@ -83,18 +95,29 @@ class UserCoinsControllers extends BaseController {
                     if ($request->status == 1) {
                         $User = User::find($request->userId);
                         $User->totalCoins += $request->coins;
-                        $User->rankingByLevel = round(($User->totalXP + $request->coins) / 10000);
+                        //$User->rankingByLevel = round(($User->totalXP + $request->coins) / 10000);
+                        if ($User->rankingByLevel != round($User->totalXP / 10000)) {
+                            $User->is_level_up = 1;
+                        } else {
+                            $User->is_level_up = 0;
+                        }
                         $User->save();
                     } else {
                         $User = User::find($request->userId);
                         $User->totalCoins -= $request->coins;
-                        $User->rankingByLevel = round(($User->totalXP - $request->coins) / 10000);
+                        // $User->rankingByLevel = round(($User->totalXP - $request->coins) / 10000);
+                        if ($User->rankingByLevel != round($User->totalXP / 10000)) {
+                            $User->is_level_up = 1;
+                        } else {
+                            $User->is_level_up = 0;
+                        }
                         $User->save();
                     }
                     $user = User::find($request->userId);
-                    $userLevel = round(($user->totalXP - $request->coins) / 10000);
-                    $userLevelnew=round((($user->totalXP - $request->coins) / 10000),3);
-                    
+                    $userLevel = round($user->totalXP / 10000);
+                    $userLevelnew = round(($user->totalXP / 10000), 3);
+                    $remainXP = round(($userLevelnew - $userLevel) * 10000);
+
                     $responseData = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
@@ -107,7 +130,8 @@ class UserCoinsControllers extends BaseController {
                         "rankingByLevel" => $user->rankingByLevel,
                         "rankingByProfit" => $user->rankingByProfit,
                         "last_read_id" => $user->last_read_id,
-                        "remainXP"=>round(($userLevelnew-$userLevel)*10000)
+                        "remainXP" => $remainXP,
+                        "is_level_up" => $user->is_level_up
                     ];
                     $status_code = config('response_status_code.coin_add');
                     return $this->sendResponse(true, $status_code, trans('message.coin_add'), $responseData);
