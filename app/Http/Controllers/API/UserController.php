@@ -85,6 +85,9 @@ class UserController extends BaseController {
             $user = User::find($request->userId);
 
             if ($user != NULL) {
+                $userLevel = round($user->totalXP / 10000);
+                $userLevelnew = round(($user->totalXP / 10000), 3);
+                $remainXP = round(($userLevelnew - $userLevel) * 10000);
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
@@ -96,7 +99,9 @@ class UserController extends BaseController {
                     "playedGames" => $user->playedGames,
                     "rankingByLevel" => $user->rankingByLevel,
                     "rankingByProfit" => $user->rankingByProfit,
-                    "last_read_id" => $user->last_read_id
+                    "last_read_id" => $user->last_read_id,
+                    "remainXP" => $remainXP,
+                    "is_level_up" => $user->is_level_up
                 ];
             } else {
                 $status_code = config('response_status_code.no_records_found');
@@ -128,6 +133,10 @@ class UserController extends BaseController {
             $user = User::find($request->userId);
 
             if ($user != NULL) {
+                $userLevel = round($user->totalXP / 10000);
+                $userLevelnew = round(($user->totalXP / 10000), 3);
+                $remainXP = round(($userLevelnew - $userLevel) * 10000);
+
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
@@ -139,7 +148,9 @@ class UserController extends BaseController {
                     "playedGames" => $user->playedGames,
                     "rankingByLevel" => $user->rankingByLevel,
                     "rankingByProfit" => $user->rankingByProfit,
-                    "last_read_id" => $user->last_read_id
+                    "last_read_id" => $user->last_read_id,
+                    "remainXP" => $remainXP,
+                    "is_level_up" => $user->is_level_up
                 ];
             } else {
                 $status_code = config('response_status_code.no_records_found');
