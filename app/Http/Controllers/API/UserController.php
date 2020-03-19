@@ -85,7 +85,7 @@ class UserController extends BaseController {
             $user = User::find($request->userId);
 
             if ($user != NULL) {
-                $userLevel = round($user->totalXP / 1000);
+                 $userLevel = intdiv($user->totalXP,1000);
                 $userLevelnew = round(($user->totalXP / 1000), 3);
                 $remainXP = round(($userLevelnew - $userLevel) * 1000);
                 
@@ -142,7 +142,7 @@ class UserController extends BaseController {
             $user = User::find($request->userId);
 
             if ($user != NULL) {
-                $userLevel = round($user->totalXP / 1000);
+                 $userLevel = intdiv($user->totalXP,1000);
                 $userLevelnew = round(($user->totalXP / 1000), 3);
                 $remainXP = round(($userLevelnew - $userLevel) * 1000);
 

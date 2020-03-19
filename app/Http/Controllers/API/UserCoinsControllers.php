@@ -50,12 +50,16 @@ class UserCoinsControllers extends BaseController {
                     if ($request->status == 1) {
                         $User = User::find($request->userId);
                         $User->totalXP += $request->coins;
-                        $User->rankingByLevel = round(($User->totalXP + $request->coins) / 1000);
-                        if ($User->rankingByLevel != round(($User->totalXP + $request->coins) / 1000)) {
-                            $User->is_level_up = 1;
-                        } else {
-                            $User->is_level_up = 0;
-                        }
+                        /*if ($User->rankingByLevel < round((($User->totalXP + $request->coins) / 1000),0,PHP_ROUND_HALF_ODD)) 
+                            {*/
+                        
+                            $User->rankingByLevel = intdiv($User->totalXP, 1000);
+                        //}
+                        /* if ($User->rankingByLevel != round(($User->totalXP + $request->coins) / 1000)) {
+                          $User->is_level_up = 1;
+                          } else {
+                          $User->is_level_up = 0;
+                          } */
                         $User->save();
                     }/* else {
                       $User = User::find($request->userId);
@@ -69,14 +73,14 @@ class UserCoinsControllers extends BaseController {
                       $User->save();
                       } */
                     $user = User::find($request->userId);
-                    $userLevel = round($user->totalXP / 1000);
+                    $userLevel = intdiv($user->totalXP,1000);
                     $userLevelnew = round(($user->totalXP / 1000), 3);
                     $remainXP = round(($userLevelnew - $userLevel) * 1000);
 
                     $responseData = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
-                        "userImage" => url('/').'/images/'.$user->avatar,
+                        "userImage" => url('/') . '/images/' . $user->avatar,
                         "email" => $user->email,
                         "is_block" => $user->is_block,
                         "totalXP" => $user->totalXP,
@@ -98,32 +102,32 @@ class UserCoinsControllers extends BaseController {
                         $User = User::find($request->userId);
                         $User->totalCoins += $request->coins;
                         //$User->rankingByLevel = round(($User->totalXP + $request->coins) / 1000);
-                        if ($User->rankingByLevel != round($User->totalXP / 1000)) {
-                            $User->is_level_up = 1;
-                        } else {
-                            $User->is_level_up = 0;
-                        }
+                        /* if ($User->rankingByLevel != round($User->totalXP / 1000)) {
+                          $User->is_level_up = 1;
+                          } else {
+                          $User->is_level_up = 0;
+                          } */
                         $User->save();
                     } else {
                         $User = User::find($request->userId);
                         $User->totalCoins -= $request->coins;
                         // $User->rankingByLevel = round(($User->totalXP - $request->coins) / 1000);
-                        if ($User->rankingByLevel != round($User->totalXP / 1000)) {
-                            $User->is_level_up = 1;
-                        } else {
-                            $User->is_level_up = 0;
-                        }
+                        /* if ($User->rankingByLevel != round($User->totalXP / 1000)) {
+                          $User->is_level_up = 1;
+                          } else {
+                          $User->is_level_up = 0;
+                          } */
                         $User->save();
                     }
                     $user = User::find($request->userId);
-                    $userLevel = round($user->totalXP / 1000);
+                  $userLevel = intdiv($user->totalXP,1000);
                     $userLevelnew = round(($user->totalXP / 1000), 3);
                     $remainXP = round(($userLevelnew - $userLevel) * 1000);
 
                     $responseData = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
-                         "userImage" => url('/').'/images/'.$user->avatar,
+                        "userImage" => url('/') . '/images/' . $user->avatar,
                         "email" => $user->email,
                         "is_block" => $user->is_block,
                         "totalXP" => $user->totalXP,
