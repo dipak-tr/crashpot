@@ -66,6 +66,7 @@ class AuthController extends BaseController {
                 $user->device_token = $request['deviceToken'];
                 // $user->user_type = $request['userType'];
                 $user->IMEI = $request['IMEI'];
+                $user->is_level_up = 0;
                 $user->totalCoins = (setting('site.welcome_bonus') + setting('site.social_media_bonus'));
                 $user->is_active = 1;
                 $user->save();
@@ -118,6 +119,7 @@ class AuthController extends BaseController {
             $user->IMEI = $request['IMEI'];
             $user->totalCoins = (setting('site.welcome_bonus') + setting('site.social_media_bonus'));
             $user->is_active = 1;
+            $user->is_level_up = 0;
             $user->save();
 
             $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
@@ -136,13 +138,14 @@ class AuthController extends BaseController {
             $userCoind->save();
         }
         $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
-        $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 10000);
-        $userLevelnew = ($user->totalXP) ? 0 : round(($user->totalXP / 10000), 3);
-        $remainXP = round(($userLevelnew - $userLevel) * 10000);
+        $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 1000);
+        $userLevelnew = ($user->totalXP) ? 0 : round(($user->totalXP / 1000), 3);
+        $remainXP = round(($userLevelnew - $userLevel) * 1000);
 
         $records = [
             "userID" => $user->id,
             "userName" => $user->name,
+            "userImage" => $user->avatar,
             "email" => $user->email,
             "is_block" => $user->is_block,
             "socialMediaType" => $user->social_media_type,
@@ -184,6 +187,7 @@ class AuthController extends BaseController {
             $user->is_active = 1;
             $user->totalCoins = setting('site.welcome_bonus');
             $user->last_read_id = $last_row->id;
+            $user->is_level_up = 0;
             $user->save();
             $isRegister = 0;
 
@@ -196,14 +200,16 @@ class AuthController extends BaseController {
             $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
         }
 
-        $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 10000);
-        $userLevelnew = ($user->totalXP) ? 0 : round(($user->totalXP / 10000), 3);
-        $remainXP = round(($userLevelnew - $userLevel) * 10000);
+        $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 1000);
+        $userLevelnew = ($user->totalXP) ? 0 : round(($user->totalXP / 1000), 3);
+        $remainXP = round(($userLevelnew - $userLevel) * 1000);
 
         $records = [
             "guestNumber" => $user->name,
             "userID" => $user->id,
             "userName" => $user->name,
+            "userImage" => $user->avatar,
+            "email" => $user->email,
             "is_block" => $user->is_block,
             "isRegister" => $isRegister,
             "totalXP" => $user->totalXP,

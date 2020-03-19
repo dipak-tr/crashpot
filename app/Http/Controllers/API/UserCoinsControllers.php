@@ -58,16 +58,16 @@ class UserCoinsControllers extends BaseController {
                         }
                         $User->save();
                     }/* else {
-                        $User = User::find($request->userId);
-                        $User->totalXP -= $request->coins;
-                        $User->rankingByLevel = round(($User->totalXP - $request->coins) / 1000);
-                        if ($User->rankingByLevel != round(($User->totalXP - $request->coins) / 1000)) {
-                            $User->is_level_up = 1;
-                        } else {
-                            $User->is_level_up = 0;
-                        }
-                        $User->save();
-                    }*/
+                      $User = User::find($request->userId);
+                      $User->totalXP -= $request->coins;
+                      $User->rankingByLevel = round(($User->totalXP - $request->coins) / 1000);
+                      if ($User->rankingByLevel != round(($User->totalXP - $request->coins) / 1000)) {
+                      $User->is_level_up = 1;
+                      } else {
+                      $User->is_level_up = 0;
+                      }
+                      $User->save();
+                      } */
                     $user = User::find($request->userId);
                     $userLevel = round($user->totalXP / 1000);
                     $userLevelnew = round(($user->totalXP / 1000), 3);
@@ -76,6 +76,8 @@ class UserCoinsControllers extends BaseController {
                     $responseData = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
+                        "userImage" => str_replace("public","",url('/')).'storage/app/public/'.$user->avatar,
+                        "email" => $user->email,
                         "is_block" => $user->is_block,
                         "totalXP" => $user->totalXP,
                         "totalCoins" => $user->totalCoins,
@@ -121,6 +123,8 @@ class UserCoinsControllers extends BaseController {
                     $responseData = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
+                        "userImage" => str_replace("public","",url('/')).'storage/app/public/'.$user->avatar,
+                        "email" => $user->email,
                         "is_block" => $user->is_block,
                         "totalXP" => $user->totalXP,
                         "totalCoins" => $user->totalCoins,

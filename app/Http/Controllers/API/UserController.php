@@ -88,9 +88,18 @@ class UserController extends BaseController {
                 $userLevel = round($user->totalXP / 1000);
                 $userLevelnew = round(($user->totalXP / 1000), 3);
                 $remainXP = round(($userLevelnew - $userLevel) * 1000);
+                
+                $is_level_up=0;
+                if($user->is_level_up==1)
+                {
+                    $user->is_level_up=0;
+                    $user->save();
+                }
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
+                    "userImage" => str_replace("public","",url('/')).'storage/app/public/'.$user->avatar,
+                    "email" => $user->email,
                     "is_block" => $user->is_block,
                     "totalXP" => $user->totalXP,
                     "totalCoins" => $user->totalCoins,
@@ -101,7 +110,7 @@ class UserController extends BaseController {
                     "rankingByProfit" => $user->rankingByProfit,
                     "last_read_id" => $user->last_read_id,
                     "remainXP" => $remainXP,
-                    "is_level_up" => $user->is_level_up
+                    "is_level_up" => $is_level_up
                 ];
             } else {
                 $status_code = config('response_status_code.no_records_found');
@@ -140,6 +149,8 @@ class UserController extends BaseController {
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
+                    "userImage" => str_replace("public","",url('/')).'storage/app/public/'.$user->avatar,
+                    "email" => $user->email,
                     "is_block" => $user->is_block,
                     "totalXP" => $user->totalXP,
                     "totalCoins" => $user->totalCoins,
@@ -186,9 +197,8 @@ class UserController extends BaseController {
             $reportUser->chat_message = $request->chatMessage;
             $reportUser->created_by = $request->userId;
             $reportUser->save();
-            
         }
-$responseData = ["userId" => $request->userId];
+        $responseData = ["userId" => $request->userId];
         $status_code = config('response_status_code.fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $responseData);
     }
