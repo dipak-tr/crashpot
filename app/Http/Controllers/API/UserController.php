@@ -85,9 +85,9 @@ class UserController extends BaseController {
             $user = User::find($request->userId);
 
             if ($user != NULL) {
-                $userLevel = round($user->totalXP / 10000);
-                $userLevelnew = round(($user->totalXP / 10000), 3);
-                $remainXP = round(($userLevelnew - $userLevel) * 10000);
+                $userLevel = round($user->totalXP / 1000);
+                $userLevelnew = round(($user->totalXP / 1000), 3);
+                $remainXP = round(($userLevelnew - $userLevel) * 1000);
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
@@ -133,9 +133,9 @@ class UserController extends BaseController {
             $user = User::find($request->userId);
 
             if ($user != NULL) {
-                $userLevel = round($user->totalXP / 10000);
-                $userLevelnew = round(($user->totalXP / 10000), 3);
-                $remainXP = round(($userLevelnew - $userLevel) * 10000);
+                $userLevel = round($user->totalXP / 1000);
+                $userLevelnew = round(($user->totalXP / 1000), 3);
+                $remainXP = round(($userLevelnew - $userLevel) * 1000);
 
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
@@ -186,8 +186,9 @@ class UserController extends BaseController {
             $reportUser->chat_message = $request->chatMessage;
             $reportUser->created_by = $request->userId;
             $reportUser->save();
+            
         }
-
+$responseData = ["userId" => $request->userId];
         $status_code = config('response_status_code.fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $responseData);
     }

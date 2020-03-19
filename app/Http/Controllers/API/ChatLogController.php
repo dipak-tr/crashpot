@@ -15,11 +15,16 @@ class ChatLogController extends BaseController {
     public function chatHistory(Request $request) {
         $validator = Validator::make($request->all(), [
                     'userId' => 'required|digits_between:1,11',
-                    'last_read_id' => 'required|digits_between:0,11'
+                    'last_read_id' => 'digits_between:0,11',
+                    'pgn' => 'digits_between:0,11'
         ]);
 
         $responseData = [];
         $errors = [];
+        $page=$last_read_id=0;
+      $page=1*$request->pgn;
+      
+        
         if ($validator->fails()) {
             foreach ($validator->messages()->getMessages() as $key => $value) {
                 $errors[$key] = $value;
@@ -28,11 +33,13 @@ class ChatLogController extends BaseController {
             $status_code = config('response_status_code.no_records_found');
             return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
         } else {
-            $last_read_id = 0;
- 
+            $last_read_id = $is_update = 0;
+
             $chatLogs = DB::table('chat_logs')
                     ->where('id', '>', $request->last_read_id)
-                    ->where('user_id', '<>', $request->userId)
+                 //   ->where('user_id', '<>', $request->userId)
+                    ->orderByRaw('id DESC')
+                    ->limit($page,10)
                     ->get();
 
             if ($chatLogs != NULL) {
@@ -42,15 +49,16 @@ class ChatLogController extends BaseController {
                         "message" => $chatLog->message,
                         "createdAt" => $chatLog->created_at
                     ];
-                    $last_read_id = $chatLog->id;
+                    if ($is_update == 0) {
+                        $last_read_id = $chatLog->id;
+                    }
+                    $is_update++;
                 }
 
-                 DB::table('users')
+                DB::table('users')
                         ->where('id', $request->userId)
                         ->update(['last_read_id' => $last_read_id
                 ]);
-
-                
             } else {
                 $status_code = config('response_status_code.no_records_found');
                 return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
