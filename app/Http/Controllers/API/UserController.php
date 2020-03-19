@@ -98,7 +98,7 @@ class UserController extends BaseController {
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
-                    "userImage" => url('/').'/'.$user->avatar,
+                    "userImage" => url('/').'/images/'.$user->avatar,
                     "email" => $user->email,
                     "is_block" => $user->is_block,
                     "totalXP" => $user->totalXP,
