@@ -35,20 +35,31 @@ class ChatLogController extends BaseController {
         } else {
             $last_read_id = $is_update = 0;
 
-            $chatLogs = DB::table('chat_logs')
-                    ->where('id', '>', $request->last_read_id)
+            $chatLogs = DB::table('chat_logs')                    
+                    ->leftJoin('users', 'chat_logs.user_id', '=', 'users.id')
+                    ->where('chat_logs.id', '>', $request->last_read_id)
                  //   ->where('user_id', '<>', $request->userId)
-                    ->orderByRaw('id DESC')
+                    ->orderByRaw('chat_logs.id DESC')
                     ->offset($page)
                     ->limit(10)
+                      ->select('chat_logs.*', 'users.name', 'users.email','users.avatar')
                     ->get();
 
             if ($chatLogs != NULL && count($chatLogs)!=0) {
                 foreach ($chatLogs as $chatLog) {
-                    $responseData[] = ["Chatlog_Id" => $chatLog->id,
-                        "userID" => $chatLog->user_id,
+                    
+                    if(empty($chatLog->avatar))
+                    {
+                        $chatLog->avatar = 'users/default.png';
+                    }
+                    $responseData[] = [
                         "message" => $chatLog->message,
-                        "createdAt" => $chatLog->created_at
+                        "userId" => $chatLog->user_id,
+                        "name"=>$chatLog->name,
+                        "email"=>$chatLog->email,
+                        "userImage"=>url('/').'/images/'.$chatLog->avatar,
+                        "messageId"=>$chatLog->id,
+                        "time" => $chatLog->created_at                        
                     ];
                     if ($is_update == 0) {
                         $last_read_id = $chatLog->id;
