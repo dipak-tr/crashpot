@@ -22,7 +22,7 @@ class ChatLogController extends BaseController {
         $responseData = [];
         $errors = [];
         $page=$last_read_id=0;
-      $page=1*$request->pgn;
+      $page=10*$request->pgn;
       
         
         if ($validator->fails()) {
@@ -39,10 +39,11 @@ class ChatLogController extends BaseController {
                     ->where('id', '>', $request->last_read_id)
                  //   ->where('user_id', '<>', $request->userId)
                     ->orderByRaw('id DESC')
-                    ->limit($page,10)
+                    ->offset($page)
+                    ->limit(10)
                     ->get();
 
-            if ($chatLogs != NULL) {
+            if ($chatLogs != NULL && count($chatLogs)!=0) {
                 foreach ($chatLogs as $chatLog) {
                     $responseData[] = ["Chatlog_Id" => $chatLog->id,
                         "userID" => $chatLog->user_id,
