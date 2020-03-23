@@ -275,7 +275,7 @@ class UserController extends BaseController {
                         }
                     }
                     $profit = 0;
-                    $profit = $user->wincoins - $user->losscoins;
+                  //  $profit = $user->wincoins - $user->losscoins;
                     $responseData[] = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
