@@ -245,7 +245,7 @@ class UserController extends BaseController {
             return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
         } else {
 
-
+$page=0;
             /* $users = DB::table("users")
               ->select("users.*", DB::raw("(SELECT sum(coins) as wincoins FROM `usercoins` WHERE `status` = 1 AND `is_xp_or_coin` = 0 AND user_id=users.id) as wincoins"), DB::raw("(SELECT sum(coins) as losscoins FROM `usercoins` WHERE `status` = 0 AND `is_xp_or_coin` = 0 AND user_id=users.id) as losscoins"))
               ->get(); */
