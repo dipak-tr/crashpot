@@ -78,10 +78,25 @@ class UserCoinsControllers extends BaseController {
                     $userLevelnew = round(($user->totalXP / 1000), 3);
                     $remainXP = round(($userLevelnew - $userLevel) * 1000);
 
+                     $avata = url('/') . '/images/users/default.png';
+                if(!empty($user->avatar))
+                {
+                    $userImage=array();
+                
+                    $userImage=explode("/",$user->avatar);
+                    if(isset($userImage[0]) && $userImage[0]=='users')
+                    {
+                       $avata = url('/') . '/images/' . $user->avatar;
+                    }else{
+                        $avata =$user->avatar;
+                    }
+                    
+                }
+                
                     $responseData = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
-                        "userImage" => url('/') . '/images/' . $user->avatar,
+                        "userImage" => $avata,
                         "email" => $user->email,
                         "is_block" => $user->is_block,
                         "totalXP" => $user->totalXP,
@@ -127,10 +142,25 @@ class UserCoinsControllers extends BaseController {
                     $userLevelnew = round(($user->totalXP / 1000), 3);
                     $remainXP = round(($userLevelnew - $userLevel) * 1000);
 
+                     $avata = url('/') . '/images/users/default.png';
+                if(!empty($user->avatar))
+                {
+                    $userImage=array();
+                
+                    $userImage=explode("/",$user->avatar);
+                    if(isset($userImage[0]) && $userImage[0]=='users')
+                    {
+                       $avata = url('/') . '/images/' . $user->avatar;
+                    }else{
+                        $avata =$user->avatar;
+                    }
+                    
+                }
+                
                     $responseData = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
-                        "userImage" => url('/') . '/images/' . $user->avatar,
+                        "userImage" => $avata,
                         "email" => $user->email,
                         "is_block" => $user->is_block,
                         "totalXP" => $user->totalXP,

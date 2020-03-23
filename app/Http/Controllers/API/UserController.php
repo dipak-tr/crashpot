@@ -102,7 +102,7 @@ class UserController extends BaseController {
                     $userImage=array();
                 
                     $userImage=explode("/",$user->avatar);
-                    if(isset($userImage[0]) && $userImage[0]=='users)
+                    if(isset($userImage[0]) && $userImage[0]=='users')
                     {
                        $avata = url('/') . '/images/' . $user->avatar;
                     }else{
@@ -160,11 +160,26 @@ class UserController extends BaseController {
                 $userLevel = intdiv($user->totalXP, 1000);
                 $userLevelnew = round(($user->totalXP / 1000), 3);
                 $remainXP = round(($userLevelnew - $userLevel) * 1000);
+                
+                $avata = url('/') . '/images/users/default.png';
+                if(!empty($user->avatar))
+                {
+                    $userImage=array();
+                
+                    $userImage=explode("/",$user->avatar);
+                    if(isset($userImage[0]) && $userImage[0]=='users')
+                    {
+                       $avata = url('/') . '/images/' . $user->avatar;
+                    }else{
+                        $avata =$user->avatar;
+                    }
+                    
+                }
 
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
-                    "userImage" => url('/') . '/images/' . $user->avatar,
+                    "userImage" => $avata,
                     "email" => $user->email,
                     "is_block" => $user->is_block,
                     "totalXP" => $user->totalXP,
@@ -242,10 +257,23 @@ class UserController extends BaseController {
                 $userLevelnew = round(($user->totalXP / 1000), 3);
                 $remainXP = round(($userLevelnew - $userLevel) * 1000);
 
+                $avata = url('/') . '/images/users/default.png';
+
+                    if (!empty($chatLog->avatar)) {
+                        $userImage = array();
+
+                        $userImage = explode("/", $chatLog->avatar);
+                        if (isset($userImage[0]) && $userImage[0]=='users') {
+                            $avata = url('/') . '/images/' . $chatLog->avatar;
+                        } else {
+                            $avata = $chatLog->avatar;
+                        }
+                    }
+                    
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
-                    "userImage" => url('/') . '/images/' . $user->avatar,
+                    "userImage" => $avata,
                     "email" => $user->email,
                     "is_block" => $user->is_block,
                     "totalXP" => $user->totalXP,
@@ -265,4 +293,4 @@ class UserController extends BaseController {
             }
         }
     }
-    
+}
