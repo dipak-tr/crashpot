@@ -102,7 +102,7 @@ class UserController extends BaseController {
                     $userImage=array();
                 
                     $userImage=explode("/",$user->avatar);
-                    if(isset($userImage[0]))
+                    if(isset($userImage[0]) && $userImage[0]=='users)
                     {
                        $avata = url('/') . '/images/' . $user->avatar;
                     }else{
