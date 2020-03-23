@@ -49,8 +49,8 @@ class UserCoinsControllers extends BaseController {
                 if ($request->is_xp_or_coin == 1) {
                     if ($request->status == 1) {
                         $User = User::find($request->userId);
-                        $User->totalXP += $request->coins;
-                        
+                        $User->totalXP += $request->coins;                        
+
                         /* if ($User->rankingByLevel < round((($User->totalXP + $request->coins) / 1000),0,PHP_ROUND_HALF_ODD)) 
                           { */
 
@@ -78,21 +78,18 @@ class UserCoinsControllers extends BaseController {
                     $userLevelnew = round(($user->totalXP / 1000), 3);
                     $remainXP = round(($userLevelnew - $userLevel) * 1000);
 
-                     $avata = url('/') . '/images/users/default.png';
-                if(!empty($user->avatar))
-                {
-                    $userImage=array();
-                
-                    $userImage=explode("/",$user->avatar);
-                    if(isset($userImage[0]) && $userImage[0]=='users')
-                    {
-                       $avata = url('/') . '/images/' . $user->avatar;
-                    }else{
-                        $avata =$user->avatar;
+                    $avata = url('/') . '/images/users/default.png';
+                    if (!empty($user->avatar)) {
+                        $userImage = array();
+
+                        $userImage = explode("/", $user->avatar);
+                        if (isset($userImage[0]) && $userImage[0] == 'users') {
+                            $avata = url('/') . '/images/' . $user->avatar;
+                        } else {
+                            $avata = $user->avatar;
+                        }
                     }
-                    
-                }
-                
+
                     $responseData = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
@@ -118,6 +115,7 @@ class UserCoinsControllers extends BaseController {
                         $User = User::find($request->userId);
                         $User->totalCoins += $request->coins;
                         $User->rankingByProfit += $request->coins;
+                        $User->profit += $request->coins;
                         //$User->rankingByLevel = round(($User->totalXP + $request->coins) / 1000);
                         /* if ($User->rankingByLevel != round($User->totalXP / 1000)) {
                           $User->is_level_up = 1;
@@ -129,6 +127,7 @@ class UserCoinsControllers extends BaseController {
                         $User = User::find($request->userId);
                         $User->totalCoins -= $request->coins;
                         $User->rankingByProfit -= $request->coins;
+                        $User->profit -= $request->coins;
                         // $User->rankingByLevel = round(($User->totalXP - $request->coins) / 1000);
                         /* if ($User->rankingByLevel != round($User->totalXP / 1000)) {
                           $User->is_level_up = 1;
@@ -142,21 +141,18 @@ class UserCoinsControllers extends BaseController {
                     $userLevelnew = round(($user->totalXP / 1000), 3);
                     $remainXP = round(($userLevelnew - $userLevel) * 1000);
 
-                     $avata = url('/') . '/images/users/default.png';
-                if(!empty($user->avatar))
-                {
-                    $userImage=array();
-                
-                    $userImage=explode("/",$user->avatar);
-                    if(isset($userImage[0]) && $userImage[0]=='users')
-                    {
-                       $avata = url('/') . '/images/' . $user->avatar;
-                    }else{
-                        $avata =$user->avatar;
+                    $avata = url('/') . '/images/users/default.png';
+                    if (!empty($user->avatar)) {
+                        $userImage = array();
+
+                        $userImage = explode("/", $user->avatar);
+                        if (isset($userImage[0]) && $userImage[0] == 'users') {
+                            $avata = url('/') . '/images/' . $user->avatar;
+                        } else {
+                            $avata = $user->avatar;
+                        }
                     }
-                    
-                }
-                
+
                     $responseData = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,

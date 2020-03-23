@@ -94,21 +94,18 @@ class UserController extends BaseController {
                     $user->is_level_up = 0;
                     $user->save();
                 }
-                
+
                 $avata = url('/') . '/images/users/default.png';
-                
-                if(!empty($user->avatar))
-                {
-                    $userImage=array();
-                
-                    $userImage=explode("/",$user->avatar);
-                    if(isset($userImage[0]) && $userImage[0]=='users')
-                    {
-                       $avata = url('/') . '/images/' . $user->avatar;
-                    }else{
-                        $avata =$user->avatar;
+
+                if (!empty($user->avatar)) {
+                    $userImage = array();
+
+                    $userImage = explode("/", $user->avatar);
+                    if (isset($userImage[0]) && $userImage[0] == 'users') {
+                        $avata = url('/') . '/images/' . $user->avatar;
+                    } else {
+                        $avata = $user->avatar;
                     }
-                    
                 }
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
@@ -160,20 +157,17 @@ class UserController extends BaseController {
                 $userLevel = intdiv($user->totalXP, 1000);
                 $userLevelnew = round(($user->totalXP / 1000), 3);
                 $remainXP = round(($userLevelnew - $userLevel) * 1000);
-                
+
                 $avata = url('/') . '/images/users/default.png';
-                if(!empty($user->avatar))
-                {
-                    $userImage=array();
-                
-                    $userImage=explode("/",$user->avatar);
-                    if(isset($userImage[0]) && $userImage[0]=='users')
-                    {
-                       $avata = url('/') . '/images/' . $user->avatar;
-                    }else{
-                        $avata =$user->avatar;
+                if (!empty($user->avatar)) {
+                    $userImage = array();
+
+                    $userImage = explode("/", $user->avatar);
+                    if (isset($userImage[0]) && $userImage[0] == 'users') {
+                        $avata = url('/') . '/images/' . $user->avatar;
+                    } else {
+                        $avata = $user->avatar;
                     }
-                    
                 }
 
                 $responseData = ["guestNumber" => $user->name,
@@ -235,7 +229,8 @@ class UserController extends BaseController {
 
     public function userByLevel(Request $request) {
         $validator = Validator::make($request->all(), [
-                    'userId' => 'required|digits_between:1,11'
+                    'userId' => 'required|digits_between:1,11',
+                    'levelType' => 'digits_between:1,4',
         ]);
 
         $responseData = [];
@@ -250,47 +245,52 @@ class UserController extends BaseController {
             return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
         } else {
 
-            $user = User::find($request->userId);
 
-            if ($user != NULL) {
-                $userLevel = intdiv($user->totalXP, 1000);
-                $userLevelnew = round(($user->totalXP / 1000), 3);
-                $remainXP = round(($userLevelnew - $userLevel) * 1000);
+            $users = DB::table("users")
+                    ->select("users.*", DB::raw("(SELECT sum(coins) as wincoins FROM `usercoins` WHERE `status` = 1 AND `is_xp_or_coin` = 0 AND user_id=users.id) as wincoins"), DB::raw("(SELECT sum(coins) as losscoins FROM `usercoins` WHERE `status` = 0 AND `is_xp_or_coin` = 0 AND user_id=users.id) as losscoins"))
+                    ->get();
 
-                $avata = url('/') . '/images/users/default.png';
 
-                    if (!empty($chatLog->avatar)) {
+            if ($users != NULL) {
+
+                foreach ($users as $user) {
+                    $avata = url('/') . '/images/users/default.png';
+
+                    if (!empty($user->avatar)) {
                         $userImage = array();
 
-                        $userImage = explode("/", $chatLog->avatar);
-                        if (isset($userImage[0]) && $userImage[0]=='users') {
-                            $avata = url('/') . '/images/' . $chatLog->avatar;
+                        $userImage = explode("/", $user->avatar);
+                        if (isset($userImage[0]) && $userImage[0] == 'users') {
+                            $avata = url('/') . '/images/' . $user->avatar;
                         } else {
-                            $avata = $chatLog->avatar;
+                            $avata = $user->avatar;
                         }
                     }
-                    
-                $responseData = ["guestNumber" => $user->name,
-                    "userID" => $user->id,
-                    "userName" => $user->name,
-                    "userImage" => $avata,
-                    "email" => $user->email,
-                    "is_block" => $user->is_block,
-                    "totalXP" => $user->totalXP,
-                    "totalCoins" => $user->totalCoins,
-                    "profit" => $user->profit,
-                    "wagered" => $user->wagered,
-                    "playedGames" => $user->playedGames,
-                    "rankingByLevel" => $user->rankingByLevel,
-                    "rankingByProfit" => $user->rankingByProfit,
-                    "last_read_id" => $user->last_read_id,
-                    "remainXP" => $remainXP,
-                    "is_level_up" => $user->is_level_up
-                ];
+                    $profit = 0;
+                    $profit = $user->wincoins - $user->losscoins;
+                    $responseData[] = ["guestNumber" => $user->name,
+                        "userID" => $user->id,
+                        "userName" => $user->name,
+                        "userImage" => $avata,
+                        "profit" => $profit,
+                        "wagered" => $user->wagered,
+                        "playedGames" => $user->playedGames,
+                        "rankingByLevel" => $user->rankingByLevel,
+                        "rankingByProfit" => $user->rankingByProfit,
+                        "wincoins" => $user->wincoins,
+                        "losscoins" => $user->losscoins
+                    ];
+                    $User = User::find($user->id);
+                    $User->profit = $profit;
+                    $User->save();
+                }
             } else {
                 $status_code = config('response_status_code.no_records_found');
                 return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
             }
+            $status_code = config('response_status_code.fetched_success');
+            return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $responseData);
         }
     }
+
 }
