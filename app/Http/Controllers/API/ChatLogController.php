@@ -21,10 +21,10 @@ class ChatLogController extends BaseController {
 
         $responseData = [];
         $errors = [];
-        $page=$last_read_id=0;
-      $page=10*$request->pgn;
-      
-        
+        $page = $last_read_id = 0;
+        $page = 10 * $request->pgn;
+
+
         if ($validator->fails()) {
             foreach ($validator->messages()->getMessages() as $key => $value) {
                 $errors[$key] = $value;
@@ -35,38 +35,37 @@ class ChatLogController extends BaseController {
         } else {
             $last_read_id = $is_update = 0;
 
-            $chatLogs = DB::table('chat_logs')                    
+            $chatLogs = DB::table('chat_logs')
                     ->leftJoin('users', 'chat_logs.user_id', '=', 'users.id')
                     ->where('chat_logs.id', '>', $request->last_read_id)
-                 //   ->where('user_id', '<>', $request->userId)
+                    //   ->where('user_id', '<>', $request->userId)
                     ->orderByRaw('chat_logs.id DESC')
                     ->offset($page)
                     ->limit(10)
-                      ->select('chat_logs.*', 'users.name', 'users.email','users.avatar')
+                    ->select('chat_logs.*', 'users.name', 'users.email', 'users.avatar')
                     ->get();
 
-            if ($chatLogs != NULL && count($chatLogs)!=0) {
+            if ($chatLogs != NULL && count($chatLogs) != 0) {
                 foreach ($chatLogs as $chatLog) {
-                    
-                    if(empty($chatLog->avatar))
-                    {
+
+                    if (empty($chatLog->avatar)) {
                         $chatLog->avatar = 'users/default.png';
                     }
                     $responseData[] = [
                         "message" => $chatLog->message,
                         "userId" => $chatLog->user_id,
-                        "name"=>$chatLog->name,
-                        "email"=>$chatLog->email,
-                        "userImage"=>url('/').'/images/'.$chatLog->avatar,
-                        "messageId"=>$chatLog->id,
-                        "time" => $chatLog->created_at                        
+                        "name" => $chatLog->name,
+                        "email" => $chatLog->email,
+                        "userImage" => url('/') . '/images/' . $chatLog->avatar,
+                        "messageId" => $chatLog->id,
+                        "time" => $chatLog->created_at
                     ];
                     if ($is_update == 0) {
                         $last_read_id = $chatLog->id;
                     }
                     $is_update++;
                 }
-
+                $responseData = array_reverse($responseData);
                 DB::table('users')
                         ->where('id', $request->userId)
                         ->update(['last_read_id' => $last_read_id
