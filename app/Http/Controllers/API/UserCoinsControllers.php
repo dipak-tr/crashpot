@@ -50,6 +50,7 @@ class UserCoinsControllers extends BaseController {
                     if ($request->status == 1) {
                         $User = User::find($request->userId);
                         $User->totalXP += $request->coins;
+                        
                         /* if ($User->rankingByLevel < round((($User->totalXP + $request->coins) / 1000),0,PHP_ROUND_HALF_ODD)) 
                           { */
 
@@ -101,6 +102,7 @@ class UserCoinsControllers extends BaseController {
                     if ($request->status == 1) {
                         $User = User::find($request->userId);
                         $User->totalCoins += $request->coins;
+                        $User->rankingByProfit += $request->coins;
                         //$User->rankingByLevel = round(($User->totalXP + $request->coins) / 1000);
                         /* if ($User->rankingByLevel != round($User->totalXP / 1000)) {
                           $User->is_level_up = 1;
@@ -111,6 +113,7 @@ class UserCoinsControllers extends BaseController {
                     } else {
                         $User = User::find($request->userId);
                         $User->totalCoins -= $request->coins;
+                        $User->rankingByProfit -= $request->coins;
                         // $User->rankingByLevel = round(($User->totalXP - $request->coins) / 1000);
                         /* if ($User->rankingByLevel != round($User->totalXP / 1000)) {
                           $User->is_level_up = 1;

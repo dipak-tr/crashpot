@@ -85,20 +85,35 @@ class UserController extends BaseController {
             $user = User::find($request->userId);
 
             if ($user != NULL) {
-                 $userLevel = intdiv($user->totalXP,1000);
+                $userLevel = intdiv($user->totalXP, 1000);
                 $userLevelnew = round(($user->totalXP / 1000), 3);
                 $remainXP = round(($userLevelnew - $userLevel) * 1000);
-                
-                $is_level_up=0;
-                if($user->is_level_up==1)
-                {
-                    $user->is_level_up=0;
+
+                $is_level_up = 0;
+                if ($user->is_level_up == 1) {
+                    $user->is_level_up = 0;
                     $user->save();
+                }
+                
+                $avata = url('/') . '/images/users/default.png';
+                
+                if(!empty($user->avatar))
+                {
+                    $userImage=array();
+                
+                    $userImage=explode("/",$user->avatar);
+                    if(isset($userImage[0]))
+                    {
+                       $avata = url('/') . '/images/' . $user->avatar;
+                    }else{
+                        $avata =$user->avatar;
+                    }
+                    
                 }
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
-                    "userImage" => url('/').'/images/'.$user->avatar,
+                    "userImage" => $avata,
                     "email" => $user->email,
                     "is_block" => $user->is_block,
                     "totalXP" => $user->totalXP,
@@ -142,14 +157,14 @@ class UserController extends BaseController {
             $user = User::find($request->userId);
 
             if ($user != NULL) {
-                 $userLevel = intdiv($user->totalXP,1000);
+                $userLevel = intdiv($user->totalXP, 1000);
                 $userLevelnew = round(($user->totalXP / 1000), 3);
                 $remainXP = round(($userLevelnew - $userLevel) * 1000);
 
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
-                     "userImage" => url('/').'/images/'.$user->avatar,
+                    "userImage" => url('/') . '/images/' . $user->avatar,
                     "email" => $user->email,
                     "is_block" => $user->is_block,
                     "totalXP" => $user->totalXP,
@@ -203,4 +218,51 @@ class UserController extends BaseController {
         return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $responseData);
     }
 
-}
+    public function userByLevel(Request $request) {
+        $validator = Validator::make($request->all(), [
+                    'userId' => 'required|digits_between:1,11'
+        ]);
+
+        $responseData = [];
+        $errors = [];
+
+        if ($validator->fails()) {
+            foreach ($validator->messages()->getMessages() as $key => $value) {
+                $errors[$key] = $value;
+            }
+
+            $status_code = config('response_status_code.no_records_found');
+            return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
+        } else {
+
+            $user = User::find($request->userId);
+
+            if ($user != NULL) {
+                $userLevel = intdiv($user->totalXP, 1000);
+                $userLevelnew = round(($user->totalXP / 1000), 3);
+                $remainXP = round(($userLevelnew - $userLevel) * 1000);
+
+                $responseData = ["guestNumber" => $user->name,
+                    "userID" => $user->id,
+                    "userName" => $user->name,
+                    "userImage" => url('/') . '/images/' . $user->avatar,
+                    "email" => $user->email,
+                    "is_block" => $user->is_block,
+                    "totalXP" => $user->totalXP,
+                    "totalCoins" => $user->totalCoins,
+                    "profit" => $user->profit,
+                    "wagered" => $user->wagered,
+                    "playedGames" => $user->playedGames,
+                    "rankingByLevel" => $user->rankingByLevel,
+                    "rankingByProfit" => $user->rankingByProfit,
+                    "last_read_id" => $user->last_read_id,
+                    "remainXP" => $remainXP,
+                    "is_level_up" => $user->is_level_up
+                ];
+            } else {
+                $status_code = config('response_status_code.no_records_found');
+                return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
+            }
+        }
+    }
+    

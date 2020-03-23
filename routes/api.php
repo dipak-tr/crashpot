@@ -26,4 +26,5 @@ Route::get('dashboard', 'API\UserController@getDashboard');
 Route::get('get/user-profile', 'API\UserController@getUserProfile');
 Route::post('report-user', 'API\UserController@reportUser');
 Route::get('chat-history', 'API\ChatLogController@chatHistory');
+Route::get('user-by-level', 'API\UserController@userByLevel');
 
