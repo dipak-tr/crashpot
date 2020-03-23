@@ -49,7 +49,7 @@ class UserCoinsControllers extends BaseController {
                 if ($request->is_xp_or_coin == 1) {
                     if ($request->status == 1) {
                         $User = User::find($request->userId);
-                        $User->totalXP += $request->coins;                        
+                        $User->totalXP += $request->coins;
 
                         /* if ($User->rankingByLevel < round((($User->totalXP + $request->coins) / 1000),0,PHP_ROUND_HALF_ODD)) 
                           { */
