@@ -244,20 +244,26 @@ class UserController extends BaseController {
             $status_code = config('response_status_code.no_records_found');
             return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
         } else {
-
             $page = 0;
             /* $users = DB::table("users")
               ->select("users.*", DB::raw("(SELECT sum(coins) as wincoins FROM `usercoins` WHERE `status` = 1 AND `is_xp_or_coin` = 0 AND user_id=users.id) as wincoins"), DB::raw("(SELECT sum(coins) as losscoins FROM `usercoins` WHERE `status` = 0 AND `is_xp_or_coin` = 0 AND user_id=users.id) as losscoins"))
               ->get(); */
-            $users = DB::table('users')
-                    //->where('id', '>', $request->last_read_id)
-                    //   ->where('user_id', '<>', $request->userId)
-                    ->orderByRaw('profit DESC')
-                    ->offset($page)
-                    ->limit(50)
-                    //->select('name', 'users.email', 'users.avatar')
-                    ->get();
-
+            if ($request->levelType == 1) {
+                $users = DB::table('users')
+                        //->where('id', '>', $request->last_read_id)
+                        //   ->where('user_id', '<>', $request->userId)
+                        ->orderByRaw('profit DESC')
+                        ->offset($page)
+                        ->limit(50)
+                        //->select('name', 'users.email', 'users.avatar')
+                        ->get();
+            } else {
+                $users = DB::table('users')
+                        ->orderByRaw('rankingByLevel DESC')
+                        ->offset($page)
+                        ->limit(50)
+                        ->get();
+            }
             if ($users != NULL) {
                 foreach ($users as $user) {
                     $avata = url('/') . '/images/users/default.png';
