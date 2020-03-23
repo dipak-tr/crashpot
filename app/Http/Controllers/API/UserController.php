@@ -245,7 +245,7 @@ class UserController extends BaseController {
             return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
         } else {
 
-$page=0;
+            $page = 0;
             /* $users = DB::table("users")
               ->select("users.*", DB::raw("(SELECT sum(coins) as wincoins FROM `usercoins` WHERE `status` = 1 AND `is_xp_or_coin` = 0 AND user_id=users.id) as wincoins"), DB::raw("(SELECT sum(coins) as losscoins FROM `usercoins` WHERE `status` = 0 AND `is_xp_or_coin` = 0 AND user_id=users.id) as losscoins"))
               ->get(); */
@@ -254,13 +254,11 @@ $page=0;
                     //   ->where('user_id', '<>', $request->userId)
                     ->orderByRaw('profit DESC')
                     ->offset($page)
-                    ->limit(10)
+                    ->limit(50)
                     //->select('name', 'users.email', 'users.avatar')
                     ->get();
 
-
             if ($users != NULL) {
-
                 foreach ($users as $user) {
                     $avata = url('/') . '/images/users/default.png';
 
@@ -275,18 +273,16 @@ $page=0;
                         }
                     }
                     $profit = 0;
-                  //  $profit = $user->wincoins - $user->losscoins;
+                    //  $profit = $user->wincoins - $user->losscoins;
                     $responseData[] = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
                         "userImage" => $avata,
-                        "profit" => $profit,
+                        "profit" => $user->profit,
                         "wagered" => $user->wagered,
                         "playedGames" => $user->playedGames,
                         "rankingByLevel" => $user->rankingByLevel,
-                        "rankingByProfit" => $user->rankingByProfit,
-                        "wincoins" => $user->wincoins,
-                        "losscoins" => $user->losscoins
+                        "rankingByProfit" => $user->rankingByProfit
                     ];
                     $User = User::find($user->id);
                     $User->profit = $profit;
