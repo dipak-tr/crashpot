@@ -252,7 +252,7 @@ class UserController extends BaseController {
             if ($request->levelType == 1) {
                 $users = DB::table('users')
                         //->where('id', '>', $request->last_read_id)
-                        //   ->where('user_id', '<>', $request->userId)
+                           ->where('is_active', '=', 1)
                         ->orderByRaw('profit DESC')
                         ->offset($page)
                         ->limit(50)
@@ -260,6 +260,7 @@ class UserController extends BaseController {
                         ->get();
             } else {
                 $users = DB::table('users')
+                        ->where('is_active', '=', 1)
                         ->orderByRaw('rankingByLevel DESC')
                         ->offset($page)
                         ->limit(50)
@@ -267,7 +268,7 @@ class UserController extends BaseController {
             }
             if ($users != NULL) {
                 foreach ($users as $user) {
-
+$userData = User::find($user->id);
                     $userLevel = intdiv($user->totalXP, 1000);
                     $userLevelnew = round(($user->totalXP / 1000), 3);
                     $remainXP = round(($userLevelnew - $userLevel) * 1000);
@@ -285,7 +286,7 @@ class UserController extends BaseController {
                         }
                     }
                     if ($request->levelType == 1) {
-                        $user->rankingByProfit = $rank;
+                        $userData->rankingByProfit = $rank;
                         $rankingByLevel=$user->rankingByLevel;
                         $rankingByProfit = $rank;
                         if($request->userId==$user->id){
@@ -293,7 +294,7 @@ class UserController extends BaseController {
                             $rankingByProfitPosition=$rankingByProfit;
                         }
                     } else {
-                        $user->rankingByLevel = $rank;
+                        $userData->rankingByLevel = $rank;
                         $rankingByProfit=$user->rankingByProfit;
                         $rankingByLevel = $rank;
                         if($request->userId==$user->id){
@@ -301,7 +302,7 @@ class UserController extends BaseController {
                             $rankingByProfitPosition=$rankingByProfit;
                         }
                     }
-                    $user->save();
+                    $userData->save();
                     $rank++;
                     $responseData[] = ["guestNumber" => $user->name,
                         "userID" => $user->id,
