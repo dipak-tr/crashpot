@@ -265,6 +265,11 @@ class UserController extends BaseController {
             }
             if ($users != NULL) {
                 foreach ($users as $user) {
+                    
+                     $userLevel = intdiv($user->totalXP, 1000);
+                    $userLevelnew = round(($user->totalXP / 1000), 3);
+                    $remainXP = round(($userLevelnew - $userLevel) * 1000);
+                    
                     $avata = url('/') . '/images/users/default.png';
 
                     if (!empty($user->avatar)) {
@@ -287,7 +292,8 @@ class UserController extends BaseController {
                         "wagered" => $user->wagered,
                         "playedGames" => $user->playedGames,
                         "rankingByLevel" => $user->rankingByLevel,
-                        "rankingByProfit" => $user->rankingByProfit
+                        "rankingByProfit" => $user->rankingByProfit,
+                        "remainXP"=>$remainXP
                     ];
                   
                 }
