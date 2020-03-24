@@ -265,11 +265,11 @@ class UserController extends BaseController {
             }
             if ($users != NULL) {
                 foreach ($users as $user) {
-                    
-                     $userLevel = intdiv($user->totalXP, 1000);
+
+                    $userLevel = intdiv($user->totalXP, 1000);
                     $userLevelnew = round(($user->totalXP / 1000), 3);
                     $remainXP = round(($userLevelnew - $userLevel) * 1000);
-                    
+
                     $avata = url('/') . '/images/users/default.png';
 
                     if (!empty($user->avatar)) {
@@ -293,9 +293,8 @@ class UserController extends BaseController {
                         "playedGames" => $user->playedGames,
                         "rankingByLevel" => $user->rankingByLevel,
                         "rankingByProfit" => $user->rankingByProfit,
-                        "remainXP"=>$remainXP
+                        "remainXP" => $remainXP
                     ];
-                  
                 }
             } else {
                 $status_code = config('response_status_code.no_records_found');
@@ -304,6 +303,40 @@ class UserController extends BaseController {
             $status_code = config('response_status_code.fetched_success');
             return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $responseData);
         }
+    }
+
+    public function logout(Request $request) {
+        $validator = Validator::make($request->all(), [
+                    'userId' => 'required|digits_between:1,11'
+        ]);
+
+        $responseData = [];
+        $errors = [];
+
+        if ($validator->fails()) {
+            foreach ($validator->messages()->getMessages() as $key => $value) {
+                $errors[$key] = $value;
+            }
+            $status_code = config('response_status_code.invalid_input');
+            return $this->sendResponse(true, $status_code, trans('message.invalid_input'));
+        } else {
+            $User = User::find($request->userId);
+            if ($User != NULL) {
+
+                $User->IMEI = '';
+                $User->save();
+
+                $responseData = [
+                    "userID" => $User->id,
+                    "userName" => $User->name
+                ];
+            } else {
+                $status_code = config('response_status_code.invalid_input');
+                return $this->sendResponse(true, $status_code, trans('message.invalid_input'));
+            }
+        }
+        $status_code = config('response_status_code.fetched_success');
+        return $this->sendResponse(true, $status_code, trans('message.fetched_success'));
     }
 
 }

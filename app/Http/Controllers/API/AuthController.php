@@ -141,21 +141,18 @@ class AuthController extends BaseController {
         $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 1000);
         $userLevelnew = ($user->totalXP) ? 0 : round(($user->totalXP / 1000), 3);
         $remainXP = round(($userLevelnew - $userLevel) * 1000);
-        
-          $avata = url('/') . '/images/users/default.png';
-                if(!empty($user->avatar))
-                {
-                    $userImage=array();
-                
-                    $userImage=explode("/",$user->avatar);
-                    if(isset($userImage[0]) && $userImage[0]=='users')
-                    {
-                       $avata = url('/') . '/images/' . $user->avatar;
-                    }else{
-                        $avata =$user->avatar;
-                    }
-                    
-                }
+
+        $avata = url('/') . '/images/users/default.png';
+        if (!empty($user->avatar)) {
+            $userImage = array();
+
+            $userImage = explode("/", $user->avatar);
+            if (isset($userImage[0]) && $userImage[0] == 'users') {
+                $avata = url('/') . '/images/' . $user->avatar;
+            } else {
+                $avata = $user->avatar;
+            }
+        }
 
         $records = [
             "userID" => $user->id,
@@ -218,18 +215,18 @@ class AuthController extends BaseController {
         $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 1000);
         $userLevelnew = ($user->totalXP) ? 0 : round(($user->totalXP / 1000), 3);
         $remainXP = round(($userLevelnew - $userLevel) * 1000);
-$avata = url('/') . '/images/users/default.png';
+        $avata = url('/') . '/images/users/default.png';
 
-                    if (!empty($chatLog->avatar)) {
-                        $userImage = array();
+        if (!empty($chatLog->avatar)) {
+            $userImage = array();
 
-                        $userImage = explode("/", $chatLog->avatar);
-                        if (isset($userImage[0]) && $userImage[0]=='users') {
-                            $avata = url('/') . '/images/' . $chatLog->avatar;
-                        } else {
-                            $avata = $chatLog->avatar;
-                        }
-                    }
+            $userImage = explode("/", $chatLog->avatar);
+            if (isset($userImage[0]) && $userImage[0] == 'users') {
+                $avata = url('/') . '/images/' . $chatLog->avatar;
+            } else {
+                $avata = $chatLog->avatar;
+            }
+        }
         $records = [
             "guestNumber" => $user->name,
             "userID" => $user->id,
