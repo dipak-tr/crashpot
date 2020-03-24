@@ -285,6 +285,7 @@ $userData = User::find($user->id);
                             $avata = $user->avatar;
                         }
                     }
+                    $RankingByLevelPostion=$rankingByProfitPosition=1;
                     if ($request->levelType == 1) {
                         $userData->rankingByProfit = $rank;
                         $rankingByLevel=$user->rankingByLevel;
