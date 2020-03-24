@@ -245,9 +245,50 @@ class UserController extends BaseController {
             return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
         } else {
             $page = 0;
+            $rank = 1;
             /* $users = DB::table("users")
               ->select("users.*", DB::raw("(SELECT sum(coins) as wincoins FROM `usercoins` WHERE `status` = 1 AND `is_xp_or_coin` = 0 AND user_id=users.id) as wincoins"), DB::raw("(SELECT sum(coins) as losscoins FROM `usercoins` WHERE `status` = 0 AND `is_xp_or_coin` = 0 AND user_id=users.id) as losscoins"))
               ->get(); */
+
+            if ($request->levelType == 1) {
+                $users = DB::table('users')
+                        //->where('id', '>', $request->last_read_id)
+                        ->where('is_active', '=', 1)
+                        ->orderByRaw('profit DESC')
+                        ->offset($page)
+                        ->limit(500)
+                        //->select('name', 'users.email', 'users.avatar')
+                        ->get();
+            } else {
+                $users = DB::table('users')
+                        ->where('is_active', '=', 1)
+                        ->orderByRaw('rankingByLevel DESC')
+                        ->offset($page)
+                        ->limit(500)
+                        ->get();
+            }
+
+            if (count($users) > 0 && $users != NULL) {
+                foreach ($users as $user) {
+
+                    if ($request->levelType == 1) {
+                        $userData = User::find($user->id);
+                        $userData->rankingByProfit = $rank;
+                        $rankingByLevel = $user->rankingByLevel;
+                        $rankingByProfit = $rank;
+
+                        $userData->save();
+                    }
+
+                    $rank++;
+                }
+            }
+            
+            $RankingByLevelPostion = $rankingByProfitPosition = 1;
+            $userLogData = User::find($user->id);
+            $RankingByLevelPostion = $userLogData->rankingByLevel;
+            $rankingByProfitPosition = $userLogData->rankingByProfit;
+
             $rank = 1;
             if ($request->levelType == 1) {
                 $users = DB::table('users')
@@ -266,8 +307,8 @@ class UserController extends BaseController {
                         ->limit(50)
                         ->get();
             }
-            
-            if (count($users) >0 &&  $users!= NULL) {
+
+            if (count($users) > 0 && $users != NULL) {
                 foreach ($users as $user) {
                     $userData = User::find($user->id);
                     $userLevel = intdiv($user->totalXP, 1000);
@@ -286,7 +327,7 @@ class UserController extends BaseController {
                             $avata = $user->avatar;
                         }
                     }
-                    $RankingByLevelPostion = $rankingByProfitPosition = 1;
+/*
                     if ($request->levelType == 1) {
                         $userData->rankingByProfit = $rank;
                         $rankingByLevel = $user->rankingByLevel;
@@ -305,8 +346,8 @@ class UserController extends BaseController {
                             $rankingByProfitPosition = $rankingByProfit;
                         }
                     }
-                    
-                    $rank++;
+
+                    $rank++;*/
                     $responseData[] = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
@@ -314,8 +355,8 @@ class UserController extends BaseController {
                         "profit" => $user->profit,
                         "wagered" => $user->wagered,
                         "playedGames" => $user->playedGames,
-                        "rankingByLevel" => $rankingByLevel,
-                        "rankingByProfit" => $rankingByProfit,
+                        "rankingByLevel" => $user->rankingByLevel,
+                        "rankingByProfit" => $user->rankingByProfit,
                         "remainXP" => $remainXP,
                         "RankingByLevelPostion" => $RankingByLevelPostion,
                         "rankingByProfitPosition" => $rankingByProfitPosition
