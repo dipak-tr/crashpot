@@ -229,6 +229,7 @@ class UserController extends BaseController {
 
     public function userByLevel(Request $request) {
         $validator = Validator::make($request->all(), [
+             'userId' => 'required|digits_between:1,11',
                     'levelType' => 'digits_between:1,4',
         ]);
 
@@ -247,6 +248,7 @@ class UserController extends BaseController {
             /* $users = DB::table("users")
               ->select("users.*", DB::raw("(SELECT sum(coins) as wincoins FROM `usercoins` WHERE `status` = 1 AND `is_xp_or_coin` = 0 AND user_id=users.id) as wincoins"), DB::raw("(SELECT sum(coins) as losscoins FROM `usercoins` WHERE `status` = 0 AND `is_xp_or_coin` = 0 AND user_id=users.id) as losscoins"))
               ->get(); */
+            $rank = 1;
             if ($request->levelType == 1) {
                 $users = DB::table('users')
                         //->where('id', '>', $request->last_read_id)
@@ -282,8 +284,25 @@ class UserController extends BaseController {
                             $avata = $user->avatar;
                         }
                     }
-                    $profit = 0;
-                    //  $profit = $user->wincoins - $user->losscoins;
+                    if ($request->levelType == 1) {
+                        $user->rankingByProfit = $rank;
+                        $rankingByLevel=$user->rankingByLevel;
+                        $rankingByProfit = $rank;
+                        if($request->userId==$user->id){
+                            $RankingByLevelPostion=$rankingByLevel;
+                            $rankingByProfitPosition=$rankingByProfit;
+                        }
+                    } else {
+                        $user->rankingByLevel = $rank;
+                        $rankingByProfit=$user->rankingByProfit;
+                        $rankingByLevel = $rank;
+                        if($request->userId==$user->id){
+                            $RankingByLevelPostion=$rankingByLevel;
+                            $rankingByProfitPosition=$rankingByProfit;
+                        }
+                    }
+                    $user->save();
+                    $rank++;
                     $responseData[] = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
@@ -291,9 +310,12 @@ class UserController extends BaseController {
                         "profit" => $user->profit,
                         "wagered" => $user->wagered,
                         "playedGames" => $user->playedGames,
-                        "rankingByLevel" => $user->rankingByLevel,
-                        "rankingByProfit" => $user->rankingByProfit,
-                        "remainXP" => $remainXP
+                        "rankingByLevel" => $rankingByLevel,
+                        "rankingByProfit" => $rankingByProfit,
+                        "remainXP" => $remainXP,
+                        "RankingByLevelPostion" => $RankingByLevelPostion,
+                        "rankingByProfitPosition" => $rankingByProfitPosition
+                        
                     ];
                 }
             } else {
