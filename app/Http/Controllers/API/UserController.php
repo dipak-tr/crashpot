@@ -266,7 +266,8 @@ class UserController extends BaseController {
                         ->limit(50)
                         ->get();
             }
-            if (!empty($users) &&  $users!= NULL) {
+            
+            if (count($users) >0 &&  $users!= NULL) {
                 foreach ($users as $user) {
                     $userData = User::find($user->id);
                     $userLevel = intdiv($user->totalXP, 1000);
