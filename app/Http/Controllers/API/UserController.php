@@ -295,8 +295,9 @@ class UserController extends BaseController {
                             $RankingByLevelPostion = $rankingByLevel;
                             $rankingByProfitPosition = $rankingByProfit;
                         }
+                        $userData->save();
                     } else {
-                        $userData->rankingByLevel = $rank;
+                        //$userData->rankingByLevel = $rank;
                         $rankingByProfit = $user->rankingByProfit;
                         $rankingByLevel = $rank;
                         if ($request->userId == $user->id) {
@@ -304,7 +305,7 @@ class UserController extends BaseController {
                             $rankingByProfitPosition = $rankingByProfit;
                         }
                     }
-                    $userData->save();
+                    
                     $rank++;
                     $responseData[] = ["guestNumber" => $user->name,
                         "userID" => $user->id,
