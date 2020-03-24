@@ -116,6 +116,10 @@ class UserCoinsControllers extends BaseController {
                         $User->totalCoins += $request->coins;
                         $User->rankingByProfit += $request->coins;
                         $User->profit += $request->coins;
+
+                        if ($request->gameType == 5) {
+                            $User->playedGames = $User->playedGames + 1;
+                        }
                         //$User->rankingByLevel = round(($User->totalXP + $request->coins) / 1000);
                         /* if ($User->rankingByLevel != round($User->totalXP / 1000)) {
                           $User->is_level_up = 1;
@@ -128,6 +132,9 @@ class UserCoinsControllers extends BaseController {
                         $User->totalCoins -= $request->coins;
                         $User->rankingByProfit -= $request->coins;
                         $User->profit -= $request->coins;
+                        if ($request->gameType == 5) {
+                            $User->playedGames = $User->playedGames + 1;
+                        }
                         // $User->rankingByLevel = round(($User->totalXP - $request->coins) / 1000);
                         /* if ($User->rankingByLevel != round($User->totalXP / 1000)) {
                           $User->is_level_up = 1;

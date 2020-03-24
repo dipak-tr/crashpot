@@ -229,7 +229,6 @@ class UserController extends BaseController {
 
     public function userByLevel(Request $request) {
         $validator = Validator::make($request->all(), [
-                    'userId' => 'required|digits_between:1,11',
                     'levelType' => 'digits_between:1,4',
         ]);
 
@@ -290,9 +289,7 @@ class UserController extends BaseController {
                         "rankingByLevel" => $user->rankingByLevel,
                         "rankingByProfit" => $user->rankingByProfit
                     ];
-                    $User = User::find($user->id);
-                    $User->profit = $profit;
-                    $User->save();
+                  
                 }
             } else {
                 $status_code = config('response_status_code.no_records_found');
