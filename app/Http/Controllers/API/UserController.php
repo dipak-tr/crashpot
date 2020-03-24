@@ -229,7 +229,7 @@ class UserController extends BaseController {
 
     public function userByLevel(Request $request) {
         $validator = Validator::make($request->all(), [
-             'userId' => 'required|digits_between:1,11',
+                    'userId' => 'required|digits_between:1,11',
                     'levelType' => 'digits_between:1,4',
         ]);
 
@@ -252,7 +252,7 @@ class UserController extends BaseController {
             if ($request->levelType == 1) {
                 $users = DB::table('users')
                         //->where('id', '>', $request->last_read_id)
-                           ->where('is_active', '=', 1)
+                        ->where('is_active', '=', 1)
                         ->orderByRaw('profit DESC')
                         ->offset($page)
                         ->limit(50)
@@ -266,9 +266,9 @@ class UserController extends BaseController {
                         ->limit(50)
                         ->get();
             }
-            if ($users != NULL) {
+            if (!empty($users) &&  $users!= NULL) {
                 foreach ($users as $user) {
-$userData = User::find($user->id);
+                    $userData = User::find($user->id);
                     $userLevel = intdiv($user->totalXP, 1000);
                     $userLevelnew = round(($user->totalXP / 1000), 3);
                     $remainXP = round(($userLevelnew - $userLevel) * 1000);
@@ -285,22 +285,22 @@ $userData = User::find($user->id);
                             $avata = $user->avatar;
                         }
                     }
-                    $RankingByLevelPostion=$rankingByProfitPosition=1;
+                    $RankingByLevelPostion = $rankingByProfitPosition = 1;
                     if ($request->levelType == 1) {
                         $userData->rankingByProfit = $rank;
-                        $rankingByLevel=$user->rankingByLevel;
+                        $rankingByLevel = $user->rankingByLevel;
                         $rankingByProfit = $rank;
-                        if($request->userId==$user->id){
-                            $RankingByLevelPostion=$rankingByLevel;
-                            $rankingByProfitPosition=$rankingByProfit;
+                        if ($request->userId == $user->id) {
+                            $RankingByLevelPostion = $rankingByLevel;
+                            $rankingByProfitPosition = $rankingByProfit;
                         }
                     } else {
                         $userData->rankingByLevel = $rank;
-                        $rankingByProfit=$user->rankingByProfit;
+                        $rankingByProfit = $user->rankingByProfit;
                         $rankingByLevel = $rank;
-                        if($request->userId==$user->id){
-                            $RankingByLevelPostion=$rankingByLevel;
-                            $rankingByProfitPosition=$rankingByProfit;
+                        if ($request->userId == $user->id) {
+                            $RankingByLevelPostion = $rankingByLevel;
+                            $rankingByProfitPosition = $rankingByProfit;
                         }
                     }
                     $userData->save();
@@ -317,7 +317,6 @@ $userData = User::find($user->id);
                         "remainXP" => $remainXP,
                         "RankingByLevelPostion" => $RankingByLevelPostion,
                         "rankingByProfitPosition" => $rankingByProfitPosition
-                        
                     ];
                 }
             } else {
