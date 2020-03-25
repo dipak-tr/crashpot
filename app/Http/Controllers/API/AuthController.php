@@ -8,6 +8,7 @@ use Validator;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Usercoin;
+use App\Usernotification;
 
 class AuthController extends BaseController {
 
