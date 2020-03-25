@@ -127,10 +127,16 @@ class UserCoinsControllers extends BaseController {
                           $User->is_level_up = 0;
                           } */
                         $User->save();
+                        if ($request->gameType == 3) {
+                            $UserFrm = User::find($request->fromUserId);
+                            $UserFrm->totalCoins -= $request->coins;
+                            $UserFrm->profit -= $request->coins;
+                            $UserFrm->save();
+                        }
                     } else {
                         $User = User::find($request->userId);
                         $User->totalCoins -= $request->coins;
-                       // $User->rankingByProfit -= $request->coins;
+                        // $User->rankingByProfit -= $request->coins;
                         $User->profit -= $request->coins;
                         if ($request->gameType == 5) {
                             $User->playedGames = $User->playedGames + 1;
