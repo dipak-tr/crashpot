@@ -303,7 +303,6 @@ class UserController extends BaseController {
                         $userData->rankingByProfit = $rank;
                         $rankingByLevel = $user->rankingByLevel;
                         $rankingByProfit = $rank;
-
                         $userData->save();
                     }
 
