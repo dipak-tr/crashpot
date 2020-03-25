@@ -119,7 +119,9 @@ class UserController extends BaseController {
                     "wagered" => $user->wagered,
                     "playedGames" => $user->playedGames,
                     "rankingByLevel" => $user->rankingByLevel,
+                    "RankingByLevelPostion" => $user->rankingByLevel,
                     "rankingByProfit" => $user->rankingByProfit,
+                    "rankingByProfitPosition" => $user->rankingByProfit,
                     "last_read_id" => $user->last_read_id,
                     "remainXP" => $remainXP,
                     "is_level_up" => $is_level_up
@@ -181,8 +183,10 @@ class UserController extends BaseController {
                     "profit" => $user->profit,
                     "wagered" => $user->wagered,
                     "playedGames" => $user->playedGames,
-                    "rankingByLevel" => $user->rankingByLevel,
+                   "rankingByLevel" => $user->rankingByLevel,
+                    "RankingByLevelPostion" => $user->rankingByLevel,
                     "rankingByProfit" => $user->rankingByProfit,
+                    "rankingByProfitPosition" => $user->rankingByProfit,
                     "last_read_id" => $user->last_read_id,
                     "remainXP" => $remainXP,
                     "is_level_up" => $user->is_level_up
