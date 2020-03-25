@@ -52,7 +52,7 @@ class UserNotificationController extends BaseController {
 
 
         $status_code = config('response_status_code.dashboard_fetched_success');
-        return $this->sendResponse(true, $status_code, trans('message.dashboard_fetched_success'), $responseData);
+        return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $responseData);
     }
 
 }
