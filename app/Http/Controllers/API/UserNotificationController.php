@@ -39,10 +39,10 @@ class UserNotificationController extends BaseController {
 
         if (count($userNotifications) > 0 && $userNotifications != NULL) {
             foreach ($userNotifications as $userNotification) {
-                $createdDate = date('Y-m-d H:i');
+                //$createdDate = date('Y-m-d H:i');
                 $responseData[] = ["msgTitle" => strtoupper($userNotification->msg_title),
                     "notificationMsg" => $userNotification->notification_msg,
-                    "createdAt" => $createdDate
+                    "time" => $userNotification->created_at
                 ];
             }
         } else {
