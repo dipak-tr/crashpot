@@ -28,33 +28,31 @@ class UserNotificationController extends BaseController {
             return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
         } else {
 
-            
+
             $userNotifications = DB::table('usernotification')
                     ->where('user_id', '=', $request->userId)
                     ->orderByRaw('id DESC')
                     //->offset($page)
-                   // ->limit(500)
+                    // ->limit(500)
                     ->get();
         }
 
         if (count($userNotifications) > 0 && $userNotifications != NULL) {
             foreach ($userNotifications as $userNotification) {
-                 
-            $responseData[] = ["msgTitle" => strtoupper($userNotification->msg_title),
-                "notificationMsg" => $userNotification->notification_msg,
-                "createdAt" => $userNotification->created_at
-            ];
+                $createdDate = date('Y-m-d H:i');
+                $responseData[] = ["msgTitle" => strtoupper($userNotification->msg_title),
+                    "notificationMsg" => $userNotification->notification_msg,
+                    "createdAt" => $createdDate
+                ];
             }
-        }
-         else {
+        } else {
             $status_code = config('response_status_code.no_records_found');
             return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
         }
-        
+
 
         $status_code = config('response_status_code.dashboard_fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.dashboard_fetched_success'), $responseData);
     }
 
-    
 }
