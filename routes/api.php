@@ -28,4 +28,5 @@ Route::post('report-user', 'API\UserController@reportUser');
 Route::get('chat-history', 'API\ChatLogController@chatHistory');
 Route::get('user-by-level', 'API\UserController@userByLevel');
 Route::get('logout', 'API\UserController@logout');
+Route::get('notification', 'API\UserNotificationController@getNotification');
 

@@ -89,6 +89,7 @@ class AuthController extends BaseController {
                 $socialMedia = 0;
                 $userNotification = new Usernotification;
                 $userNotification->user_id = $user->id;
+                $userNotification->msg_title = 'logged in';
                 if ($userNotification->social_media_type == 1) {
                     $socialMedia = 'facebook';
                 } else {
@@ -121,6 +122,7 @@ class AuthController extends BaseController {
                 $socialMedia = 0;
                 $userNotification = new Usernotification;
                 $userNotification->user_id = $user->id;
+                $userNotification->msg_title = 'logged in';
                 if ($userNotification->social_media_type == 1) {
                     $socialMedia = 'facebook';
                 } else {
@@ -164,6 +166,7 @@ class AuthController extends BaseController {
             $socialMedia = 0;
             $userNotification = new Usernotification;
             $userNotification->user_id = $user->id;
+            $userNotification->msg_title = 'logged in';
             if ($userNotification->social_media_type == 1) {
                 $socialMedia = 'facebook';
             } else {
