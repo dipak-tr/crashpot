@@ -42,7 +42,7 @@ class UserNotificationController extends BaseController {
                  
             $responseData[] = ["msgTitle" => strtoupper($userNotification->msg_title),
                 "notificationMsg" => $userNotification->notification_msg,
-                "createdAt" => $user->id
+                "createdAt" => $userNotification->created_at
             ];
             }
         }
