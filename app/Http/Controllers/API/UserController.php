@@ -95,6 +95,26 @@ class UserController extends BaseController {
                     $user->save();
                 }
 
+                  $unreadNotification = DB::table('usernotification')
+                    //->leftJoin('users', 'chat_logs.user_id', '=', 'users.id')
+                    ->where('user_id', '=', $request->userId)
+                    ->where('is_read', '=', 0)
+                    //->orderByRaw('chat_logs.id DESC')
+                    //->offset($page)
+                    //->limit(10)
+                    ->select('id')
+                    ->get();
+                  
+                  $unreadchat = DB::table('chat_logs')
+                    //->leftJoin('users', 'chat_logs.user_id', '=', 'users.id')
+                    ->where('user_id', '=', $request->userId)
+                    ->where('id', '>', $user->last_read_id)
+                    //->orderByRaw('chat_logs.id DESC')
+                    //->offset($page)
+                    //->limit(10)
+                    ->select('id')
+                    ->get();
+                  
                 $avata = url('/') . '/images/users/default.png';
 
                 if (!empty($user->avatar)) {
@@ -107,6 +127,7 @@ class UserController extends BaseController {
                         $avata = $user->avatar;
                     }
                 }
+                
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
@@ -124,7 +145,9 @@ class UserController extends BaseController {
                     "rankingByProfitPosition" => $user->rankingByProfit,
                     "last_read_id" => $user->last_read_id,
                     "remainXP" => $remainXP,
-                    "is_level_up" => $is_level_up
+                    "is_level_up" => $is_level_up,
+                    "notificationCNT"=>count($unreadNotification),
+                    "chatCNT"=>count($unreadchat)
                 ];
             } else {
                 $status_code = config('response_status_code.no_records_found');

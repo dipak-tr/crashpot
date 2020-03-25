@@ -44,6 +44,9 @@ class UserNotificationController extends BaseController {
                     "notificationMsg" => $userNotification->notification_msg,
                     "time" => $userNotification->created_at
                 ];
+                DB::table('usernotification')
+                        ->where('id', $userNotification->id)
+                        ->update(['is_read' => 1]);
             }
         } else {
             $status_code = config('response_status_code.no_records_found');
