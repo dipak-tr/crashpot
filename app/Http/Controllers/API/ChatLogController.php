@@ -38,7 +38,7 @@ class ChatLogController extends BaseController {
             $chatLogs = DB::table('chat_logs')
                     ->leftJoin('users', 'chat_logs.user_id', '=', 'users.id')
                     ->where('chat_logs.id', '>', $request->last_read_id)
-                    //   ->where('user_id', '<>', $request->userId)
+                       ->where('users.is_active', '=', 1)
                     ->orderByRaw('chat_logs.id DESC')
                     ->offset($page)
                     ->limit(10)

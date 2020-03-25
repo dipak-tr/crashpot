@@ -85,6 +85,18 @@ class AuthController extends BaseController {
                 $userCoind->game_type = 7;
                 $userCoind->status = 1;
                 $userCoind->save();
+
+                $socialMedia = 0;
+                $userNotification = new Usernotification;
+                $userNotification->user_id = $user->id;
+                if ($userNotification->social_media_type == 1) {
+                    $socialMedia = 'facebook';
+                } else {
+                    $socialMedia = 'gmail';
+                }
+                $userNotification->notification_msg = 'you logged in with ' . $socialMedia . '.';
+                $userNotification->is_read = 1;
+                $userNotification->save();
             } else {
 
                 DB::table('users')
@@ -98,13 +110,25 @@ class AuthController extends BaseController {
                             'device_token' => $request['deviceToken']
                 ]);
 
-                $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
+                $user = DB::table('users')->where('id', $request['userID'])->first();
                 $userCoind = new Usercoin;
                 $userCoind->user_id = $user->id;
                 $userCoind->coins = setting('site.social_media_bonus');
                 $userCoind->game_type = 7;
                 $userCoind->status = 1;
                 $userCoind->save();
+
+                $socialMedia = 0;
+                $userNotification = new Usernotification;
+                $userNotification->user_id = $user->id;
+                if ($userNotification->social_media_type == 1) {
+                    $socialMedia = 'facebook';
+                } else {
+                    $socialMedia = 'gmail';
+                }
+                $userNotification->notification_msg = 'you logged in with ' . $socialMedia . '.';
+                $userNotification->is_read = 1;
+                $userNotification->save();
             }
         } else {
             $user = new User;
@@ -136,6 +160,18 @@ class AuthController extends BaseController {
             $userCoind->game_type = 7;
             $userCoind->status = 1;
             $userCoind->save();
+
+            $socialMedia = 0;
+            $userNotification = new Usernotification;
+            $userNotification->user_id = $user->id;
+            if ($userNotification->social_media_type == 1) {
+                $socialMedia = 'facebook';
+            } else {
+                $socialMedia = 'gmail';
+            }
+            $userNotification->notification_msg = 'you logged in with ' . $socialMedia . '.';
+            $userNotification->is_read = 1;
+            $userNotification->save();
         }
         $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
         $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 1000);
