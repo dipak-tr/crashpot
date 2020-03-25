@@ -44,7 +44,7 @@ class UserCoinsControllers extends BaseController {
             $Usercoin->from_userid = $request->fromUserId;
             $Usercoin->is_xp_or_coin = $request->is_xp_or_coin;
             $Usercoin->save();
-die('dfdf');
+
             if ($Usercoin != NULL) {
                 if ($request->is_xp_or_coin == 1) {
                     if ($request->status == 1) {
