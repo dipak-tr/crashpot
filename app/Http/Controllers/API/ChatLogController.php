@@ -67,7 +67,9 @@ class ChatLogController extends BaseController {
                         "email" => $chatLog->email,
                         "userImage" => $avata,
                         "messageId" => $chatLog->id,
-                        "time" => $chatLog->created_at
+                        "time" => $chatLog->created_at,
+                        "messageType" => $chatLog->messageType,
+                        "tagUserList" => $chatLog->tagUserList
                     ];
                     if ($is_update == 0) {
                         $last_read_id = $chatLog->id;
