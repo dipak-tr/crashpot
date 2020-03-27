@@ -58,6 +58,9 @@ class AuthController extends BaseController {
         if ($userID != 0) {
             if ($request->is_register == 1) {
                 DB::table('users')->where('id', '=', $userID)->delete();
+                DB::table('chat_logs')->where('user_id', '=', $userID)->delete();
+                DB::table('usernotifications')->where('user_id', '=', $userID)->delete();
+                
                 $userID = $request['oldUserId'] ? $request['oldUserId'] : 0;
                 $user = DB::table('users')->find($userID);
             }
