@@ -294,7 +294,7 @@ class UserController extends BaseController {
                         ->limit(500)
                         ->get();
             }
-
+echo "<pre>";print_R($users);die('dd');
             if (count($users) > 0 && $users != NULL) {
                 foreach ($users as $user) {
 

@@ -16,7 +16,7 @@ use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
  
-class UserNotificationController extends BaseVoyagerBaseController
+class AdminNotificationsController extends BaseVoyagerBaseController
 {
     //use BreadRelationshipParser;
 
@@ -423,8 +423,7 @@ class UserNotificationController extends BaseVoyagerBaseController
           
           foreach($userLists as $userList)
           {
-              print_R($data);die('sdd');
-              send_push_notification($userList->device_token, $type='', $title = null, $message = null, $data);
+             $this->send_push_notification($userList->device_token, $type='', $title = $data->title, $message = $data->notification_text, $data);
           }
         if (!$request->has('_tagging')) {
             if (auth()->user()->can('browse', $data)) {
@@ -923,7 +922,9 @@ class UserNotificationController extends BaseVoyagerBaseController
     
     public function send_push_notification($deviceToken, $type, $title = null, $message = null, $data = null) 
     {
-        $API_ACCESS_KEY = config('constants.fcm_app_server_key');
+        return true;
+        //$API_ACCESS_KEY = config('constants.fcm_app_server_key');
+        $API_ACCESS_KEY = setting('site.site.fcm_app_server_key');
         $responceData = array();
         $notification = array();
         if(!empty($type))
@@ -963,7 +964,8 @@ class UserNotificationController extends BaseVoyagerBaseController
         
         try {
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, config('constants.fcm_push_notification_url'));
+           // curl_setopt($ch, CURLOPT_URL, config('constants.fcm_push_notification_url'));
+            curl_setopt($ch, CURLOPT_URL, setting('site.fcm_push_notification_url'));
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
