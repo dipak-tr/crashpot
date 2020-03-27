@@ -304,6 +304,12 @@ class UserController extends BaseController {
                         $rankingByLevel = $user->rankingByLevel;
                         $rankingByProfit = $rank;
                         $userData->save();
+                    }else{
+                        $userData = User::find($user->id);
+                        $userData->rankingByLevel = $rank;
+                        $rankingByProfit = $user->rankingByProfit;
+                        $rankingByLevel = $rank;
+                        $userData->save();
                     }
 
                     $rank++;
@@ -328,7 +334,7 @@ class UserController extends BaseController {
             } else {
                 $users = DB::table('users')
                         ->where('is_active', '=', 1)
-                        ->orderByRaw('rankingByLevel DESC')
+                        ->orderByRaw('rankingByLevel ASC')
                         ->offset($page)
                         ->limit(50)
                         ->get();
