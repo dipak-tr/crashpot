@@ -95,7 +95,7 @@ class UserController extends BaseController {
                     $user->save();
                 }
 
-                  $unreadNotification = DB::table('usernotification')
+                  $unreadNotification = DB::table('usernotifications')
                     //->leftJoin('users', 'chat_logs.user_id', '=', 'users.id')
                     ->where('user_id', '=', $request->userId)
                     ->where('is_read', '=', 0)
