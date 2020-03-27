@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 Route::post('login', 'API\AuthController@login');
-Route::post('duplicatelogin', 'API\AuthController@duplicateLogin');
+Route::get('duplicatelogin', 'API\AuthController@duplicateLogin');
 Route::get('get/terms-conditions', 'API\SiteController@getTermsConditions');
 Route::get('get/privacy-policy', 'API\SiteController@getPrivacyPolicy');
 Route::post('guest-random-number', 'API\AuthController@getGuestRandomNumber');
