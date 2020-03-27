@@ -105,7 +105,7 @@ class UserController extends BaseController {
                         //->limit(10)
                         ->select('id')
                         ->get();
-                if ($user->social_media_type == 0) {
+                if ($user->social_media_type == 0 && $user->is_block==0) {
                     $unreadchat = DB::table('chat_logs')
                             //->leftJoin('users', 'chat_logs.user_id', '=', 'users.id')
                             ->where('user_id', '=', $request->userId)
@@ -116,6 +116,7 @@ class UserController extends BaseController {
                             ->select('id')
                             ->get();
                 }
+                
                 $avata = url('/') . '/images/users/default.png';
 
                 if (!empty($user->avatar)) {

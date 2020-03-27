@@ -57,6 +57,9 @@ class AuthController extends BaseController {
         if ($userID != 0) {
             $user = DB::table('users')->find($request['userID']);
             if (empty($user)) {
+                $user = DB::table('users')->where('social_media_id', $request['socialMediaId'])->first();
+            }
+            if (empty($user)) {
                 $user = new User;
                 $user->name = $request['name'];
                 $user->email = $request['email'];
@@ -305,6 +308,38 @@ class AuthController extends BaseController {
             $number[] = $digit[$n];
         }
         return implode($number); //turn the array into a string
+    }
+
+    public function duplicateLogin(Request $request) {
+        $validator = Validator::make($request->all(), [
+                    'socialMediaId' => 'required',
+                    'IMEI' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $status_code = config('response_status_code.invalid_input');
+            return $this->sendResponse(false, $status_code, trans('message.invalid_input'));
+        }
+
+
+        $user = DB::table('users')->where('social_media_id', $request['socialMediaId'])->first();
+
+        if (empty($user)) {
+
+            $records = [
+                "social_media_id" => request['socialMediaId'],
+                "is_register" => 1
+            ];
+            $status_code = config('response_status_code.login_success');
+            return $this->sendResponse(true, $status_code, trans('message.login_success'), $records);
+        } else {
+            $records = [
+                "social_media_id" => request['socialMediaId'],
+                "is_register" => 0
+            ];
+            $status_code = config('response_status_code.login_success');
+            return $this->sendResponse(true, $status_code, trans('message.login_success'), $records);
+        }
     }
 
 }
