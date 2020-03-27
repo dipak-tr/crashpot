@@ -120,8 +120,9 @@ class AuthController extends BaseController {
                             'device_type' => $request['deviceType'],
                             'device_token' => $request['deviceToken']
                 ]);
-
+echo $userID;
                 $user = DB::table('users')->where('id',$userID)->first();
+                print_R($user);die;
                 $userCoind = new Usercoin;
                 $userCoind->user_id = $user->id;
                 $userCoind->coins = setting('site.social_media_bonus');
