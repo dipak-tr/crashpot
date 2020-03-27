@@ -29,7 +29,7 @@ class UserNotificationController extends BaseController {
         } else {
 
 
-            $userNotifications = DB::table('usernotification')
+            $userNotifications = DB::table('usernotifications')
                     ->where('user_id', '=', $request->userId)
                     ->orderByRaw('id DESC')
                     //->offset($page)
@@ -44,7 +44,7 @@ class UserNotificationController extends BaseController {
                     "notificationMsg" => $userNotification->notification_msg,
                     "time" => $userNotification->created_at
                 ];
-                DB::table('usernotification')
+                DB::table('usernotifications')
                         ->where('id', $userNotification->id)
                         ->update(['is_read' => 1]);
             }
