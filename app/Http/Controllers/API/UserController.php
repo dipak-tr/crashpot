@@ -301,12 +301,12 @@ class UserController extends BaseController {
                     if ($request->levelType == 1) {
                         $userData = User::find($user->id);
                         $userData->rankingByProfit = $rank;
-                        $rankingByLevel = $user->rankingByLevel;
+                        $rankingByLevel = $user->ranking;
                         $rankingByProfit = $rank;
                         $userData->save();
                     }else{
                         $userData = User::find($user->id);
-                        $userData->rankingByLevel = $rank;
+                        $userData->ranking = $rank;
                         $rankingByProfit = $user->rankingByProfit;
                         $rankingByLevel = $rank;
                         $userData->save();
@@ -318,7 +318,7 @@ class UserController extends BaseController {
             
             $RankingByLevelPostion = $rankingByProfitPosition = 1;
             $userLogData = User::find($request->userId);
-            $RankingByLevelPostion = $userLogData->rankingByLevel;
+            $RankingByLevelPostion = $userLogData->ranking;
             $rankingByProfitPosition = $userLogData->rankingByProfit;
 
             $rank = 1;
@@ -334,7 +334,7 @@ class UserController extends BaseController {
             } else {
                 $users = DB::table('users')
                         ->where('is_active', '=', 1)
-                        ->orderByRaw('rankingByLevel ASC')
+                        ->orderByRaw('ranking ASC')
                         ->offset($page)
                         ->limit(50)
                         ->get();
@@ -387,7 +387,7 @@ class UserController extends BaseController {
                         "profit" => $user->profit,
                         "wagered" => $user->wagered,
                         "playedGames" => $user->playedGames,
-                        "rankingByLevel" => $user->rankingByLevel,
+                        "rankingByLevel" => $user->ranking,
                         "rankingByProfit" => $user->rankingByProfit,
                         "remainXP" => $remainXP,
                         "RankingByLevelPostion" => $RankingByLevelPostion,
