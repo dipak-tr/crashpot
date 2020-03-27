@@ -1,6 +1,7 @@
-<?php
+F<?php
 
 namespace App\Http\Controllers\Voyager;
+
 use TCG\Voyager\Http\Controllers\VoyagerUserController as BaseVoyagerUserController;
 use Exception;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -15,11 +16,10 @@ use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
- 
-class UserNotificationController extends BaseVoyagerBaseController
-{
-    //use BreadRelationshipParser;
 
+class UserNotificationController extends BaseVoyagerBaseController {
+
+    //use BreadRelationshipParser;
     //***************************************
     //               ____
     //              |  _ \
@@ -32,8 +32,7 @@ class UserNotificationController extends BaseVoyagerBaseController
     //
     //****************************************
 
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
         // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
 
@@ -66,7 +65,7 @@ class UserNotificationController extends BaseVoyagerBaseController
         if (strlen($dataType->model_name) != 0) {
             $model = app($dataType->model_name);
 
-            if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
+            if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope' . ucfirst($dataType->scope))) {
                 $query = $model->{$dataType->scope}();
             } else {
                 $query = $model::select('*');
@@ -87,7 +86,7 @@ class UserNotificationController extends BaseVoyagerBaseController
 
             if ($search->value != '' && $search->key && $search->filter) {
                 $search_filter = ($search->filter == 'equals') ? '=' : 'LIKE';
-                $search_value = ($search->filter == 'equals') ? $search->value : '%'.$search->value.'%';
+                $search_value = ($search->filter == 'equals') ? $search->value : '%' . $search->value . '%';
                 $query->where($search->key, $search_filter, $search_value);
             }
 
@@ -103,8 +102,7 @@ class UserNotificationController extends BaseVoyagerBaseController
                 $dataTypeContent = call_user_func([$query->orderBy($model->getKeyName(), 'DESC'), $getter]);
             }
 
-           //s $dataTypeContent = call_user_func([$query->where('role_id','!=',1), $getter]);
-
+            //s $dataTypeContent = call_user_func([$query->where('role_id','!=',1), $getter]);
             // Replace relationships' keys for labels and create READ links if a slug is provided.
             $dataTypeContent = $this->resolveRelations($dataTypeContent, $dataType);
         } else {
@@ -168,20 +166,7 @@ class UserNotificationController extends BaseVoyagerBaseController
         }
 
         return Voyager::view($view, compact(
-            'actions',
-            'dataType',
-            'dataTypeContent',
-            'isModelTranslatable',
-            'search',
-            'orderBy',
-            'orderColumn',
-            'sortOrder',
-            'searchNames',
-            'isServerSide',
-            'defaultSearchKey',
-            'usesSoftDeletes',
-            'showSoftDeleted',
-            'showCheckboxColumn'
+                                'actions', 'dataType', 'dataTypeContent', 'isModelTranslatable', 'search', 'orderBy', 'orderColumn', 'sortOrder', 'searchNames', 'isServerSide', 'defaultSearchKey', 'usesSoftDeletes', 'showSoftDeleted', 'showCheckboxColumn'
         ));
     }
 
@@ -197,8 +182,7 @@ class UserNotificationController extends BaseVoyagerBaseController
     //
     //****************************************
 
-    public function show(Request $request, $id)
-    {
+    public function show(Request $request, $id) {
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -212,7 +196,7 @@ class UserNotificationController extends BaseVoyagerBaseController
             if ($model && in_array(SoftDeletes::class, class_uses_recursive($model))) {
                 $model = $model->withTrashed();
             }
-            if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
+            if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope' . ucfirst($dataType->scope))) {
                 $model = $model->{$dataType->scope}();
             }
             $dataTypeContent = call_user_func([$model, 'findOrFail'], $id);
@@ -260,8 +244,7 @@ class UserNotificationController extends BaseVoyagerBaseController
     //
     //****************************************
 
-    public function edit(Request $request, $id)
-    {
+    public function edit(Request $request, $id) {
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -273,7 +256,7 @@ class UserNotificationController extends BaseVoyagerBaseController
             if ($model && in_array(SoftDeletes::class, class_uses($model))) {
                 $model = $model->withTrashed();
             }
-            if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
+            if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope' . ucfirst($dataType->scope))) {
                 $model = $model->{$dataType->scope}();
             }
             $dataTypeContent = call_user_func([$model, 'findOrFail'], $id);
@@ -301,12 +284,11 @@ class UserNotificationController extends BaseVoyagerBaseController
             $view = "voyager::$slug.edit-add";
         }
 
-                return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
+        return Voyager::view($view, compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     // POST BR(E)AD
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -315,7 +297,7 @@ class UserNotificationController extends BaseVoyagerBaseController
         $id = $id instanceof \Illuminate\Database\Eloquent\Model ? $id->{$id->getKeyName()} : $id;
 
         $model = app($dataType->model_name);
-        if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
+        if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope' . ucfirst($dataType->scope))) {
             $model = $model->{$dataType->scope}();
         }
         if ($model && in_array(SoftDeletes::class, class_uses_recursive($model))) {
@@ -340,8 +322,8 @@ class UserNotificationController extends BaseVoyagerBaseController
         }
 
         return $redirect->with([
-            'message'    => __('voyager::generic.successfully_updated')." {$dataType->getTranslatedAttribute('display_name_singular')}",
-            'alert-type' => 'success',
+                    'message' => __('voyager::generic.successfully_updated') . " {$dataType->getTranslatedAttribute('display_name_singular')}",
+                    'alert-type' => 'success',
         ]);
     }
 
@@ -358,18 +340,15 @@ class UserNotificationController extends BaseVoyagerBaseController
     //
     //****************************************
 
-    public function create(Request $request)
-    {
-         $slug = $this->getSlug($request);
+    public function create(Request $request) {
+        $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         // Check permission
         $this->authorize('add', app($dataType->model_name));
 
-        $dataTypeContent = (strlen($dataType->model_name) != 0)
-                            ? new $dataType->model_name()
-                            : false;
+        $dataTypeContent = (strlen($dataType->model_name) != 0) ? new $dataType->model_name() : false;
 
         foreach ($dataType->addRows as $key => $row) {
             $dataType->addRows[$key]['col_width'] = $row->details->width ?? 100;
@@ -387,7 +366,7 @@ class UserNotificationController extends BaseVoyagerBaseController
             $view = "voyager::$slug.edit-add";
         }
 
-        return Voyager::view($view, compact('states','cities','dataType', 'dataTypeContent', 'isModelTranslatable'));
+        return Voyager::view($view, compact('states', 'cities', 'dataType', 'dataTypeContent', 'isModelTranslatable'));
     }
 
     /**
@@ -397,8 +376,7 @@ class UserNotificationController extends BaseVoyagerBaseController
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -413,19 +391,19 @@ class UserNotificationController extends BaseVoyagerBaseController
         event(new BreadDataAdded($dataType, $data));
 
         //send_push_notification($deviceToken, $type, $title = null, $message = null, $data = null);
-          $userLists = DB::table('users')                   
-                       ->where('is_active', '=', 1)
-                    //->orderByRaw('chat_logs.id DESC')
-                    //->offset($page)
-                    //->limit(10)
-                    ->select('id','device_token')
-                    ->get();
-          
-          foreach($userLists as $userList)
-          {
-              print_R($data);die('sdd');
-              send_push_notification($userList->device_token, $type='', $title = null, $message = null, $data);
-          }
+        $userLists = DB::table('users')
+                ->where('is_active', '=', 1)
+                //->orderByRaw('chat_logs.id DESC')
+                //->offset($page)
+                //->limit(10)
+                ->select('id', 'device_token')
+                ->get();
+
+        foreach ($userLists as $userList) {
+            print_R($data);
+            die('sdd');
+            send_push_notification($userList->device_token, $type = '', $title = null, $message = null, $data);
+        }
         if (!$request->has('_tagging')) {
             if (auth()->user()->can('browse', $data)) {
                 $redirect = redirect()->route("voyager.{$dataType->slug}.index");
@@ -434,8 +412,8 @@ class UserNotificationController extends BaseVoyagerBaseController
             }
 
             return $redirect->with([
-                'message'    => __('voyager::generic.successfully_added_new')." {$dataType->getTranslatedAttribute('display_name_singular')}",
-                'alert-type' => 'success',
+                        'message' => __('voyager::generic.successfully_added_new') . " {$dataType->getTranslatedAttribute('display_name_singular')}",
+                        'alert-type' => 'success',
             ]);
         } else {
             return response()->json(['success' => true, 'data' => $data]);
@@ -454,8 +432,7 @@ class UserNotificationController extends BaseVoyagerBaseController
     //
     //****************************************
 
-    public function destroy(Request $request, $id)
-    {
+    public function destroy(Request $request, $id) {
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -484,15 +461,13 @@ class UserNotificationController extends BaseVoyagerBaseController
         $displayName = count($ids) > 1 ? $dataType->getTranslatedAttribute('display_name_plural') : $dataType->getTranslatedAttribute('display_name_singular');
 
         $res = $data->destroy($ids);
-        $data = $res
-            ? [
-                'message'    => __('voyager::generic.successfully_deleted')." {$displayName}",
-                'alert-type' => 'success',
-            ]
-            : [
-                'message'    => __('voyager::generic.error_deleting')." {$displayName}",
-                'alert-type' => 'error',
-            ];
+        $data = $res ? [
+            'message' => __('voyager::generic.successfully_deleted') . " {$displayName}",
+            'alert-type' => 'success',
+                ] : [
+            'message' => __('voyager::generic.error_deleting') . " {$displayName}",
+            'alert-type' => 'error',
+        ];
 
         if ($res) {
             event(new BreadDataDeleted($dataType, $data));
@@ -501,8 +476,7 @@ class UserNotificationController extends BaseVoyagerBaseController
         return redirect()->route("voyager.{$dataType->slug}.index")->with($data);
     }
 
-    public function restore(Request $request, $id)
-    {
+    public function restore(Request $request, $id) {
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -512,7 +486,7 @@ class UserNotificationController extends BaseVoyagerBaseController
 
         // Get record
         $model = call_user_func([$dataType->model_name, 'withTrashed']);
-        if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
+        if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope' . ucfirst($dataType->scope))) {
             $model = $model->{$dataType->scope}();
         }
         $data = $model->findOrFail($id);
@@ -520,15 +494,13 @@ class UserNotificationController extends BaseVoyagerBaseController
         $displayName = $dataType->getTranslatedAttribute('display_name_singular');
 
         $res = $data->restore($id);
-        $data = $res
-            ? [
-                'message'    => __('voyager::generic.successfully_restored')." {$displayName}",
-                'alert-type' => 'success',
-            ]
-            : [
-                'message'    => __('voyager::generic.error_restoring')." {$displayName}",
-                'alert-type' => 'error',
-            ];
+        $data = $res ? [
+            'message' => __('voyager::generic.successfully_restored') . " {$displayName}",
+            'alert-type' => 'success',
+                ] : [
+            'message' => __('voyager::generic.error_restoring') . " {$displayName}",
+            'alert-type' => 'error',
+        ];
 
         if ($res) {
             event(new BreadDataRestored($dataType, $data));
@@ -543,8 +515,7 @@ class UserNotificationController extends BaseVoyagerBaseController
     //
     //****************************************
 
-    public function remove_media(Request $request)
-    {
+    public function remove_media(Request $request) {
         try {
             // GET THE SLUG, ex. 'posts', 'pages', etc.
             $slug = $request->get('slug');
@@ -587,7 +558,7 @@ class UserNotificationController extends BaseVoyagerBaseController
 
                 // Check if we're dealing with a nested array for the case of multiple files
                 if (is_array($fieldData[0])) {
-                    foreach ($fieldData as $index=>$file) {
+                    foreach ($fieldData as $index => $file) {
                         // file type has a different structure than images
                         if (!empty($file['original_name'])) {
                             if ($file['original_name'] == $filename) {
@@ -640,10 +611,10 @@ class UserNotificationController extends BaseVoyagerBaseController
             $data->save();
 
             return response()->json([
-                'data' => [
-                    'status'  => 200,
-                    'message' => __('voyager::media.file_removed'),
-                ],
+                        'data' => [
+                            'status' => 200,
+                            'message' => __('voyager::media.file_removed'),
+                        ],
             ]);
         } catch (Exception $e) {
             $code = 500;
@@ -658,11 +629,11 @@ class UserNotificationController extends BaseVoyagerBaseController
             }
 
             return response()->json([
-                'data' => [
-                    'status'  => $code,
-                    'message' => $message,
-                ],
-            ], $code);
+                        'data' => [
+                            'status' => $code,
+                            'message' => $message,
+                        ],
+                            ], $code);
         }
     }
 
@@ -674,8 +645,7 @@ class UserNotificationController extends BaseVoyagerBaseController
      *
      * @return void
      */
-    protected function cleanup($dataType, $data)
-    {
+    protected function cleanup($dataType, $data) {
         // Delete Translations, if present
         if (is_bread_translatable($data)) {
             $data->deleteAttributeTranslations($data->getTranslatableAttributes());
@@ -719,8 +689,7 @@ class UserNotificationController extends BaseVoyagerBaseController
      *
      * @return void
      */
-    public function deleteBreadImages($data, $rows, $single_image = null)
-    {
+    public function deleteBreadImages($data, $rows, $single_image = null) {
         $imagesDeleted = false;
 
         foreach ($rows as $row) {
@@ -739,13 +708,13 @@ class UserNotificationController extends BaseVoyagerBaseController
                     if (isset($row->details->thumbnails)) {
                         foreach ($row->details->thumbnails as $thumbnail) {
                             $ext = explode('.', $image);
-                            $extension = '.'.$ext[count($ext) - 1];
+                            $extension = '.' . $ext[count($ext) - 1];
 
                             $path = str_replace($extension, '', $image);
 
                             $thumb_name = $thumbnail->name;
 
-                            $this->deleteFileIfExists($path.'-'.$thumb_name.$extension);
+                            $this->deleteFileIfExists($path . '-' . $thumb_name . $extension);
                         }
                     }
                 }
@@ -764,8 +733,7 @@ class UserNotificationController extends BaseVoyagerBaseController
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function order(Request $request)
-    {
+    public function order(Request $request) {
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -775,10 +743,10 @@ class UserNotificationController extends BaseVoyagerBaseController
 
         if (!isset($dataType->order_column) || !isset($dataType->order_display_column)) {
             return redirect()
-            ->route("voyager.{$dataType->slug}.index")
-            ->with([
-                'message'    => __('voyager::bread.ordering_not_set'),
-                'alert-type' => 'error',
+                            ->route("voyager.{$dataType->slug}.index")
+                            ->with([
+                                'message' => __('voyager::bread.ordering_not_set'),
+                                'alert-type' => 'error',
             ]);
         }
 
@@ -799,15 +767,11 @@ class UserNotificationController extends BaseVoyagerBaseController
         }
 
         return Voyager::view($view, compact(
-            'dataType',
-            'display_column',
-            'dataRow',
-            'results'
+                                'dataType', 'display_column', 'dataRow', 'results'
         ));
     }
 
-    public function update_order(Request $request)
-    {
+    public function update_order(Request $request) {
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -830,8 +794,7 @@ class UserNotificationController extends BaseVoyagerBaseController
         }
     }
 
-    public function action(Request $request)
-    {
+    public function action(Request $request) {
         $slug = $this->getSlug($request);
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
@@ -847,8 +810,7 @@ class UserNotificationController extends BaseVoyagerBaseController
      *
      * @return mixed
      */
-    public function relation(Request $request)
-    {
+    public function relation(Request $request) {
         $slug = $this->getSlug($request);
         $page = $request->input('page');
         $on_page = 50;
@@ -864,7 +826,7 @@ class UserNotificationController extends BaseVoyagerBaseController
 
         $this->authorize($method, $model);
 
-        $rows = $dataType->{$method.'Rows'};
+        $rows = $dataType->{$method . 'Rows'};
         foreach ($rows as $key => $row) {
             if ($row->field === $request->input('type')) {
                 $options = $row->details;
@@ -882,10 +844,10 @@ class UserNotificationController extends BaseVoyagerBaseController
                         $total_count = $relationshipOptions->count();
                         $relationshipOptions = $relationshipOptions->forPage($page, $on_page);
                     } else {
-                        $total_count = $model->where($options->label, 'LIKE', '%'.$search.'%')->count();
+                        $total_count = $model->where($options->label, 'LIKE', '%' . $search . '%')->count();
                         $relationshipOptions = $model->take($on_page)->skip($skip)
-                            ->where($options->label, 'LIKE', '%'.$search.'%')
-                            ->get();
+                                ->where($options->label, 'LIKE', '%' . $search . '%')
+                                ->get();
                     }
                 } else {
                     $total_count = $model->count();
@@ -896,23 +858,23 @@ class UserNotificationController extends BaseVoyagerBaseController
 
                 if (!$row->required && !$search) {
                     $results[] = [
-                        'id'   => '',
+                        'id' => '',
                         'text' => __('voyager::generic.none'),
                     ];
                 }
 
                 foreach ($relationshipOptions as $relationshipOption) {
                     $results[] = [
-                        'id'   => $relationshipOption->{$options->key},
+                        'id' => $relationshipOption->{$options->key},
                         'text' => $relationshipOption->{$options->label},
                     ];
                 }
 
                 return response()->json([
-                    'results'    => $results,
-                    'pagination' => [
-                        'more' => ($total_count > ($skip + $on_page)),
-                    ],
+                            'results' => $results,
+                            'pagination' => [
+                                'more' => ($total_count > ($skip + $on_page)),
+                            ],
                 ]);
             }
         }
@@ -920,26 +882,21 @@ class UserNotificationController extends BaseVoyagerBaseController
         // No result found, return empty array
         return response()->json([], 404);
     }
-    
-    public function send_push_notification($deviceToken, $type, $title = null, $message = null, $data = null) 
-    {
+
+    public function send_push_notification($deviceToken, $type, $title = null, $message = null, $data = null) {
         $API_ACCESS_KEY = config('constants.fcm_app_server_key');
         $responceData = array();
         $notification = array();
-        if(!empty($type))
-        {
+        if (!empty($type)) {
             $responceData['type'] = $type;
         }
-        if(!empty($title))
-        {
+        if (!empty($title)) {
             $notification['title'] = $responceData['title'] = $title;
         }
-        if(!empty($message))
-        {
+        if (!empty($message)) {
             $notification['message'] = $responceData['message'] = $message;
         }
-        if(isset($data) && $data != null)
-        {
+        if (isset($data) && $data != null) {
             $responceData['data'] = $data;
         }
         $headers = array
@@ -947,20 +904,19 @@ class UserNotificationController extends BaseVoyagerBaseController
             'Authorization: key=' . $API_ACCESS_KEY,
             'Content-Type: application/json'
         );
-        
+
         $fields = array(
             'to' => $deviceToken,
             'priority' => 'high',
             'type' => $type,
             'data' => $responceData,
         );
-        
-        if(!empty($notification))
-        {
+
+        if (!empty($notification)) {
             $fields['notification'] = $notification;
             \Log::info($notification);
         }
-        
+
         try {
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, config('constants.fcm_push_notification_url'));
@@ -982,9 +938,9 @@ class UserNotificationController extends BaseVoyagerBaseController
             }
             \Log::info($res);
             return $res;
-            
         } catch (Exception $e) {
             \Log::info($e);
         }
     }
+
 }

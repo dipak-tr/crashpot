@@ -38,7 +38,7 @@ class ChatLogController extends BaseController {
             $chatLogs = DB::table('chat_logs')
                     ->leftJoin('users', 'chat_logs.user_id', '=', 'users.id')
                     ->where('chat_logs.id', '>', $request->last_read_id)
-                       ->where('users.is_active', '=', 1)
+                    ->where('users.is_active', '=', 1)
                     ->orderByRaw('chat_logs.id DESC')
                     ->offset($page)
                     ->limit(10)
@@ -54,7 +54,7 @@ class ChatLogController extends BaseController {
                         $userImage = array();
 
                         $userImage = explode("/", $chatLog->avatar);
-                        if (isset($userImage[0]) && $userImage[0]=='users') {
+                        if (isset($userImage[0]) && $userImage[0] == 'users') {
                             $avata = url('/') . '/images/' . $chatLog->avatar;
                         } else {
                             $avata = $chatLog->avatar;
@@ -75,7 +75,6 @@ class ChatLogController extends BaseController {
                         $last_read_id = $chatLog->id;
                     }
                     $is_update++;
-                    
                 }
                 $responseData = array_reverse($responseData);
                 DB::table('users')

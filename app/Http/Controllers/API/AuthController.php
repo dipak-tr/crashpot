@@ -53,8 +53,12 @@ class AuthController extends BaseController {
         //     return $this->sendResponse(true, $status_code, trans('message.imei_number_mismatch'), $response_user);
         // }
 
+
         $userID = $request['userID'] ? $request['userID'] : 0;
         if ($userID != 0) {
+            if ($request->is_register == 1) {
+                DB::table('users')->where('id', '=', $userID)->delete();
+            }
             $user = DB::table('users')->find($request['userID']);
             if (empty($user)) {
                 $user = DB::table('users')->where('social_media_id', $request['socialMediaId'])->first();
