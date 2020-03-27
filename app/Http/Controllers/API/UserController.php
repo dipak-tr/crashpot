@@ -95,26 +95,27 @@ class UserController extends BaseController {
                     $user->save();
                 }
 
-                  $unreadNotification = DB::table('usernotifications')
-                    //->leftJoin('users', 'chat_logs.user_id', '=', 'users.id')
-                    ->where('user_id', '=', $request->userId)
-                    ->where('is_read', '=', 0)
-                    //->orderByRaw('chat_logs.id DESC')
-                    //->offset($page)
-                    //->limit(10)
-                    ->select('id')
-                    ->get();
-                  
-                  $unreadchat = DB::table('chat_logs')
-                    //->leftJoin('users', 'chat_logs.user_id', '=', 'users.id')
-                    ->where('user_id', '=', $request->userId)
-                    ->where('id', '>', $user->last_read_id)
-                    //->orderByRaw('chat_logs.id DESC')
-                    //->offset($page)
-                    //->limit(10)
-                    ->select('id')
-                    ->get();
-                  
+                $unreadchat = $unreadNotification = array();
+                $unreadNotification = DB::table('usernotifications')
+                        //->leftJoin('users', 'chat_logs.user_id', '=', 'users.id')
+                        ->where('user_id', '=', $request->userId)
+                        ->where('is_read', '=', 0)
+                        //->orderByRaw('chat_logs.id DESC')
+                        //->offset($page)
+                        //->limit(10)
+                        ->select('id')
+                        ->get();
+                if ($user->social_media_type == 0) {
+                    $unreadchat = DB::table('chat_logs')
+                            //->leftJoin('users', 'chat_logs.user_id', '=', 'users.id')
+                            ->where('user_id', '=', $request->userId)
+                            ->where('id', '>', $user->last_read_id)
+                            //->orderByRaw('chat_logs.id DESC')
+                            //->offset($page)
+                            //->limit(10)
+                            ->select('id')
+                            ->get();
+                }
                 $avata = url('/') . '/images/users/default.png';
 
                 if (!empty($user->avatar)) {
@@ -127,7 +128,7 @@ class UserController extends BaseController {
                         $avata = $user->avatar;
                     }
                 }
-                
+
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
@@ -146,8 +147,8 @@ class UserController extends BaseController {
                     "last_read_id" => $user->last_read_id,
                     "remainXP" => $remainXP,
                     "is_level_up" => $is_level_up,
-                    "notificationCNT"=>count($unreadNotification),
-                    "chatCNT"=>count($unreadchat)
+                    "notificationCNT" => count($unreadNotification),
+                    "chatCNT" => count($unreadchat)
                 ];
             } else {
                 $status_code = config('response_status_code.no_records_found');
@@ -206,7 +207,7 @@ class UserController extends BaseController {
                     "profit" => $user->profit,
                     "wagered" => $user->wagered,
                     "playedGames" => $user->playedGames,
-                   "rankingByLevel" => $user->rankingByLevel,
+                    "rankingByLevel" => $user->rankingByLevel,
                     "RankingByLevelPostion" => $user->ranking,
                     "rankingByProfit" => $user->rankingByProfit,
                     "rankingByProfitPosition" => $user->rankingByProfit,
@@ -304,7 +305,7 @@ class UserController extends BaseController {
                         $rankingByLevel = $user->ranking;
                         $rankingByProfit = $rank;
                         $userData->save();
-                    }else{
+                    } else {
                         $userData = User::find($user->id);
                         $userData->ranking = $rank;
                         $rankingByProfit = $user->rankingByProfit;
@@ -315,7 +316,7 @@ class UserController extends BaseController {
                     $rank++;
                 }
             }
-            
+
             $RankingByLevelPostion = $rankingByProfitPosition = 1;
             $userLogData = User::find($request->userId);
             $RankingByLevelPostion = $userLogData->ranking;
@@ -359,27 +360,27 @@ class UserController extends BaseController {
                             $avata = $user->avatar;
                         }
                     }
-/*
-                    if ($request->levelType == 1) {
-                        $userData->rankingByProfit = $rank;
-                        $rankingByLevel = $user->rankingByLevel;
-                        $rankingByProfit = $rank;
-                        if ($request->userId == $user->id) {
-                            $RankingByLevelPostion = $rankingByLevel;
-                            $rankingByProfitPosition = $rankingByProfit;
-                        }
-                        $userData->save();
-                    } else {
-                        //$userData->rankingByLevel = $rank;
-                        $rankingByProfit = $user->rankingByProfit;
-                        $rankingByLevel = $rank;
-                        if ($request->userId == $user->id) {
-                            $RankingByLevelPostion = $rankingByLevel;
-                            $rankingByProfitPosition = $rankingByProfit;
-                        }
-                    }
+                    /*
+                      if ($request->levelType == 1) {
+                      $userData->rankingByProfit = $rank;
+                      $rankingByLevel = $user->rankingByLevel;
+                      $rankingByProfit = $rank;
+                      if ($request->userId == $user->id) {
+                      $RankingByLevelPostion = $rankingByLevel;
+                      $rankingByProfitPosition = $rankingByProfit;
+                      }
+                      $userData->save();
+                      } else {
+                      //$userData->rankingByLevel = $rank;
+                      $rankingByProfit = $user->rankingByProfit;
+                      $rankingByLevel = $rank;
+                      if ($request->userId == $user->id) {
+                      $RankingByLevelPostion = $rankingByLevel;
+                      $rankingByProfitPosition = $rankingByProfit;
+                      }
+                      }
 
-                    $rank++;*/
+                      $rank++; */
                     $responseData[] = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,

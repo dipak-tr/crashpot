@@ -75,6 +75,7 @@ class ChatLogController extends BaseController {
                         $last_read_id = $chatLog->id;
                     }
                     $is_update++;
+                    
                 }
                 $responseData = array_reverse($responseData);
                 DB::table('users')
