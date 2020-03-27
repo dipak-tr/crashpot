@@ -60,7 +60,7 @@ class AuthController extends BaseController {
                 DB::table('users')->where('id', '=', $userID)->delete();
                 DB::table('chat_logs')->where('user_id', '=', $userID)->delete();
                 DB::table('usernotifications')->where('user_id', '=', $userID)->delete();
-                
+
                 $userID = $request['oldUserId'] ? $request['oldUserId'] : 0;
                 $user = DB::table('users')->find($userID);
             }
@@ -118,14 +118,15 @@ class AuthController extends BaseController {
                         ->update(['name' => $request['name'],
                             'avatar' => $request['avatar'],
                             'email' => $request['email'],
+                            'IMEI' => $request['IMEI'],
                             'social_media_type' => $request['socialMediaType'],
                             'social_media_id' => $request['socialMediaId'],
                             'device_type' => $request['deviceType'],
                             'device_token' => $request['deviceToken']
                 ]);
 
-                $user = DB::table('users')->where('id',$userID)->first();
-               
+                $user = DB::table('users')->where('id', $userID)->first();
+
                 $userCoind = new Usercoin;
                 $userCoind->user_id = $userID;
                 $userCoind->coins = setting('site.social_media_bonus');
