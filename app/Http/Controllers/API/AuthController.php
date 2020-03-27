@@ -324,9 +324,8 @@ class AuthController extends BaseController {
         $user = DB::table('users')->where('social_media_id', $request->socialMediaId)->first();
 
         if (empty($user)) {
-print_R($user);die;
             $records = [
-                "social_media_id" => $request->socialMediaId,
+                "social_media_id" => $user->social_media_id,
                 "is_register" => 1
             ];
             $status_code = config('response_status_code.login_success');
