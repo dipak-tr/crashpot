@@ -120,11 +120,11 @@ class AuthController extends BaseController {
                             'device_type' => $request['deviceType'],
                             'device_token' => $request['deviceToken']
                 ]);
-echo $userID;
+
                 $user = DB::table('users')->where('id',$userID)->first();
-                print_R($user);die;
+               
                 $userCoind = new Usercoin;
-                $userCoind->user_id = $user->id;
+                $userCoind->user_id = $userID;
                 $userCoind->coins = setting('site.social_media_bonus');
                 $userCoind->game_type = 7;
                 $userCoind->status = 1;
@@ -132,7 +132,7 @@ echo $userID;
 
                 $socialMedia = 0;
                 $userNotification = new Usernotification;
-                $userNotification->user_id = $user->id;
+                $userNotification->user_id = $userID;
                 $userNotification->msg_title = 'logged in';
                 if ($userNotification->social_media_type == 1) {
                     $socialMedia = 'facebook';
