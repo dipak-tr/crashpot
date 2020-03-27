@@ -58,8 +58,10 @@ class AuthController extends BaseController {
         if ($userID != 0) {
             if ($request->is_register == 1) {
                 DB::table('users')->where('id', '=', $userID)->delete();
+                $userID = $request['oldUserId'] ? $request['oldUserId'] : 0;
+                $user = DB::table('users')->find($userID);
             }
-            $user = DB::table('users')->find($request['userID']);
+
             if (empty($user)) {
                 $user = DB::table('users')->where('social_media_id', $request['socialMediaId'])->first();
             }
@@ -330,14 +332,16 @@ class AuthController extends BaseController {
         if (empty($user)) {
             $records = [
                 "social_media_id" => $request->social_media_id,
-                "is_register" => 0
+                "is_register" => 0,
+                "oldUserId" => 0
             ];
             $status_code = config('response_status_code.no_records_found');
             return $this->sendResponse(true, $status_code, trans('message.no_records_found'), $records);
         } else {
             $records = [
                 "social_media_id" => $request->socialMediaId,
-                "is_register" => 1
+                "is_register" => 1,
+                "oldUserId" => $user->id
             ];
             $status_code = config('response_status_code.fetched_success');
             return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $records);
