@@ -111,7 +111,7 @@ class AuthController extends BaseController {
             } else {
 
                 DB::table('users')
-                        ->where('id', $request['userID'])
+                        ->where('id', $userID)
                         ->update(['name' => $request['name'],
                             'avatar' => $request['avatar'],
                             'email' => $request['email'],
@@ -121,7 +121,7 @@ class AuthController extends BaseController {
                             'device_token' => $request['deviceToken']
                 ]);
 
-                $user = DB::table('users')->where('id', $request['userID'])->first();
+                $user = DB::table('users')->where('id',$userID)->first();
                 $userCoind = new Usercoin;
                 $userCoind->user_id = $user->id;
                 $userCoind->coins = setting('site.social_media_bonus');
