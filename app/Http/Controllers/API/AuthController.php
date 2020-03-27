@@ -328,15 +328,15 @@ class AuthController extends BaseController {
                 "social_media_id" => $request->social_media_id,
                 "is_register" => 0
             ];
-            $status_code = config('response_status_code.login_success');
-            return $this->sendResponse(true, $status_code, trans('message.login_success'), $records);
+            $status_code = config('response_status_code.no_records_found');
+            return $this->sendResponse(true, $status_code, trans('message.no_records_found'), $records);
         } else {
             $records = [
                 "social_media_id" => $request->socialMediaId,
                 "is_register" => 1
             ];
-            $status_code = config('response_status_code.login_success');
-            return $this->sendResponse(true, $status_code, trans('message.login_success'), $records);
+            $status_code = config('response_status_code.fetched_success');
+            return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $records);
         }
     }
 
