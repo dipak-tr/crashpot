@@ -311,7 +311,7 @@ class UserController extends BaseController {
             }
             
             $RankingByLevelPostion = $rankingByProfitPosition = 1;
-            $userLogData = User::find($user->id);
+            $userLogData = User::find($request->userId);
             $RankingByLevelPostion = $userLogData->rankingByLevel;
             $rankingByProfitPosition = $userLogData->rankingByProfit;
 
