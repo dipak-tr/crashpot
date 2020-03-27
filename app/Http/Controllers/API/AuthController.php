@@ -312,8 +312,7 @@ class AuthController extends BaseController {
 
     public function duplicateLogin(Request $request) {
         $validator = Validator::make($request->all(), [
-                    'socialMediaId' => 'required',
-                    'IMEI' => 'required',
+                    'socialMediaId' => 'required'
         ]);
 
         if ($validator->fails()) {
