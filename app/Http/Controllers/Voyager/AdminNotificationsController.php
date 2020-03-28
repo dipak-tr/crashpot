@@ -16,6 +16,7 @@ use TCG\Voyager\Events\BreadDataUpdated;
 use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController as BaseVoyagerBaseController;
+use App\User;
 
 class AdminNotificationsController extends BaseVoyagerBaseController {
 
@@ -400,7 +401,7 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
                 //->limit(10)
                 ->select('id', 'device_token')
                 ->get();
-
+print_R($userLists);die;
         foreach ($userLists as $userList) {
             print_R($userList);die;
             if ($userList->id == 28) {
