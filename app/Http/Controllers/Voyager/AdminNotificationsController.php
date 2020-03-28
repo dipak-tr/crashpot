@@ -931,7 +931,7 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
             'to' => $deviceToken,
             'priority' => 'high',
             'type' => $type,
-            'data' => $data,
+            'data' => $responceData['data'],
         );
 
         if (!empty($notification)) {
