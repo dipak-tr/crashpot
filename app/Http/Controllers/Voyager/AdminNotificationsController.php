@@ -420,7 +420,7 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
                 $aData=array();
                 $aData["imageurl"] = $avata;
                 $aData["isBrodcast"] = 1;
-                $aData["token"] = $userList->token;
+                $aData["token"] = $userList->device_token;
 
                 $this->send_push_notification($userList->device_token, $type = '', $title = $data->title, $message = $data->notification_text, $aData);
             }
