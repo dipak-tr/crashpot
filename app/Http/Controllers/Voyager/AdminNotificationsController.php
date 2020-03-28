@@ -393,6 +393,8 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
         //send_push_notification($deviceToken, $type, $title = null, $message = null, $data = null);
         $userLists = DB::table('users')
                 ->where('is_active', '=', 1)
+                ->where('device_token', '<>', '')
+                ->where('id', '=', 1)
                 //->orderByRaw('chat_logs.id DESC')
                 //->offset($page)
                 //->limit(10)
@@ -400,8 +402,10 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
                 ->get();
 
         foreach ($userLists as $userList) {
+            if($userList->id==28)
+            {
             $this->send_push_notification($userList->device_token, $type = '', $title = $data->title, $message = $data->notification_text, $data);
-        }
+        }}
         if (!$request->has('_tagging')) {
             if (auth()->user()->can('browse', $data)) {
                 $redirect = redirect()->route("voyager.{$dataType->slug}.index");
@@ -882,7 +886,7 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
     }
 
     public function send_push_notification($deviceToken, $type, $title = null, $message = null, $data = null) {
-        return true;
+        //return true;
         //$API_ACCESS_KEY = config('constants.fcm_app_server_key');
         $API_ACCESS_KEY = setting('site.site.fcm_app_server_key');
         $responceData = array();
