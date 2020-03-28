@@ -402,6 +402,7 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
                 ->get();
 
         foreach ($userLists as $userList) {
+            print_R($userList);die;
             if ($userList->id == 28) {
                 $avata = url('/') . '/images/users/default.png';
 
