@@ -415,7 +415,7 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
                         $avata = $userList->avatar;
                     }
                 }
-                $data->avatar = $avata;
+                $data->imageurl = $avata;
                 $data->isBrodcast = 1;
 
                 $this->send_push_notification($userList->device_token, $type = '', $title = $data->title, $message = $data->notification_text, $data);
