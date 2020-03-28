@@ -913,7 +913,7 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
         $arrNotification = array();
         $arrNotification["body"] = $message;
         $arrNotification["title"] = $title;
-        $arrNotification["sound"] = $data["default"];
+        $arrNotification["sound"] = "default";
         $arrNotification["type"] = 1;
         $arrNotification["type"] = $data["imageurl"];
         $arrNotification["type"] = $data["isBrodcast"];
