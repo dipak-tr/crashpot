@@ -403,27 +403,24 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
                 ->get();
 
         foreach ($userLists as $userList) {
+            $avata = url('/') . '/images/users/default.png';
 
-            if ($userList->id == 28) {
-                $avata = url('/') . '/images/users/default.png';
+            if (!empty($userList->avatar)) {
+                $userImage = array();
 
-                if (!empty($userList->avatar)) {
-                    $userImage = array();
-
-                    $userImage = explode("/", $userList->avatar);
-                    if (isset($userImage[0]) && $userImage[0] == 'users') {
-                        $avata = url('/') . '/images/' . $userList->avatar;
-                    } else {
-                        $avata = $userList->avatar;
-                    }
+                $userImage = explode("/", $userList->avatar);
+                if (isset($userImage[0]) && $userImage[0] == 'users') {
+                    $avata = url('/') . '/images/' . $userList->avatar;
+                } else {
+                    $avata = $userList->avatar;
                 }
-                $aData=array();
-                $aData["imageurl"] = $avata;
-                $aData["isBrodcast"] = 1;
-                $aData["token"] = $userList->device_token;
-
-                $this->send_push_notification($userList->device_token, $type = '', $title = $data->title, $message = $data->notification_text, $aData);
             }
+            $aData = array();
+            $aData["imageurl"] = $avata;
+            $aData["isBrodcast"] = 1;
+            $aData["token"] = $userList->device_token;
+
+            $this->send_push_notification($userList->device_token, $type = '', $title = $data->title, $message = $data->notification_text, $aData);
         }
         if (!$request->has('_tagging')) {
             if (auth()->user()->can('browse', $data)) {
@@ -917,7 +914,7 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
         $arrNotification["type"] = 1;
         $arrNotification["type"] = $data["imageurl"];
         $arrNotification["type"] = $data["isBrodcast"];
-        
+
         $fields = array(
             'to' => $data["token"],
             'data' => $arrNotification
@@ -956,63 +953,63 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
             \Log::info($e);
         }
         /*         * ******************************************************************* */
-       /* $responceData = array();
-        $notification = array();
-        if (!empty($type)) {
-            $responceData['type'] = $type;
-        }
-        if (!empty($title)) {
-            $notification['title'] = $responceData['title'] = $title;
-        }
-        if (!empty($message)) {
-            $notification['message'] = $responceData['message'] = $message;
-        }
-        if (isset($data) && $data != null) {
-            $responceData['data'] = $data;
-        }
-        $headers = array
-            (
-            'Authorization: key=' . $API_ACCESS_KEY,
-            'Content-Type: application/json'
-        );
+        /* $responceData = array();
+          $notification = array();
+          if (!empty($type)) {
+          $responceData['type'] = $type;
+          }
+          if (!empty($title)) {
+          $notification['title'] = $responceData['title'] = $title;
+          }
+          if (!empty($message)) {
+          $notification['message'] = $responceData['message'] = $message;
+          }
+          if (isset($data) && $data != null) {
+          $responceData['data'] = $data;
+          }
+          $headers = array
+          (
+          'Authorization: key=' . $API_ACCESS_KEY,
+          'Content-Type: application/json'
+          );
 
-        $fields = array(
-            'to' => $deviceToken,
-            'priority' => 'high',
-            'type' => $type,
-            'data' => $responceData['data'],
-        );
+          $fields = array(
+          'to' => $deviceToken,
+          'priority' => 'high',
+          'type' => $type,
+          'data' => $responceData['data'],
+          );
 
-        if (!empty($notification)) {
-            $fields['notification'] = $notification;
-            \Log::info($notification);
-        }
+          if (!empty($notification)) {
+          $fields['notification'] = $notification;
+          \Log::info($notification);
+          }
 
-        try {
-            $ch = curl_init();
-            // curl_setopt($ch, CURLOPT_URL, config('constants.fcm_push_notification_url'));
-            curl_setopt($ch, CURLOPT_URL, setting('site.fcm_push_notification_url'));
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
-            $result = curl_exec($ch);
-            curl_close($ch);
-            $errMsg = '';
-            $res = (array) json_decode($result);
-            $errMsg = '';
-            if (!empty($res)) {
-                if ($res['failure'] == 1) {
-                    $errMsg = $res['results'][0]->error;
-                    return $errMsg;
-                }
-            }
-            \Log::info($res);
-            return $res;
-        } catch (Exception $e) {
-            \Log::info($e);
-        }*/
+          try {
+          $ch = curl_init();
+          // curl_setopt($ch, CURLOPT_URL, config('constants.fcm_push_notification_url'));
+          curl_setopt($ch, CURLOPT_URL, setting('site.fcm_push_notification_url'));
+          curl_setopt($ch, CURLOPT_POST, true);
+          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+          $result = curl_exec($ch);
+          curl_close($ch);
+          $errMsg = '';
+          $res = (array) json_decode($result);
+          $errMsg = '';
+          if (!empty($res)) {
+          if ($res['failure'] == 1) {
+          $errMsg = $res['results'][0]->error;
+          return $errMsg;
+          }
+          }
+          \Log::info($res);
+          return $res;
+          } catch (Exception $e) {
+          \Log::info($e);
+          } */
     }
 
 }
