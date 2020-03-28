@@ -452,7 +452,7 @@ $arrNotification["type"] = 1;
                 $userList->imageurl = $avata;
                 $userList->isBrodcast = 1;
 
-                $this->send_push_notification($userList->device_token, $type = '', $title = $data->title, $message = $data->notification_text, $userList);
+                //$this->send_push_notification($userList->device_token, $type = '', $title = $data->title, $message = $data->notification_text, $userList);
             }
         }
         if (!$request->has('_tagging')) {
