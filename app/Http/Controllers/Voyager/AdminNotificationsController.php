@@ -379,7 +379,7 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
      */
     public function store(Request $request) {
         $slug = $this->getSlug($request);
-die('test');
+
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         // Check permission
