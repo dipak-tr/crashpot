@@ -908,12 +908,12 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
         /*         * ******************************************************************* */
         $url = 'https://fcm.googleapis.com/fcm/send';
         $arrNotification = array();
-        $arrNotification["body"] = $message;
+        $arrNotification["message"] = $message;
         $arrNotification["title"] = $title;
         $arrNotification["sound"] = "default";
         $arrNotification["type"] = 1;
-        $arrNotification["type"] = $data["imageurl"];
-        $arrNotification["type"] = $data["isBrodcast"];
+        $arrNotification["imageurl"] = $data["imageurl"];
+        $arrNotification["isBrodcast"] = $data["isBrodcast"];
 
         $fields = array(
             'to' => $data["token"],
