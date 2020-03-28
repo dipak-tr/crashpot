@@ -390,6 +390,38 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
         $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
 
         event(new BreadDataAdded($dataType, $data));
+        
+         $API_ACCESS_KEY = setting('site.fcm_app_server_key');
+       /**********************************************************************/
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        $arrNotification=array();
+      $arrNotification["body"] ="Test by Vijay.";
+$arrNotification["title"] = "PHP ADVICES";
+$arrNotification["sound"] = "default";
+$arrNotification["type"] = 1;
+            $fields = array(
+                'to' => 'dMH7OE7YSlmlZf86cyUstZ:APA91bFgrFlmxyETk82Ek7CKdGPiq8ZRbmvMQG6lS8n25Ghyzf3KicmRdu6YopGg5_qrwgGoNue4oep7G2QamtRoQtmCHVgJ7DtDPEYXS5KmB0ezn9c84_YDsa1oSJmcUWP4mT9SMNoj',
+                'data' => $arrNotification
+            );
+      
+      // Firebase API Key
+      $headers = array('Authorization:key='.$API_ACCESS_KEY,'Content-Type:application/json');
+     // Open connection
+      $ch = curl_init();
+      // Set the url, number of POST vars, POST data
+      curl_setopt($ch, CURLOPT_URL, $url);
+      curl_setopt($ch, CURLOPT_POST, true);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      // Disabling SSL Certificate support temporarly
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+      $result = curl_exec($ch);
+      if ($result === FALSE) {
+          die('Curl failed: ' . curl_error($ch));
+      }
+      curl_close($ch);
+       /**********************************************************************/
 
         //send_push_notification($deviceToken, $type, $title = null, $message = null, $data = null);
         $userLists = DB::table('users')
@@ -905,37 +937,7 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
     public function send_push_notification($deviceToken, $type, $title = null, $message = null, $data = null) {
         //return true;
         //$API_ACCESS_KEY = config('constants.fcm_app_server_key');
-        $API_ACCESS_KEY = setting('site.fcm_app_server_key');
-       /**********************************************************************/
-        $url = 'https://fcm.googleapis.com/fcm/send';
-        $arrNotification=array();
-      $arrNotification["body"] ="Test by Vijay.";
-$arrNotification["title"] = "PHP ADVICES";
-$arrNotification["sound"] = "default";
-$arrNotification["type"] = 1;
-            $fields = array(
-                'to' => 'dMH7OE7YSlmlZf86cyUstZ:APA91bFgrFlmxyETk82Ek7CKdGPiq8ZRbmvMQG6lS8n25Ghyzf3KicmRdu6YopGg5_qrwgGoNue4oep7G2QamtRoQtmCHVgJ7DtDPEYXS5KmB0ezn9c84_YDsa1oSJmcUWP4mT9SMNoj',
-                'data' => $arrNotification
-            );
-      
-      // Firebase API Key
-      $headers = array('Authorization:key='.$API_ACCESS_KEY,'Content-Type:application/json');
-     // Open connection
-      $ch = curl_init();
-      // Set the url, number of POST vars, POST data
-      curl_setopt($ch, CURLOPT_URL, $url);
-      curl_setopt($ch, CURLOPT_POST, true);
-      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      // Disabling SSL Certificate support temporarly
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
-      $result = curl_exec($ch);
-      if ($result === FALSE) {
-          die('Curl failed: ' . curl_error($ch));
-      }
-      curl_close($ch);
-       /**********************************************************************/
+       
         $responceData = array();
         $notification = array();
         if (!empty($type)) {
