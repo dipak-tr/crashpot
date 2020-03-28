@@ -938,6 +938,7 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
             $fields['notification'] = $notification;
             \Log::info($notification);
         }
+        echo "<pre>";
 print_R($fields);die;
         try {
             $ch = curl_init();
