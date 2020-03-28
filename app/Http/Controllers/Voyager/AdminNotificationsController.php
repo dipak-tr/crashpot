@@ -33,7 +33,7 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
     //
     //****************************************
 
-    public function index(Request $request) { 
+    public function index(Request $request) {
         // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
 
@@ -390,38 +390,6 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
         $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
 
         event(new BreadDataAdded($dataType, $data));
-        
-         $API_ACCESS_KEY = setting('site.fcm_app_server_key');
-       /**********************************************************************/
-        $url = 'https://fcm.googleapis.com/fcm/send';
-        $arrNotification=array();
-      $arrNotification["body"] ="Test by Vijay.";
-$arrNotification["title"] = "PHP ADVICES";
-$arrNotification["sound"] = "default";
-$arrNotification["type"] = 1;
-            $fields = array(
-                'to' => 'dMH7OE7YSlmlZf86cyUstZ:APA91bFgrFlmxyETk82Ek7CKdGPiq8ZRbmvMQG6lS8n25Ghyzf3KicmRdu6YopGg5_qrwgGoNue4oep7G2QamtRoQtmCHVgJ7DtDPEYXS5KmB0ezn9c84_YDsa1oSJmcUWP4mT9SMNoj',
-                'data' => $arrNotification
-            );
-      
-      // Firebase API Key
-      $headers = array('Authorization:key='.$API_ACCESS_KEY,'Content-Type:application/json');
-     // Open connection
-      $ch = curl_init();
-      // Set the url, number of POST vars, POST data
-      curl_setopt($ch, CURLOPT_URL, $url);
-      curl_setopt($ch, CURLOPT_POST, true);
-      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      // Disabling SSL Certificate support temporarly
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
-      $result = curl_exec($ch);
-      if ($result === FALSE) {
-          die('Curl failed: ' . curl_error($ch));
-      }
-      curl_close($ch);
-       /**********************************************************************/
 
         //send_push_notification($deviceToken, $type, $title = null, $message = null, $data = null);
         $userLists = DB::table('users')
@@ -435,7 +403,7 @@ $arrNotification["type"] = 1;
                 ->get();
 
         foreach ($userLists as $userList) {
-          
+
             if ($userList->id == 28) {
                 $avata = url('/') . '/images/users/default.png';
 
@@ -449,10 +417,12 @@ $arrNotification["type"] = 1;
                         $avata = $userList->avatar;
                     }
                 }
-                $userList->imageurl = $avata;
-                $userList->isBrodcast = 1;
+                $aData=array();
+                $aData["imageurl"] = $avata;
+                $aData["isBrodcast"] = 1;
+                $aData["token"] = $userList->token;
 
-                //$this->send_push_notification($userList->device_token, $type = '', $title = $data->title, $message = $data->notification_text, $userList);
+                $this->send_push_notification($userList->device_token, $type = '', $title = $data->title, $message = $data->notification_text, $aData);
             }
         }
         if (!$request->has('_tagging')) {
@@ -937,8 +907,56 @@ $arrNotification["type"] = 1;
     public function send_push_notification($deviceToken, $type, $title = null, $message = null, $data = null) {
         //return true;
         //$API_ACCESS_KEY = config('constants.fcm_app_server_key');
-       $API_ACCESS_KEY = setting('site.fcm_app_server_key');
-        $responceData = array();
+        $API_ACCESS_KEY = setting('site.fcm_app_server_key');
+        /*         * ******************************************************************* */
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        $arrNotification = array();
+        $arrNotification["body"] = $message;
+        $arrNotification["title"] = $title;
+        $arrNotification["sound"] = $data["default"];
+        $arrNotification["type"] = 1;
+        $arrNotification["type"] = $data["imageurl"];
+        $arrNotification["type"] = $data["isBrodcast"];
+        
+        $fields = array(
+            'to' => $data["token"],
+            'data' => $arrNotification
+        );
+
+        // Firebase API Key
+        $headers = array('Authorization:key=' . $API_ACCESS_KEY, 'Content-Type:application/json');
+        try {
+            // Open connection
+            $ch = curl_init();
+            // Set the url, number of POST vars, POST data
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            // Disabling SSL Certificate support temporarly
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+            $result = curl_exec($ch);
+            /* if ($result === FALSE) {
+              die('Curl failed: ' . curl_error($ch));
+              } */
+            curl_close($ch);
+            $errMsg = '';
+            $res = (array) json_decode($result);
+            $errMsg = '';
+            if (!empty($res)) {
+                if ($res['failure'] == 1) {
+                    $errMsg = $res['results'][0]->error;
+                    return $errMsg;
+                }
+            }
+            \Log::info($res);
+            return $res;
+        } catch (Exception $e) {
+            \Log::info($e);
+        }
+        /*         * ******************************************************************* */
+       /* $responceData = array();
         $notification = array();
         if (!empty($type)) {
             $responceData['type'] = $type;
@@ -969,7 +987,7 @@ $arrNotification["type"] = 1;
             $fields['notification'] = $notification;
             \Log::info($notification);
         }
-       
+
         try {
             $ch = curl_init();
             // curl_setopt($ch, CURLOPT_URL, config('constants.fcm_push_notification_url'));
@@ -994,7 +1012,7 @@ $arrNotification["type"] = 1;
             return $res;
         } catch (Exception $e) {
             \Log::info($e);
-        }
+        }*/
     }
 
 }
