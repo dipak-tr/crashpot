@@ -32,7 +32,7 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
     //
     //****************************************
 
-    public function index(Request $request) {
+    public function index(Request $request) { 
         // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
 
@@ -394,7 +394,7 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
         $userLists = DB::table('users')
                 ->where('is_active', '=', 1)
                 ->where('device_token', '<>', '')
-                ->where('id', '=', 1)
+                //->where('id', '=', 1)
                 //->orderByRaw('chat_logs.id DESC')
                 //->offset($page)
                 //->limit(10)
