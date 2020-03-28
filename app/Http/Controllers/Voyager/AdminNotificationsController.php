@@ -906,6 +906,7 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
         //return true;
         //$API_ACCESS_KEY = config('constants.fcm_app_server_key');
         $API_ACCESS_KEY = setting('site.site.fcm_app_server_key');
+        print_R($API_ACCESS_KEY);die;
         $responceData = array();
         $notification = array();
         if (!empty($type)) {
