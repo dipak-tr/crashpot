@@ -402,10 +402,25 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
                 ->get();
 
         foreach ($userLists as $userList) {
-            if($userList->id==28)
-            {
-            $this->send_push_notification($userList->device_token, $type = '', $title = $data->title, $message = $data->notification_text, $data);
-        }}
+            if ($userList->id == 28) {
+                $avata = url('/') . '/images/users/default.png';
+
+                if (!empty($userList->avatar)) {
+                    $userImage = array();
+
+                    $userImage = explode("/", $userList->avatar);
+                    if (isset($userImage[0]) && $userImage[0] == 'users') {
+                        $avata = url('/') . '/images/' . $userList->avatar;
+                    } else {
+                        $avata = $userList->avatar;
+                    }
+                }
+                $data->avatar = $avata;
+                $data->isBrodcast = 1;
+
+                $this->send_push_notification($userList->device_token, $type = '', $title = $data->title, $message = $data->notification_text, $data);
+            }
+        }
         if (!$request->has('_tagging')) {
             if (auth()->user()->can('browse', $data)) {
                 $redirect = redirect()->route("voyager.{$dataType->slug}.index");
