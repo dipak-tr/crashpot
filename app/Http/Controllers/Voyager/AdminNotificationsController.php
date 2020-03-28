@@ -379,7 +379,7 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
      */
     public function store(Request $request) {
         $slug = $this->getSlug($request);
-
+die('test');
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         // Check permission
@@ -401,9 +401,9 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
                 //->limit(10)
                 ->select('id', 'device_token')
                 ->get();
-print_R($userLists);die;
+
         foreach ($userLists as $userList) {
-            print_R($userList);die;
+          
             if ($userList->id == 28) {
                 $avata = url('/') . '/images/users/default.png';
 
