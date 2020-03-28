@@ -907,29 +907,34 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
         //$API_ACCESS_KEY = config('constants.fcm_app_server_key');
         $API_ACCESS_KEY = setting('site.fcm_app_server_key');
        /**********************************************************************/
-        $url = "https://fcm.googleapis.com/fcm/send";
-    $token = "dMH7OE7YSlmlZf86cyUstZ:APA91bFgrFlmxyETk82Ek7CKdGPiq8ZRbmvMQG6lS8n25Ghyzf3KicmRdu6YopGg5_qrwgGoNue4oep7G2QamtRoQtmCHVgJ7DtDPEYXS5KmB0ezn9c84_YDsa1oSJmcUWP4mT9SMNoj";
-    $serverKey = $API_ACCESS_KEY;
-    $title = "Notification title";
-    $body = "Hello I am from Your php server";
-    $notification = array('title' =>$title , 'body' => $body, 'sound' => 'default', 'badge' => '1');
-    $arrayToSend = array('to' => $token, 'notification' => $notification,'priority'=>'high');
-    $json = json_encode($arrayToSend);
-    $headers = array();
-    $headers[] = 'Content-Type: application/json';
-    $headers[] = 'Authorization: key='. $serverKey;
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-    curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
-    //Send the request
-    $response = curl_exec($ch);
-    //Close request
-    if ($response === FALSE) {
-    die('FCM Send Error: ' . curl_error($ch));
-    }
-    curl_close($ch);
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        $arrNotification=array();
+      $arrNotification["body"] ="Test by Vijay.";
+$arrNotification["title"] = "PHP ADVICES";
+$arrNotification["sound"] = "default";
+$arrNotification["type"] = 1;
+            $fields = array(
+                'to' => 'dMH7OE7YSlmlZf86cyUstZ:APA91bFgrFlmxyETk82Ek7CKdGPiq8ZRbmvMQG6lS8n25Ghyzf3KicmRdu6YopGg5_qrwgGoNue4oep7G2QamtRoQtmCHVgJ7DtDPEYXS5KmB0ezn9c84_YDsa1oSJmcUWP4mT9SMNoj',
+                'data' => $arrNotification
+            );
+      
+      // Firebase API Key
+      $headers = array('Authorization:key='.$API_ACCESS_KEY,'Content-Type:application/json');
+     // Open connection
+      $ch = curl_init();
+      // Set the url, number of POST vars, POST data
+      curl_setopt($ch, CURLOPT_URL, $url);
+      curl_setopt($ch, CURLOPT_POST, true);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      // Disabling SSL Certificate support temporarly
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+      $result = curl_exec($ch);
+      if ($result === FALSE) {
+          die('Curl failed: ' . curl_error($ch));
+      }
+      curl_close($ch);
        /**********************************************************************/
         $responceData = array();
         $notification = array();
