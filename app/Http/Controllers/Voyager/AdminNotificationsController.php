@@ -34,7 +34,7 @@ class AdminNotificationsController extends BaseVoyagerBaseController {
     //****************************************
 
     public function index(Request $request) { 
-      die('sdf');  // GET THE SLUG, ex. 'posts', 'pages', etc.
+        // GET THE SLUG, ex. 'posts', 'pages', etc.
         $slug = $this->getSlug($request);
 
         // GET THE DataType based on the slug
