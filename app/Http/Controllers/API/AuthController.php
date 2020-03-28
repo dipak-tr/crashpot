@@ -60,6 +60,8 @@ class AuthController extends BaseController {
                 DB::table('users')->where('id', '=', $userID)->delete();
                 DB::table('chat_logs')->where('user_id', '=', $userID)->delete();
                 DB::table('usernotifications')->where('user_id', '=', $userID)->delete();
+                DB::table('reportusers')->where('user_id', '=', $userID)->delete();
+                DB::table('reportusers')->where('created_by', '=', $userID)->delete();
 
                 $userID = $request['oldUserId'] ? $request['oldUserId'] : 0;
                 $user = DB::table('users')->find($userID);
