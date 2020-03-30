@@ -135,13 +135,18 @@ class AuthController extends BaseController {
 
                 $user = DB::table('users')->where('id', $userID)->first();
 
-                $userCoind = new Usercoin;
-                $userCoind->user_id = $userID;
-                $userCoind->coins = setting('site.social_media_bonus');
-                $userCoind->game_type = 7;
-                $userCoind->status = 1;
-                $userCoind->save();
-
+                $userCoinBonus = DB::table('usercoins')
+                        ->where('game_type', 7)
+                        ->where('user_id', $userID)
+                        ->first();
+                if (count($userCoinBonus) == 0) {
+                    $userCoind = new Usercoin;
+                    $userCoind->user_id = $userID;
+                    $userCoind->coins = setting('site.social_media_bonus');
+                    $userCoind->game_type = 7;
+                    $userCoind->status = 1;
+                    $userCoind->save();
+                }
                 $socialMedia = 0;
                 $userNotification = new Usernotification;
                 $userNotification->user_id = $userID;

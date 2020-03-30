@@ -452,6 +452,13 @@ class UserController extends BaseController {
 
                 $User->IMEI = '';
                 $User->save();
+                
+                $userNotification = new Usernotification;
+                $userNotification->user_id = $request->userId;
+                $userNotification->msg_title = 'logout ';
+                $userNotification->notification_msg = 'you logout from the App.';
+                $userNotification->is_read = 1;
+                $userNotification->save();
 
                 $responseData = [
                     "userID" => $User->id,
