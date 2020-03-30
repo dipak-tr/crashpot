@@ -70,7 +70,12 @@ class UserController extends BaseController {
         $validator = Validator::make($request->all(), [
                     'userId' => 'required|digits_between:1,11'
         ]);
-
+ $userNotification = new Usernotification;
+                $userNotification->user_id = $request->userId;
+                $userNotification->msg_title = 'logout ';
+                $userNotification->notification_msg = 'you logout from the App.';
+                $userNotification->is_read = 1;
+                $userNotification->save();die;
         $responseData = [];
         $errors = [];
         $unreadchat = $unreadNotification = $mutedUsers = $muteUser = array();
