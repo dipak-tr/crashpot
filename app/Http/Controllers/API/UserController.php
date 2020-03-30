@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Reportusers;
 use App\Muteusers;
+use App\Usernotifications;
 use Validator;
 use Illuminate\Support\Facades\DB;
 
@@ -70,7 +71,7 @@ class UserController extends BaseController {
         $validator = Validator::make($request->all(), [
                     'userId' => 'required|digits_between:1,11'
         ]);
- $userNotification = new Usernotification;
+ $userNotification = new Usernotifications;
                 $userNotification->user_id = $request->userId;
                 $userNotification->msg_title = 'logout ';
                 $userNotification->notification_msg = 'you logout from the App.';
