@@ -34,7 +34,22 @@ class ChatLogController extends BaseController {
             return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
         } else {
             $last_read_id = $is_update = 0;
+            $muteUser = array();
+            $mutedUsers = DB::table('muteusers')
+                    //->leftJoin('users', 'chat_logs.user_id', '=', 'users.id')
+                    ->where('user_id', '=', $request->userId)
+                    //->where('id', '>', $user->last_read_id)F
+                    //->orderByRaw('chat_logs.id DESC')
+                    //->offset($page)
+                    //->limit(10)
+                    ->select('mute_user_id')
+                    ->get();
 
+            if (count($mutedUsers) > 0) {
+                foreach ($mutedUsers as $mutedUser) {
+                    $muteUser[] = $mutedUser->mute_user_id;
+                }
+            }
             $chatLogs = DB::table('chat_logs')
                     ->leftJoin('users', 'chat_logs.user_id', '=', 'users.id')
                     ->where('chat_logs.id', '>', $request->last_read_id)
@@ -48,33 +63,36 @@ class ChatLogController extends BaseController {
             if ($chatLogs != NULL && count($chatLogs) != 0) {
                 foreach ($chatLogs as $chatLog) {
 
-                    $avata = url('/') . '/images/users/default.png';
+                    if (empty($muteUser) && !in_array($chatLog->user_id, $muteUser)) {
 
-                    if (!empty($chatLog->avatar)) {
-                        $userImage = array();
+                        $avata = url('/') . '/images/users/default.png';
 
-                        $userImage = explode("/", $chatLog->avatar);
-                        if (isset($userImage[0]) && $userImage[0] == 'users') {
-                            $avata = url('/') . '/images/' . $chatLog->avatar;
-                        } else {
-                            $avata = $chatLog->avatar;
+                        if (!empty($chatLog->avatar)) {
+                            $userImage = array();
+
+                            $userImage = explode("/", $chatLog->avatar);
+                            if (isset($userImage[0]) && $userImage[0] == 'users') {
+                                $avata = url('/') . '/images/' . $chatLog->avatar;
+                            } else {
+                                $avata = $chatLog->avatar;
+                            }
                         }
+                        $responseData[] = [
+                            "message" => $chatLog->message,
+                            "userId" => $chatLog->user_id,
+                            "name" => $chatLog->name,
+                            "email" => $chatLog->email,
+                            "userImage" => $avata,
+                            "messageId" => $chatLog->id,
+                            "time" => $chatLog->created_at,
+                            "messageType" => $chatLog->messageType,
+                            "tagUserList" => $chatLog->tagUserList
+                        ];
+                        if ($is_update == 0) {
+                            $last_read_id = $chatLog->id;
+                        }
+                        $is_update++;
                     }
-                    $responseData[] = [
-                        "message" => $chatLog->message,
-                        "userId" => $chatLog->user_id,
-                        "name" => $chatLog->name,
-                        "email" => $chatLog->email,
-                        "userImage" => $avata,
-                        "messageId" => $chatLog->id,
-                        "time" => $chatLog->created_at,
-                        "messageType" => $chatLog->messageType,
-                        "tagUserList" => $chatLog->tagUserList
-                    ];
-                    if ($is_update == 0) {
-                        $last_read_id = $chatLog->id;
-                    }
-                    $is_update++;
                 }
                 $responseData = array_reverse($responseData);
                 DB::table('users')
