@@ -99,6 +99,7 @@ class ChatLogController extends BaseController {
                         ->where('id', $request->userId)
                         ->update(['last_read_id' => $last_read_id
                 ]);
+                
             } else {
                 $status_code = config('response_status_code.no_records_found');
                 return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
@@ -106,7 +107,7 @@ class ChatLogController extends BaseController {
         }
 
         $status_code = config('response_status_code.fetched_success');
-        return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $responseData);
+        return $this->sendResponse(true, $status_code, trans('message.fetched_success').count($responseData), $responseData);
     }
 
 }
