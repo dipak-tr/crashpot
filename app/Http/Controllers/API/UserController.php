@@ -6,6 +6,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use App\User;
 use App\Reportusers;
+use App\Muteusers;
 use Validator;
 use Illuminate\Support\Facades\DB;
 
@@ -72,7 +73,7 @@ class UserController extends BaseController {
 
         $responseData = [];
         $errors = [];
-
+        $unreadchat = $unreadNotification = $mutedUsers = $muteUser = array();
         if ($validator->fails()) {
             foreach ($validator->messages()->getMessages() as $key => $value) {
                 $errors[$key] = $value;
@@ -95,7 +96,7 @@ class UserController extends BaseController {
                     $user->save();
                 }
 
-                $unreadchat = $unreadNotification = array();
+
                 $unreadNotification = DB::table('usernotifications')
                         //->leftJoin('users', 'chat_logs.user_id', '=', 'users.id')
                         ->where('user_id', '=', $request->userId)
@@ -115,6 +116,22 @@ class UserController extends BaseController {
                             //->limit(10)
                             ->select('id')
                             ->get();
+
+                    $mutedUsers = DB::table('muteusers')
+                            //->leftJoin('users', 'chat_logs.user_id', '=', 'users.id')
+                            ->where('user_id', '=', $request->userId)
+                            //->where('id', '>', $user->last_read_id)F
+                            //->orderByRaw('chat_logs.id DESC')
+                            //->offset($page)
+                            //->limit(10)
+                            ->select('mute_user_id')
+                            ->get();
+
+                    if (count($mutedUsers) > 0) {
+                        foreach ($mutedUsers as $mutedUser) {
+                            $muteUser[] = $mutedUser->mute_user_id;
+                        }
+                    }
                 }
 
                 $avata = url('/') . '/images/users/default.png';
@@ -149,7 +166,8 @@ class UserController extends BaseController {
                     "remainXP" => $remainXP,
                     "is_level_up" => $is_level_up,
                     "notificationCNT" => count($unreadNotification),
-                    "chatCNT" => count($unreadchat)
+                    "chatCNT" => count($unreadchat),
+                    "mutedUser" => $muteUser
                 ];
             } else {
                 $status_code = config('response_status_code.no_records_found');
@@ -230,6 +248,7 @@ class UserController extends BaseController {
         $validator = Validator::make($request->all(), [
                     'userId' => 'required|digits_between:1,11',
                     'reportUserId' => 'required|digits_between:1,11',
+                    'reportType' => 'required|digits_between:1,11',
                     'chatMessage' => 'required|string|max:1000'
         ]);
 
@@ -245,11 +264,18 @@ class UserController extends BaseController {
             return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
         } else {
 
-            $reportUser = new Reportusers;
-            $reportUser->user_id = $request->reportUserId;
-            $reportUser->chat_message = $request->chatMessage;
-            $reportUser->created_by = $request->userId;
-            $reportUser->save();
+            $muteUser = new Muteusers;
+            $muteUser->user_id = $request->userId;
+            $muteUser->mute_user_id = $request->reportUserId;
+            $muteUser->save();
+            
+            if ($request->reportType == 1) {
+                $reportUser = new Reportusers;
+                $reportUser->user_id = $request->reportUserId;
+                $reportUser->chat_message = $request->chatMessage;
+                $reportUser->created_by = $request->userId;
+                $reportUser->save();
+            }
         }
         $responseData = ["userId" => $request->userId];
         $status_code = config('response_status_code.fetched_success');

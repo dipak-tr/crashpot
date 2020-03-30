@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Usercoin;
 use App\Usernotification;
+use App\Reportusers;
+use App\Muteusers;
 
 class AuthController extends BaseController {
 
@@ -64,6 +66,8 @@ class AuthController extends BaseController {
                 DB::table('usercoins')->where('user_id', '=', $userID)->delete();
                 DB::table('reportusers')->where('user_id', '=', $userID)->delete();
                 DB::table('reportusers')->where('created_by', '=', $userID)->delete();
+                DB::table('muteusers')->where('user_id', '=', $userID)->delete();
+                DB::table('muteusers')->where('mute_user_id', '=', $userID)->delete();
 
                 $userID = $request['oldUserId'] ? $request['oldUserId'] : 0;
                 $user = DB::table('users')->find($userID);
