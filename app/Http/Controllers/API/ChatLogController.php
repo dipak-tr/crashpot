@@ -105,9 +105,13 @@ class ChatLogController extends BaseController {
                 return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
             }
         }
-
+if(count($responseData)==0)
+{
+     $status_code = config('response_status_code.no_records_found');
+                return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
+}else{
         $status_code = config('response_status_code.fetched_success');
-        return $this->sendResponse(true, $status_code, trans('message.fetched_success').count($responseData), $responseData);
-    }
+        return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $responseData);
+    }}
 
 }
