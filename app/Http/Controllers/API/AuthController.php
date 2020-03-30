@@ -8,7 +8,7 @@ use Validator;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Usercoin;
-use App\Usernotification;
+use App\Usernotifications;
 use App\Reportusers;
 use App\Muteusers;
 
@@ -108,7 +108,7 @@ class AuthController extends BaseController {
                 $userCoind->save();
 
                 $socialMedia = 0;
-                $userNotification = new Usernotification;
+                $userNotification = new Usernotifications;
                 $userNotification->user_id = $user->id;
                 $userNotification->msg_title = 'logged in';
                 if ($userNotification->social_media_type == 1) {
@@ -148,7 +148,7 @@ class AuthController extends BaseController {
                     $userCoind->save();
                 }
                 $socialMedia = 0;
-                $userNotification = new Usernotification;
+                $userNotification = new Usernotifications;
                 $userNotification->user_id = $userID;
                 $userNotification->msg_title = 'logged in';
                 if ($userNotification->social_media_type == 1) {
@@ -192,7 +192,7 @@ class AuthController extends BaseController {
             $userCoind->save();
 
             $socialMedia = 0;
-            $userNotification = new Usernotification;
+            $userNotification = new Usernotifications;
             $userNotification->user_id = $user->id;
             $userNotification->msg_title = 'logged in';
             if ($userNotification->social_media_type == 1) {
