@@ -64,7 +64,7 @@ class ChatLogController extends BaseController {
             if ($chatLogs != NULL && count($chatLogs) != 0) {
                 foreach ($chatLogs as $chatLog) {
 
-                    if (empty($muteUser) && !in_array($chatLog->user_id, $muteUser)) {
+                   // if (empty($muteUser) && !in_array($chatLog->user_id, $muteUser)) {
 
                         $avata = url('/') . '/images/users/default.png';
 
@@ -93,7 +93,7 @@ class ChatLogController extends BaseController {
                             $last_read_id = $chatLog->id;
                         }
                         $is_update++;
-                    }
+                    //}
                 }
                 $responseData = array_reverse($responseData);
                 DB::table('users')
