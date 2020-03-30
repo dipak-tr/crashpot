@@ -54,6 +54,7 @@ class ChatLogController extends BaseController {
                     ->leftJoin('users', 'chat_logs.user_id', '=', 'users.id')
                     ->where('chat_logs.id', '>', $request->last_read_id)
                     ->where('users.is_active', '=', 1)
+                    ->whereNotIn('chat_logs.user_id', $muteUser)
                     ->orderByRaw('chat_logs.id DESC')
                     ->offset($page)
                     ->limit(10)
@@ -99,19 +100,18 @@ class ChatLogController extends BaseController {
                         ->where('id', $request->userId)
                         ->update(['last_read_id' => $last_read_id
                 ]);
-                
             } else {
                 $status_code = config('response_status_code.no_records_found');
                 return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
             }
         }
-if(count($responseData)==0)
-{
-     $status_code = config('response_status_code.no_records_found');
-                return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
-}else{
-        $status_code = config('response_status_code.fetched_success');
-        return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $responseData);
-    }}
+        if (count($responseData) == 0) {
+            $status_code = config('response_status_code.no_records_found');
+            return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
+        } else {
+            $status_code = config('response_status_code.fetched_success');
+            return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $responseData);
+        }
+    }
 
 }
