@@ -123,7 +123,7 @@ class ReportUserController extends VoyagerBaseController
         $isModelTranslatable = is_bread_translatable($model);
 
         // Eagerload Relations
-        $this->eagerLoadRelations($dataTypeContent, $dataType, 'browse', $isModelTranslatable);
+        //$this->eagerLoadRelations($dataTypeContent, $dataType, 'browse', $isModelTranslatable);
 
         // Check if server side pagination is enabled
         $isServerSide = isset($dataType->server_side) && $dataType->server_side;
