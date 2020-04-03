@@ -7,7 +7,11 @@
         <h1 class="page-title">
             <i class="{{ $dataType->icon }}"></i> {{ $dataType->getTranslatedAttribute('display_name_plural') }}
         </h1>
-        
+        @can('add', app($dataType->model_name))
+            <a href="{{ route('voyager.'.$dataType->slug.'.create') }}" class="btn btn-success btn-add-new">
+                <i class="voyager-plus"></i> <span>{{ __('voyager::generic.add_new') }}</span>
+            </a>
+        @endcan
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
         @endcan
@@ -30,6 +34,12 @@
         @endforeach
         @include('voyager::multilingual.language-selector')
     </div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style type="text/css" >
+    .mr-3{
+        margin-right: 3px;
+    }
+</style>
 @stop
 
 @section('content')
@@ -37,6 +47,7 @@
         @include('voyager::alerts')
         <div class="row">
             <div class="col-md-12">
+
                 <div class="panel panel-bordered">
                     <div class="panel-body">
                         @if ($isServerSide)
@@ -246,13 +257,38 @@
                                                 @endif
                                             </td>
                                         @endforeach
-                                        <td class="no-sort no-click" id="bread-actions">
-                                            @foreach($actions as $action)
+                                      
+                                        
+                                        
+                                           
+
+                                        
+                                      <td class="no-sort no-click" id="bread-actions">
+                                                                          @foreach($actions as $action)
                                                 @if (!method_exists($action, 'massAction'))
                                                     @include('voyager::bread.partials.actions', ['action' => $action])
                                                 @endif
                                             @endforeach
+                                            
+                                                    @foreach ($blockeduser as $is_blocked)
+                                        
+                                             @if(($data->user_id == $is_blocked['id']) )
+                                          @if(($is_blocked['is_block']=="0"))
+                                                <a href="javascript:;" id="{{$data->user_id}}" class="btn btn-sm btn-warning view block-class pull-right mr-3" title="Block" style="background-color: #fa2a00;">
+                                                    <!-- <i class="glyphicon glyphicon-ban-circle"></i> -->
+                                                    <i class="fa fa-lock"></i>
+                                                </a>
+                                            @elseif(($is_blocked['is_block']=="1"))
+                                                <a href="javascript:;" id="{{$data->user_id}}" class="btn btn-sm btn-warning view unblock pull-right mr-3" title="Unblock" style="background-color: #43d17f;">
+                                                    <!-- <i class="glyphicon glyphicon-unlock"></i> -->
+                                                    <i class="fa fa-unlock" aria-hidden="true"></i>
+                                                </a>
+                                            @endif     
+                                            @endif
+                                            @endforeach 
+                                                                                  
                                         </td>
+                                  
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -303,6 +339,46 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+    <div class="modal modal-danger fade" tabindex="-1" id="change_status_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#22a7f0">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('voyager::generic.close') }}"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><span id="modal-title"></span></h4>
+                </div>
+                <div class="modal-footer">
+                    <form action="#" id="change_status_form" method="POST">
+                        {{ csrf_field() }}
+                        <input type="hidden" id="chngstatus_userid" name="user_id" value="">
+                        <input type="hidden" id="status" name="status" value="">
+                        <input type="submit" class="btn btn-primary pull-right change-confirm" value="">
+                    </form>
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">{{ __('voyager::generic.cancel') }}</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+     <div class="modal modal-danger fade" tabindex="-1" id="change_block_modal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#22a7f0">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('voyager::generic.close') }}"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"></i> <span id="modal-block-title"></span></h4>
+                </div>
+                <div class="modal-footer">
+                    <form action="#" id="change_block_form" method="POST">
+                        {{ csrf_field() }}
+                        <input type="hidden" id="chngblock_userid" name="user_id" value="">
+                        <input type="hidden" id="block_status" name="status" value="">
+                        <input type="submit" class="btn btn-primary pull-right change-block-confirm" value="">
+                    </form>
+                    <button type="button" class="btn btn-default pull-right" data-dismiss="modal">{{ __('voyager::generic.cancel') }}</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 @stop
 
 @section('css')
@@ -318,6 +394,29 @@
     @endif
     <script>
         $(document).ready(function () {
+
+         
+
+            $('.block-class').on('click', function () {
+                var url = '{{ route("users.changeBlockStatus") }}';
+                $('#change_block_form')[0].action = url;
+                $('#chngblock_userid').val($(this).attr('id'));
+                $('#block_status').val('1');
+                $('#modal-block-title').html('Are you sure want to Block this user?');
+                $('.change-block-confirm').val('Yes, Block!');
+                $('#change_block_modal').modal('show');
+            });
+
+            $('.unblock').on('click', function () {
+                var url = '{{ route("users.changeBlockStatus") }}';
+                $('#change_block_form')[0].action = url;
+                $('#chngblock_userid').val($(this).attr('id'));
+                $('#block_status').val('0');
+                $('#modal-block-title').html('Are you sure want to Unblock this user?');
+                $('.change-block-confirm').val('Yes, Unblock!');
+                $('#change_block_modal').modal('show');
+            });
+
             @if (!$dataType->server_side)
                 var table = $('#dataTable').DataTable({!! json_encode(
                     array_merge([
