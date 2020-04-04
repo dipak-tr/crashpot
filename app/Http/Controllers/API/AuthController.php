@@ -139,7 +139,7 @@ class AuthController extends BaseController {
                         ->where('game_type', 7)
                         ->where('user_id', $userID)
                         ->first();
-                if (count($userCoinBonus) == 0) {
+                if (count((array)$userCoinBonus) == 0) {
                     $userCoind = new Usercoin;
                     $userCoind->user_id = $userID;
                     $userCoind->coins = setting('site.social_media_bonus');
