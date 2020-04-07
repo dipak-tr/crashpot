@@ -17,7 +17,7 @@ use TCG\Voyager\Events\BreadImagesDeleted;
 use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Http\Controllers\Traits\BreadRelationshipParser;
 use App\User;
-use App\ReportUser;
+use App\Reportuser;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 
 
@@ -105,7 +105,7 @@ class VoyagerUserController extends VoyagerBaseController
        
         $slug = $this->getSlug($request);
 
-         $deletedRows = ReportUser::where('user_id',$id)->delete();
+         $deletedRows = Reportuser::where('user_id',$id)->delete();
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
