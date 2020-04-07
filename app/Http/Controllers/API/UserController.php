@@ -91,6 +91,11 @@ class UserController extends BaseController {
                 $userLevelnew = round(($user->totalXP / 1000), 3);
                 $remainXP = round(($userLevelnew - $userLevel) * 1000);
 
+                $userLevelNewCeil=ceil($userLevelnew);
+
+                $user->rankingByLevel=$userLevelNewCeil;
+                $user->save();
+
                 $is_level_up = 0;
                 if ($user->is_level_up == 1) {
                     $user->is_level_up = 0;

@@ -253,4 +253,37 @@ class AuthController extends BaseController {
         return implode($number); //turn the array into a string
     }
 
+     public function duplicateLogin(Request $request) {
+        $validator = Validator::make($request->all(), [
+                    'socialMediaId' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            $status_code = config('response_status_code.invalid_input');
+            return $this->sendResponse(false, $status_code, trans('message.invalid_input'));
+        }
+
+
+        $user = DB::table('users')->where('social_media_id', $request->socialMediaId)->first();
+
+        if (empty($user)) {
+            $records = [
+                "social_media_id" => $request->social_media_id,
+                "is_register" => 0,
+                "oldUserId" => 0
+            ];
+            $status_code = config('response_status_code.no_records_found');
+            return $this->sendResponse(true, $status_code, trans('message.no_records_found'), $records);
+        } else {
+            $records = [
+                "social_media_id" => $request->socialMediaId,
+                "is_register" => 1,
+                "oldUserId" => $user->id
+            ];
+            $status_code = config('response_status_code.fetched_success');
+            return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $records);
+        }
+    }
+
+
 }
