@@ -8,9 +8,6 @@ use Validator;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Usercoin;
-use App\Usernotifications;
-use App\Reportusers;
-use App\Muteusers;
 
 class AuthController extends BaseController {
 
@@ -56,30 +53,18 @@ class AuthController extends BaseController {
         // }
 
 
+
+
         $userID = $request['userID'] ? $request['userID'] : 0;
+         $user_id = $request['userID'];
+             $users=User::where('id',$user_id)->get();
         if ($userID != 0) {
-            if ($request->is_register == 1) {
-                DB::table('users')->where('id', '=', $userID)->delete();
-                DB::table('chat_logs')->where('user_id', '=', $userID)->delete();
-                DB::table('usernotifications')->where('user_id', '=', $userID)->delete();
-                DB::table('usercoins')->where('user_id', '=', $userID)->delete();
-                DB::table('usercoins')->where('user_id', '=', $userID)->delete();
-                DB::table('reportusers')->where('user_id', '=', $userID)->delete();
-                DB::table('reportusers')->where('created_by', '=', $userID)->delete();
-                DB::table('muteusers')->where('user_id', '=', $userID)->delete();
-                DB::table('muteusers')->where('mute_user_id', '=', $userID)->delete();
-
-                $userID = $request['oldUserId'] ? $request['oldUserId'] : 0;
-                $user = DB::table('users')->find($userID);
-            }
-
-            if (empty($user)) {
-                $user = DB::table('users')->where('social_media_id', $request['socialMediaId'])->first();
-            }
-            if (empty($user)) {
+            
+            if ($users->isEmpty()) {
                 $user = new User;
                 $user->name = $request['name'];
                 $user->email = $request['email'];
+
                 $user->avatar = $request['avatar'];
                 $user->social_media_type = $request['socialMediaType'];
                 $user->social_media_id = $request['socialMediaId'];
@@ -90,75 +75,45 @@ class AuthController extends BaseController {
                 $user->is_level_up = 0;
                 $user->totalCoins = (setting('site.welcome_bonus') + setting('site.social_media_bonus'));
                 $user->is_active = 1;
-                $user->save();
+               $user->save();
 
                 $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
                 $userCoind = new Usercoin;
                 $userCoind->user_id = $user->id;
-                $userCoind->coins = setting('site.welcome_bonus');
+                $userCoind->coins = 1;
                 $userCoind->game_type = 6;
                 $userCoind->status = 1;
                 $userCoind->save();
 
                 $userCoind = new Usercoin;
                 $userCoind->user_id = $user->id;
-                $userCoind->coins = setting('site.social_media_bonus');
+                $userCoind->coins = 1;
                 $userCoind->game_type = 7;
                 $userCoind->status = 1;
                 $userCoind->save();
-
-                $socialMedia = 0;
-                $userNotification = new Usernotifications;
-                $userNotification->user_id = $user->id;
-                $userNotification->msg_title = 'logged in';
-                if ($userNotification->social_media_type == 1) {
-                    $socialMedia = 'facebook';
-                } else {
-                    $socialMedia = 'gmail';
-                }
-                $userNotification->notification_msg = 'you logged in with ' . $socialMedia . '.';
-                $userNotification->is_read = 1;
-                $userNotification->save();
             } else {
 
                 DB::table('users')
-                        ->where('id', $userID)
+                        ->where('id', $request['userID'])
                         ->update(['name' => $request['name'],
                             'avatar' => $request['avatar'],
                             'email' => $request['email'],
-                            'IMEI' => $request['IMEI'],
                             'social_media_type' => $request['socialMediaType'],
                             'social_media_id' => $request['socialMediaId'],
                             'device_type' => $request['deviceType'],
                             'device_token' => $request['deviceToken']
                 ]);
 
-                $user = DB::table('users')->where('id', $userID)->first();
+                $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
+                $userCoind = new Usercoin;
+                $userCoind->user_id = $user->id;
+                $userCoind->coins = 1;
+                $userCoind->game_type = 7;
+                $userCoind->status = 1;
+                $userCoind->save();
 
-                $userCoinBonus = DB::table('usercoins')
-                        ->where('game_type', 7)
-                        ->where('user_id', $userID)
-                        ->first();
-                if (count((array)$userCoinBonus) == 0) {
-                    $userCoind = new Usercoin;
-                    $userCoind->user_id = $userID;
-                    $userCoind->coins = setting('site.social_media_bonus');
-                    $userCoind->game_type = 7;
-                    $userCoind->status = 1;
-                    $userCoind->save();
-                }
-                $socialMedia = 0;
-                $userNotification = new Usernotifications;
-                $userNotification->user_id = $userID;
-                $userNotification->msg_title = 'logged in';
-                if ($userNotification->social_media_type == 1) {
-                    $socialMedia = 'facebook';
-                } else {
-                    $socialMedia = 'gmail';
-                }
-                $userNotification->notification_msg = 'you logged in with ' . $socialMedia . '.';
-                $userNotification->is_read = 1;
-                $userNotification->save();
+
+
             }
         } else {
             $user = new User;
@@ -174,7 +129,7 @@ class AuthController extends BaseController {
             $user->totalCoins = (setting('site.welcome_bonus') + setting('site.social_media_bonus'));
             $user->is_active = 1;
             $user->is_level_up = 0;
-            $user->save();
+           $user->save();
 
             $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
             $userCoind = new Usercoin;
@@ -186,45 +141,20 @@ class AuthController extends BaseController {
 
             $userCoind = new Usercoin;
             $userCoind->user_id = $user->id;
-            $userCoind->coins = setting('site.social_media_bonus');
+            $userCoind->coins = 1;
             $userCoind->game_type = 7;
             $userCoind->status = 1;
             $userCoind->save();
-
-            $socialMedia = 0;
-            $userNotification = new Usernotifications;
-            $userNotification->user_id = $user->id;
-            $userNotification->msg_title = 'logged in';
-            if ($userNotification->social_media_type == 1) {
-                $socialMedia = 'facebook';
-            } else {
-                $socialMedia = 'gmail';
-            }
-            $userNotification->notification_msg = 'you logged in with ' . $socialMedia . '.';
-            $userNotification->is_read = 1;
-            $userNotification->save();
         }
         $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
         $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 1000);
         $userLevelnew = ($user->totalXP) ? 0 : round(($user->totalXP / 1000), 3);
         $remainXP = round(($userLevelnew - $userLevel) * 1000);
 
-        $avata = url('/') . '/images/users/default.png';
-        if (!empty($user->avatar)) {
-            $userImage = array();
-
-            $userImage = explode("/", $user->avatar);
-            if (isset($userImage[0]) && $userImage[0] == 'users') {
-                $avata = url('/') . '/images/' . $user->avatar;
-            } else {
-                $avata = $user->avatar;
-            }
-        }
-
         $records = [
             "userID" => $user->id,
             "userName" => $user->name,
-            "userImage" => $avata,
+            "userImage" => $user->avatar,
             "email" => $user->email,
             "is_block" => $user->is_block,
             "socialMediaType" => $user->social_media_type,
@@ -252,7 +182,7 @@ class AuthController extends BaseController {
         $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
 
         if (empty($user)) {
-            $last_row = DB::table('chat_logs')->orderBy('id', 'DESC')->first();
+            $last_row = DB::table('users')->orderBy('id', 'DESC')->first();
 
             $user = new User;
             $user->name = $autogeneratednumber;
@@ -282,23 +212,12 @@ class AuthController extends BaseController {
         $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 1000);
         $userLevelnew = ($user->totalXP) ? 0 : round(($user->totalXP / 1000), 3);
         $remainXP = round(($userLevelnew - $userLevel) * 1000);
-        $avata = url('/') . '/images/users/default.png';
 
-        if (!empty($chatLog->avatar)) {
-            $userImage = array();
-
-            $userImage = explode("/", $chatLog->avatar);
-            if (isset($userImage[0]) && $userImage[0] == 'users') {
-                $avata = url('/') . '/images/' . $chatLog->avatar;
-            } else {
-                $avata = $chatLog->avatar;
-            }
-        }
         $records = [
             "guestNumber" => $user->name,
             "userID" => $user->id,
             "userName" => $user->name,
-            "userImage" => $avata,
+            "userImage" => $user->avatar,
             "email" => $user->email,
             "is_block" => $user->is_block,
             "isRegister" => $isRegister,
@@ -332,38 +251,6 @@ class AuthController extends BaseController {
             $number[] = $digit[$n];
         }
         return implode($number); //turn the array into a string
-    }
-
-    public function duplicateLogin(Request $request) {
-        $validator = Validator::make($request->all(), [
-                    'socialMediaId' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            $status_code = config('response_status_code.invalid_input');
-            return $this->sendResponse(false, $status_code, trans('message.invalid_input'));
-        }
-
-
-        $user = DB::table('users')->where('social_media_id', $request->socialMediaId)->first();
-
-        if (empty($user)) {
-            $records = [
-                "social_media_id" => $request->social_media_id,
-                "is_register" => 0,
-                "oldUserId" => 0
-            ];
-            $status_code = config('response_status_code.no_records_found');
-            return $this->sendResponse(true, $status_code, trans('message.no_records_found'), $records);
-        } else {
-            $records = [
-                "social_media_id" => $request->socialMediaId,
-                "is_register" => 1,
-                "oldUserId" => $user->id
-            ];
-            $status_code = config('response_status_code.fetched_success');
-            return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $records);
-        }
     }
 
 }
