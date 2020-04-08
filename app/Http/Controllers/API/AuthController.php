@@ -56,13 +56,13 @@ class AuthController extends BaseController {
         
         $user_social_media=$request['socialMediaId'];
          $users=User::where('social_media_id',$user_social_media)->get();
-
+         $username=$users[0]['name'];
           if (!$users->isEmpty()) {
         
 
           DB::table('users')
                         ->where('id', $old_user_id)
-                       ->update(['name' => $request['name'],
+                       ->update(['name' => $username,
                             'avatar' => $request['avatar'],
                             'email' => $request['email'],
                             'social_media_type' => $request['socialMediaType'],
@@ -226,21 +226,24 @@ else{
             $user->device_token = $request['deviceToken'];
             //$user->user_type = $request['userType'];
             $user->IMEI = $request['IMEI'];
+            $user->rankingByLevel=1;
             $user->is_active = 1;
             $user->totalCoins = setting('site.welcome_bonus');
             $user->last_read_id = $last_row->id;
             $user->is_level_up = 0;
             $user->save();
             $isRegister = 0;
-
+    
             $userCoind = new Usercoin;
             $userCoind->user_id = $user->id;
             $userCoind->coins = setting('site.welcome_bonus');
             $userCoind->game_type = 6;
             $userCoind->status = 1;
             $userCoind->save();
-            $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
+            //$user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
         }
+         
+       
 
         $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 1000);
         $userLevelnew = ($user->totalXP) ? 0 : round(($user->totalXP / 1000), 3);
