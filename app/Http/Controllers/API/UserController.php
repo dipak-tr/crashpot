@@ -92,8 +92,14 @@ class UserController extends BaseController {
                 $remainXP = round(($userLevelnew - $userLevel) * 1000);
 
                 $userLevelNewCeil=ceil($userLevelnew);
-
-                $user->rankingByLevel=$userLevelNewCeil;
+                if($userLevelNewCeil==0)
+                {
+                    $user->rankingByLevel=1;
+                }
+                else
+                { 
+                    $user->rankingByLevel=$userLevelNewCeil;
+                }
                 $user->save();
 
                 $is_level_up = 0;
@@ -175,7 +181,8 @@ class UserController extends BaseController {
                     "chatCNT" => count($unreadchat),
                     "mutedUser" => $muteUser
                 ];
-            } else {
+            }
+             else {
                 $status_code = config('response_status_code.no_records_found');
                 return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
             }
