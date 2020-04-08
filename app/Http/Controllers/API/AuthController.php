@@ -51,9 +51,40 @@ class AuthController extends BaseController {
         //     $status_code = config('response_status_code.imei_number_mismatch');
         //     return $this->sendResponse(true, $status_code, trans('message.imei_number_mismatch'), $response_user);
         // }
+        $old_user_id = $request['oldUserId'];
+         $user_id = $request['userID'];
+        
+        $user_social_media=$request['socialMediaId'];
+         $users=User::where('social_media_id',$user_social_media)->get();
 
+          if (!$users->isEmpty()) {
+        
 
+          DB::table('users')
+                        ->where('id', $old_user_id)
+                       ->update(['name' => $request['name'],
+                            'avatar' => $request['avatar'],
+                            'email' => $request['email'],
+                            'social_media_type' => $request['socialMediaType'],
+                            'social_media_id' => $request['socialMediaId'],
+                            'device_type' => $request['deviceType'],
+                            'device_token' => $request['deviceToken'],
+                            'IMEI' => $request['IMEI'],
 
+                ]);
+
+                $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
+                $userCoind = new Usercoin;
+                $userCoind->user_id = $user->id;
+                $userCoind->coins = 1;
+                $userCoind->game_type = 7;
+                $userCoind->status = 1;
+                $userCoind->save();
+                $deletedRows = User::where('id',$user_id)->delete();
+
+          }
+
+else{
 
         $userID = $request['userID'] ? $request['userID'] : 0;
          $user_id = $request['userID'];
@@ -146,6 +177,8 @@ class AuthController extends BaseController {
             $userCoind->status = 1;
             $userCoind->save();
         }
+
+}
         $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
         $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 1000);
         $userLevelnew = ($user->totalXP) ? 0 : round(($user->totalXP / 1000), 3);
