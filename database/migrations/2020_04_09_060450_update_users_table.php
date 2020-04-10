@@ -16,8 +16,22 @@ class UpdateUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('name')->nullable()->change();
             $table->string('email')->nullable()->change();
-            $table->string('password')->nullable()->change();
-            $table->tinyInteger('is_active')->comment = '0 => No, 1 => Yes';
+            $table->string('total_amount')->nullable()->default('0');
+            $table->integer('totalXP')->default('0');
+            $table->integer('totalCoins')->default('0');
+            $table->integer('profit')->default('0');
+            $table->integer('wagered')->default('0');
+            $table->integer('playedGames')->default('0');
+            $table->integer('ranking')->default('0');
+            $table->integer('rankingByLevel')->default('1');
+            $table->integer('rankingByProfit')->default('0');
+            $table->integer('last_read_id')->default('0');
+            $table->tinyInteger('is_level_up')->default('0')->comment = '0 => not level up, 1 => level up';
+
+
+
+
+             $table->tinyInteger('is_active')->comment = '0 => No, 1 => Yes';
             $table->string('user_type')->nullable();
             $table->string('IMEI')->nullable();
             $table->tinyInteger('social_media_type')->comment = '0 => Guest, 1 => Facebook, 2 => Gmail';

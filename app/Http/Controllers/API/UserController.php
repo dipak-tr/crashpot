@@ -9,6 +9,11 @@ use App\Reportusers;
 use App\Muteusers;
 use App\Usernotifications;
 use Validator;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+
 use Illuminate\Support\Facades\DB;
 
 class UserController extends BaseController {
@@ -463,7 +468,7 @@ class UserController extends BaseController {
             $User = User::find($request->userId);
             if ($User != NULL) {
 
-                $User->IMEI = '';
+                $User->IMEI = ' ';
                 $User->save();
                 
                 $userNotification = new Usernotifications;
@@ -482,6 +487,8 @@ class UserController extends BaseController {
                 return $this->sendResponse(true, $status_code, trans('message.invalid_input'));
             }
         }
+            $request->user()->token()->revoke();
+        
         $status_code = config('response_status_code.fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.fetched_success'));
     }
