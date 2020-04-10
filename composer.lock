@@ -23,7 +23,7 @@
             "require": {
                 "illuminate/cache": ">=5.5",
                 "illuminate/console": ">=5.5",
-                "illuminate/container": ">=5.5",
+				"illuminate/container": ">=5.5",
                 "illuminate/contracts": ">=5.5",
                 "illuminate/support": ">=5.5",
                 "illuminate/view": ">=5.5",
