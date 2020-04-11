@@ -274,7 +274,7 @@ else{
             if($user_old){
                         \Laravel\Passport\Token::where('user_id', $user_old->id)->delete();
 
-                $success['token'] =  $useri->createToken('MyApp')->accessToken;
+                $success['token'] =  $user_old->createToken('MyApp')->accessToken;
                }
 
          $user_new = User::where('IMEI', '<>',$request['IMEI'])->first();
@@ -282,7 +282,7 @@ else{
             if($user_new){
                         \Laravel\Passport\Token::where('user_id', $user_new->id)->delete();
 
-                $success['token'] =  $usern->createToken('MyApp')->accessToken;
+                $success['token'] =  $user_new->createToken('MyApp')->accessToken;
                }
 
         $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 1000);
