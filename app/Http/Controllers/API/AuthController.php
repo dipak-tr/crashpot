@@ -19,13 +19,13 @@ class AuthController extends BaseController {
      */
     public function login(Request $request) {
 
-          $user_secondTime = User::where('IMEI', '<>',$request['IMEI'])->where('social_media_id',$request['socialMediaId'])->first();
+          // $user_secondTime = User::where('IMEI', '<>',$request['IMEI'])->where('social_media_id',$request['socialMediaId'])->first();
 
-            if($user_secondTime){
-                        \Laravel\Passport\Token::where('user_id', $user_secondTime->id)->delete();
+          //   if($user_secondTime){
+          //               \Laravel\Passport\Token::where('user_id', $user_secondTime->id)->delete();
 
-               // $success['token'] =  $user_new->createToken('MyApp')->accessToken;
-               }
+          //      // $success['token'] =  $user_new->createToken('MyApp')->accessToken;
+          //      }
 
         $validator = Validator::make($request->all(), [
                     'name' => 'required',
@@ -60,6 +60,8 @@ class AuthController extends BaseController {
         //     $status_code = config('response_status_code.imei_number_mismatch');
         //     return $this->sendResponse(true, $status_code, trans('message.imei_number_mismatch'), $response_user);
         // }
+
+
         $old_user_id = $request['oldUserId'];
          $user_id = $request['userID'];
         
@@ -154,6 +156,7 @@ else{
                 $userCoind->save();
 
 
+               
 
             }
         } else {
@@ -210,6 +213,9 @@ else{
         $user = DB::table('users')->where('social_media_id', $request['socialMediaId'])->first();
 
         }
+
+
+       
 
         $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 1000);
         $userLevelnew = ($user->totalXP) ? 0 : round(($user->totalXP / 1000), 3);
