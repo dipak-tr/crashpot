@@ -1,15 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\API;
-use Carbon\Carbon;
 
 use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use Validator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Facades\Auth;
-
 use App\User;
 use App\Usercoin;
 
@@ -21,9 +17,6 @@ class AuthController extends BaseController {
      * @param  Request  $request
      * @return [json] user object
      */
-
-
-               
     public function login(Request $request) {
         $validator = Validator::make($request->all(), [
                     'name' => 'required',
@@ -58,28 +51,16 @@ class AuthController extends BaseController {
         //     $status_code = config('response_status_code.imei_number_mismatch');
         //     return $this->sendResponse(true, $status_code, trans('message.imei_number_mismatch'), $response_user);
         // }
-
-        $user = User::where('IMEI','<>', $request['IMEI'])->first();
-
-
-        
-            if($user){
-                        \Laravel\Passport\Token::where('user_id', $user->id)->delete();
-
-                $success['token'] =  $user->createToken('MyApp')->accessToken;
-               }
         $old_user_id = $request['oldUserId'];
          $user_id = $request['userID'];
         
         $user_social_media=$request['socialMediaId'];
          $users=User::where('social_media_id',$user_social_media)->get();
-
-         
-         
+        
           if (!$users->isEmpty()) {
-        //excecuting when user log in second time
-                     $username=$users[0]['name'];
-                     DB::table('users')
+        
+            $username=$users[0]['name'];
+          DB::table('users')
                         ->where('id', $old_user_id)
                        ->update(['name' => $username,
                             'avatar' => $request['avatar'],
@@ -89,31 +70,18 @@ class AuthController extends BaseController {
                             'device_type' => $request['deviceType'],
                             'device_token' => $request['deviceToken'],
                             'IMEI' => $request['IMEI'],
-                            //'api_token' => $this->apiToken,
 
                 ]);
-                // $users = User::where('IMEI','<>',$request['IMEI'])->get();
 
-                //  if(!$users->isEmpty())
-                //  {
-                //      DB::table('users')
-                //         ->where('id', $old_user_id)
-                //        ->update(['api_token' => $this->apiToken,
-                //    ]);
-                //  }
-            
-         
-                
                 $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
-              
-               
                 $userCoind = new Usercoin;
                 $userCoind->user_id = $user->id;
                 $userCoind->coins = 1;
                 $userCoind->game_type = 7;
                 $userCoind->status = 1;
                 $userCoind->save();
-                $deletedRows = User::where('id',$user_id)->delete();
+                 $deletedRows = User::where('id',$user_id)->delete();
+
 
           }
 
@@ -136,7 +104,6 @@ else{
                 $user->device_token = $request['deviceToken'];
                 // $user->user_type = $request['userType'];
                 $user->IMEI = $request['IMEI'];
-               // $user->api_token = $this->apiToken;
                 $user->is_level_up = 0;
                 $user->totalCoins = (setting('site.welcome_bonus') + setting('site.social_media_bonus'));
                 $user->is_active = 1;
@@ -166,8 +133,7 @@ else{
                             'social_media_type' => $request['socialMediaType'],
                             'social_media_id' => $request['socialMediaId'],
                             'device_type' => $request['deviceType'],
-                            'device_token' => $request['deviceToken'],
-                            //'api_token' => $this->apiToken,
+                            'device_token' => $request['deviceToken']
                 ]);
 
                 $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
@@ -195,7 +161,6 @@ else{
             $user->totalCoins = (setting('site.welcome_bonus') + setting('site.social_media_bonus'));
             $user->is_active = 1;
             $user->is_level_up = 0;
-          //  $user->api_token = $this->apiToken;
            $user->save();
 
             $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
@@ -215,15 +180,27 @@ else{
         }
 
 }
-            $user = User::where('IMEI', $request['IMEI'])->first();
+
+
+
+            // $user = User::where('IMEI', $request['IMEI'])->first();
 
 
         
-            if($user){
-                        \Laravel\Passport\Token::where('user_id', $user->id)->delete();
+            // if($user){
+            //             \Laravel\Passport\Token::where('user_id', $user->id)->delete();
 
-                $success['token'] =  $user->createToken('MyApp')->accessToken;
-               }
+            //     $success['token'] =  $user->createToken('MyApp')->accessToken;
+            //    }
+
+
+
+        $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
+        if(!$user)
+        {
+        $user = DB::table('users')->where('social_media_id', $request['socialMediaId'])->first();
+
+        }
 
         $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 1000);
         $userLevelnew = ($user->totalXP) ? 0 : round(($user->totalXP / 1000), 3);
@@ -232,7 +209,7 @@ else{
         $records = [
             "userID" => $user->id,
             "userName" => $user->name,
-            "userImage" => $user->avatar,   
+            "userImage" => $user->avatar,
             "email" => $user->email,
             "is_block" => $user->is_block,
             "socialMediaType" => $user->social_media_type,
@@ -246,7 +223,7 @@ else{
             "last_read_id" => $user->last_read_id,
             "remainXP" => $remainXP,
             "is_level_up" => $user->is_level_up,
-             "sucsess" =>$success,
+             //"sucsess" =>$success,
             
         ];
         $status_code = config('response_status_code.login_success');
@@ -258,7 +235,7 @@ else{
         $records = [
             "guestNumber" => $autogeneratednumber
         ];
-        $new = new User();
+
          
         $isRegister = 1;
         $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
@@ -273,9 +250,7 @@ else{
             // $user->social_media_id = $request['socialMediaId'];
             $user->device_type = $request['deviceType'];
             $user->device_token = $request['deviceToken'];
-            
             //$user->user_type = $request['userType'];
-           // $user->api_token=0;
             $user->IMEI = $request['IMEI'];
             $user->rankingByLevel=1;
             $user->is_active = 1;
@@ -291,16 +266,26 @@ else{
             $userCoind->game_type = 6;
             $userCoind->status = 1;
             $userCoind->save();
+            //$user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
         }
 
-            $user = User::where('IMEI', $request['IMEI'])->first();
+        $useri = User::where('IMEI', $request['IMEI'])->first();
 
-            if($user){
-                $success['token'] =  $user->createToken('MyApp')->accessToken;
+            if($useri){
+                        \Laravel\Passport\Token::where('user_id', $useri->id)->delete();
+
+                $success['token'] =  $useri->createToken('MyApp')->accessToken;
                }
 
+         $usern = User::where('IMEI', '<>',$request['IMEI'])->first();
 
-        $userLevel = ($user->totalXP) ? 0 : round($user->totalsXP / 1000);
+            if($user){
+                        \Laravel\Passport\Token::where('user_id', $usern->id)->delete();
+
+                $success['token'] =  $usern->createToken('MyApp')->accessToken;
+               }
+
+        $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 1000);
         $userLevelnew = ($user->totalXP) ? 0 : round(($user->totalXP / 1000), 3);
         $remainXP = round(($userLevelnew - $userLevel) * 1000);
 
@@ -324,7 +309,6 @@ else{
             "remainXP" => $remainXP,
             "is_level_up" => $user->is_level_up,
             "success" =>$success
-
         ];
         $status_code = config('response_status_code.random_number_fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.random_number_fetched_success'), $records);
