@@ -269,18 +269,18 @@ else{
             //$user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
         }
 
-        $useri = User::where('IMEI', $request['IMEI'])->first();
+        $user_old = User::where('IMEI', $request['IMEI'])->first();
 
-            if($useri){
-                        \Laravel\Passport\Token::where('user_id', $useri->id)->delete();
+            if($user_old){
+                        \Laravel\Passport\Token::where('user_id', $user_old->id)->delete();
 
                 $success['token'] =  $useri->createToken('MyApp')->accessToken;
                }
 
-         $usern = User::where('IMEI', '<>',$request['IMEI'])->first();
+         $user_new = User::where('IMEI', '<>',$request['IMEI'])->first();
 
-            if($user){
-                        \Laravel\Passport\Token::where('user_id', $usern->id)->delete();
+            if($user_new){
+                        \Laravel\Passport\Token::where('user_id', $user_new->id)->delete();
 
                 $success['token'] =  $usern->createToken('MyApp')->accessToken;
                }
