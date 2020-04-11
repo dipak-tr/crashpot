@@ -19,13 +19,20 @@ class AuthController extends BaseController {
      */
     public function login(Request $request) {
 
-          // $user_secondTime = User::where('IMEI', '<>',$request['IMEI'])->where('social_media_id',$request['socialMediaId'])->first();
+          $user_secondTime = User::where('IMEI', '<>',$request['IMEI'])->where('social_media_id',$request['socialMediaId'])->where('user_id',$request['oldUserId'])->first();
 
-          //   if($user_secondTime){
-          //               \Laravel\Passport\Token::where('user_id', $user_secondTime->id)->delete();
+            if($user_secondTime)
+            {    
+                      //  \Laravel\Passport\Token::where('user_id', $user_secondTime->id)->delete();
+                        
+          return response()->json([
+                "success"=> false,
+                "message"=>"unauthorized to access",
 
-          //      // $success['token'] =  $user_new->createToken('MyApp')->accessToken;
-          //      }
+                 ],401);
+               // $success['token'] =  $user_new->createToken('MyApp')->accessToken;
+               }
+               else{
 
         $validator = Validator::make($request->all(), [
                     'name' => 'required',
@@ -82,7 +89,7 @@ class AuthController extends BaseController {
                             'device_token' => $request['deviceToken'],
                             'IMEI' => $request['IMEI'],
 
-                ]);
+               ]);
 
                 $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
                 $userCoind = new Usercoin;
@@ -243,6 +250,7 @@ else{
         ];
         $status_code = config('response_status_code.login_success');
         return $this->sendResponse(true, $status_code, trans('message.login_success'), $records);
+    }
     }
 
     public function getGuestRandomNumber(Request $request) {
