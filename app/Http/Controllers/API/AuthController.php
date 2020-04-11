@@ -18,6 +18,15 @@ class AuthController extends BaseController {
      * @return [json] user object
      */
     public function login(Request $request) {
+
+          $user_secondTime = User::where('IMEI', '<>',$request['IMEI'])->where('social_media_id',$request['socialMediaId'])->first();
+
+            if($user_secondTime){
+                        \Laravel\Passport\Token::where('user_id', $user_secondTime->id)->delete();
+
+               // $success['token'] =  $user_new->createToken('MyApp')->accessToken;
+               }
+
         $validator = Validator::make($request->all(), [
                     'name' => 'required',
                     'avatar' => 'required',
@@ -272,7 +281,7 @@ else{
         $user_old = User::where('IMEI', $request['IMEI'])->first();
 
             if($user_old){
-                        \Laravel\Passport\Token::where('user_id', $user_old->id)->delete();
+                       // \Laravel\Passport\Token::where('user_id', $user_old->id)->delete();
 
                 $success['token'] =  $user_old->createToken('MyApp')->accessToken;
                }
@@ -280,10 +289,14 @@ else{
          $user_new = User::where('IMEI', '<>',$request['IMEI'])->first();
 
             if($user_new){
-                        \Laravel\Passport\Token::where('user_id', $user_new->id)->delete();
+                        //\Laravel\Passport\Token::where('user_id', $user_new->id)->delete();
 
                 $success['token'] =  $user_new->createToken('MyApp')->accessToken;
                }
+
+
+
+             
 
         $userLevel = ($user->totalXP) ? 0 : round($user->totalXP / 1000);
         $userLevelnew = ($user->totalXP) ? 0 : round(($user->totalXP / 1000), 3);
