@@ -294,19 +294,7 @@ else{
 
         $user_old = User::where('IMEI', $request['IMEI'])->first();
 
-            if($user_old){
-                       // \Laravel\Passport\Token::where('user_id', $user_old->id)->delete();
-
-                $success['token'] =  $user_old->createToken('MyApp')->accessToken;
-               }
-
-         $user_new = User::where('IMEI', '<>',$request['IMEI'])->first();
-
-            if($user_new){
-                        //\Laravel\Passport\Token::where('user_id', $user_new->id)->delete();
-
-                $success['token'] =  $user_new->createToken('MyApp')->accessToken;
-               }
+           
 
 
 
@@ -335,7 +323,7 @@ else{
             "last_read_id" => $user->last_read_id,
             "remainXP" => $remainXP,
             "is_level_up" => $user->is_level_up,
-            "success" =>$success
+            
         ];
         $status_code = config('response_status_code.random_number_fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.random_number_fetched_success'), $records);
