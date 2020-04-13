@@ -25,6 +25,10 @@ class UserController extends BaseController {
      * @return [json] user object
      * */
     public function updateUserName(Request $request) {
+
+
+
+
         $validator = Validator::make($request->all(), [
                     'userId' => 'required|digits_between:1,11',
                     'userName' => 'required|string|max:100',
@@ -73,6 +77,21 @@ class UserController extends BaseController {
     }
 
     public function getDashboard(Request $request) {
+
+
+         $user_secondTime = User::where('IMEI', '!=',$request['IMEI'])->where('id',$request['userID'])->where('is_loged',1)->first();
+
+            if($user_secondTime)
+            {    
+                      //  \Laravel\Passport\Token::where('user_id', $user_secondTime->id)->delete();
+                        
+          return response()->json([
+                "success"=> false,
+                "message"=>"Another device is running App",
+
+                 ],402);
+               // $success['token'] =  $user_new->createToken('MyApp')->accessToken;
+               }else{
         $validator = Validator::make($request->all(), [
                     'userId' => 'required|digits_between:1,11'
         ]);
@@ -196,7 +215,7 @@ class UserController extends BaseController {
         $status_code = config('response_status_code.dashboard_fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.dashboard_fetched_success'), $responseData);
     }
-
+}
     public function getUserProfile(Request $request) {
         $validator = Validator::make($request->all(), [
                     'userId' => 'required|digits_between:1,11'
@@ -490,6 +509,7 @@ class UserController extends BaseController {
             }
         }
            
+        
         $status_code = config('response_status_code.fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.fetched_success'));
     }
