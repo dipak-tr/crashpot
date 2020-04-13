@@ -146,6 +146,8 @@ else{
                 $userCoind->status = 1;
                 $userCoind->save();
             } else {
+                $usercoins=User::where('id',$request['userID'])->value('totalCoins');
+                $usercoins_withbonus=$usercoins+500;
 
                 DB::table('users')
                         ->where('id', $request['userID'])
@@ -157,6 +159,7 @@ else{
                             'device_type' => $request['deviceType'],
                             'device_token' => $request['deviceToken'],
                             'is_loged'=>1,
+                            'totalCoins'=>$usercoins_withbonus,
                 ]);
 
                 $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
