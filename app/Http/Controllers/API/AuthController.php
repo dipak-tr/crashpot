@@ -20,7 +20,7 @@ class AuthController extends BaseController {
     public function login(Request $request) {
 
 
-          $user_secondTime = User::where('IMEI','!=',$request['IMEI'])->where('social_media_id',$request['socialMediaId'])->where('id',$request['oldUserId'])->first();
+        
            $user_secondTime = User::where('IMEI', '!=',$request['IMEI'])->where('social_media_id',$request['socialMediaId'])->where('is_loged',1)->first();
 
             if($user_secondTime)
@@ -383,10 +383,6 @@ else{
 
 
 }   
-
-
-
-
 
 
 
