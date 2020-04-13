@@ -21,9 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
- Route::group([
-      'middleware' => 'auth:api'
-    ], function() {
+ 
 Route::post('add/user-coins', 'API\UserCoinsControllers@addUserCoins');
 Route::put('update/user-name', 'API\UserController@updateUserName');
 Route::get('dashboard', 'API\UserController@getDashboard');
@@ -38,5 +36,5 @@ Route::get('duplicatelogin', 'API\AuthController@duplicateLogin');
 Route::get('logout', 'API\UserController@logout');
 Route::get('notification', 'API\UserNotificationController@getNotification');
 
- });
+ 
 

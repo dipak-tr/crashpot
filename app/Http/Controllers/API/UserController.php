@@ -469,6 +469,8 @@ class UserController extends BaseController {
             if ($User != NULL) {
 
                 $User->IMEI = ' ';
+                $User->is_loged = 0;
+
                 $User->save();
                 
                 $userNotification = new Usernotifications;
@@ -487,8 +489,7 @@ class UserController extends BaseController {
                 return $this->sendResponse(true, $status_code, trans('message.invalid_input'));
             }
         }
-            $request->user()->token()->revoke();
-        
+           
         $status_code = config('response_status_code.fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.fetched_success'));
     }

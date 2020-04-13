@@ -19,7 +19,7 @@ class AuthController extends BaseController {
      */
     public function login(Request $request) {
 
-          $user_secondTime = User::where('IMEI', '<>',$request['IMEI'])->where('social_media_id',$request['socialMediaId'])->where('user_id',$request['oldUserId'])->first();
+           $user_secondTime = User::where('IMEI', '!=',$request['IMEI'])->where('social_media_id',$request['socialMediaId'])->where('is_loged',1)->first();
 
             if($user_secondTime)
             {    
@@ -32,7 +32,7 @@ class AuthController extends BaseController {
                  ],401);
                // $success['token'] =  $user_new->createToken('MyApp')->accessToken;
                }
-               else{
+              else{
 
         $validator = Validator::make($request->all(), [
                     'name' => 'required',
@@ -88,6 +88,7 @@ class AuthController extends BaseController {
                             'device_type' => $request['deviceType'],
                             'device_token' => $request['deviceToken'],
                             'IMEI' => $request['IMEI'],
+                            'is_loged'=>1,
 
                ]);
 
@@ -114,6 +115,7 @@ else{
                 $user = new User;
                 $user->name = $request['name'];
                 $user->email = $request['email'];
+                $user->is_loged = 1;
 
                 $user->avatar = $request['avatar'];
                 $user->social_media_type = $request['socialMediaType'];
@@ -151,7 +153,8 @@ else{
                             'social_media_type' => $request['socialMediaType'],
                             'social_media_id' => $request['socialMediaId'],
                             'device_type' => $request['deviceType'],
-                            'device_token' => $request['deviceToken']
+                            'device_token' => $request['deviceToken'],
+                            'is_loged'=>1,
                 ]);
 
                 $user = DB::table('users')->where('IMEI', $request['IMEI'])->first();
@@ -176,6 +179,8 @@ else{
             $user->device_type = $request['deviceType'];
             $user->device_token = $request['deviceToken'];
             //$user->user_type = $request['userType'];
+            $user->is_loged = 1;
+
             $user->IMEI = $request['IMEI'];
             $user->totalCoins = (setting('site.welcome_bonus') + setting('site.social_media_bonus'));
             $user->is_active = 1;
@@ -294,20 +299,7 @@ else{
 
         $user_old = User::where('IMEI', $request['IMEI'])->first();
 
-            if($user_old){
-                       // \Laravel\Passport\Token::where('user_id', $user_old->id)->delete();
-
-                $success['token'] =  $user_old->createToken('MyApp')->accessToken;
-               }
-
-         $user_new = User::where('IMEI', '<>',$request['IMEI'])->first();
-
-            if($user_new){
-                        //\Laravel\Passport\Token::where('user_id', $user_new->id)->delete();
-
-                $success['token'] =  $user_new->createToken('MyApp')->accessToken;
-               }
-
+          
 
 
              
@@ -335,7 +327,7 @@ else{
             "last_read_id" => $user->last_read_id,
             "remainXP" => $remainXP,
             "is_level_up" => $user->is_level_up,
-            "success" =>$success
+            //"success" =>$success
         ];
         $status_code = config('response_status_code.random_number_fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.random_number_fetched_success'), $records);
