@@ -18,7 +18,7 @@ use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Http\Controllers\Traits\BreadRelationshipParser;
 use App\User;
 use App\Reportuser;
-use App\UserCoin;
+use App\Usercoin;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 
 
@@ -107,7 +107,7 @@ class VoyagerUserController extends VoyagerBaseController
         $slug = $this->getSlug($request);
 
          $deletedRows = Reportuser::where('user_id',$id)->delete();
-         $deleted_coinHistory = UserCoin::where('user_id',$id)->delete();
+         $deleted_coinHistory = Usercoin::where('user_id',$id)->delete();
 
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
