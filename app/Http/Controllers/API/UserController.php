@@ -79,7 +79,7 @@ class UserController extends BaseController {
     public function getDashboard(Request $request) {
 
 
-         $user_secondTime = User::where('IMEI', '!=',$request['IMEI'])->where('id',$request['userID'])->where('is_loged',1)->first();
+         $user_secondTime = User::where('IMEI', '!=',$request['IMEI'])->where('id',$request['userId'])->where('is_loged',1)->first();
 
             if($user_secondTime)
             {    
