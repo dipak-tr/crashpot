@@ -25,7 +25,19 @@ class UserController extends BaseController {
      * @return [json] user object
      * */
     public function updateUserName(Request $request) {
+         $user_secondTime = User::where('IMEI', '!=',$request['IMEI'])->where('id',$request['userId'])->where('is_loged',1)->first();
 
+            if($user_secondTime)
+            {    
+                      //  \Laravel\Passport\Token::where('user_id', $user_secondTime->id)->delete();
+                        
+          return response()->json([
+                "success"=> false,
+                "message"=>"Another device is running App",
+
+                 ],402);
+               // $success['token'] =  $user_new->createToken('MyApp')->accessToken;
+    }else{
 
 
 
@@ -75,7 +87,7 @@ class UserController extends BaseController {
 
         echo json_encode($responseData);
     }
-
+}
     public function getDashboard(Request $request) {
 
 
@@ -217,6 +229,20 @@ class UserController extends BaseController {
     }
 }
     public function getUserProfile(Request $request) {
+
+          $user_secondTime = User::where('IMEI', '!=',$request['IMEI'])->where('id',$request['userId'])->where('is_loged',1)->first();
+
+            if($user_secondTime)
+            {    
+                      //  \Laravel\Passport\Token::where('user_id', $user_secondTime->id)->delete();
+                        
+          return response()->json([
+                "success"=> false,
+                "message"=>"Another device is running App",
+
+                 ],402);
+               // $success['token'] =  $user_new->createToken('MyApp')->accessToken;
+    }else{
         $validator = Validator::make($request->all(), [
                     'userId' => 'required|digits_between:1,11'
         ]);
@@ -280,8 +306,22 @@ class UserController extends BaseController {
         $status_code = config('response_status_code.fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $responseData);
     }
-
+}
     public function reportUser(Request $request) {
+
+     $user_secondTime = User::where('IMEI', '!=',$request['IMEI'])->where('id',$request['userId'])->where('is_loged',1)->first();
+
+            if($user_secondTime)
+            {    
+                      //  \Laravel\Passport\Token::where('user_id', $user_secondTime->id)->delete();
+                        
+          return response()->json([
+                "success"=> false,
+                "message"=>"Another device is running App",
+
+                 ],402);
+               // $success['token'] =  $user_new->createToken('MyApp')->accessToken;
+    }else{
         $validator = Validator::make($request->all(), [
                     'userId' => 'required|digits_between:1,11',
                     'reportUserId' => 'required|digits_between:1,11',
@@ -318,8 +358,10 @@ class UserController extends BaseController {
         $status_code = config('response_status_code.fetched_success');
         return $this->sendResponse(true, $status_code, trans('message.fetched_success'), $responseData);
     }
-
+}
     public function userByLevel(Request $request) {
+
+
         $validator = Validator::make($request->all(), [
                     'userId' => 'required|digits_between:1,11',
                     'levelType' => 'digits_between:1,4',

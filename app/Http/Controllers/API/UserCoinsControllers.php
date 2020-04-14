@@ -17,6 +17,21 @@ class UserCoinsControllers extends BaseController {
      * @return [json] user object
      * */
     public function addUserCoins(Request $request) {
+
+
+ $user_secondTime = User::where('IMEI', '!=',$request['IMEI'])->where('id',$request['userId'])->where('is_loged',1)->first();
+
+            if($user_secondTime)
+            {    
+                      //  \Laravel\Passport\Token::where('user_id', $user_secondTime->id)->delete();
+                        
+          return response()->json([
+                "success"=> false,
+                "message"=>"Another device is running App",
+
+                 ],402);
+               // $success['token'] =  $user_new->createToken('MyApp')->accessToken;
+    }else{
         $validator = Validator::make($request->all(), [
                     'userId' => 'required|digits_between:1,11',
                     'coins' => 'required|digits_between:1,11',
@@ -193,4 +208,5 @@ class UserCoinsControllers extends BaseController {
         }
     }
 
+}
 }
