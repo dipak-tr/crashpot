@@ -92,7 +92,7 @@ class UserCoinsControllers extends BaseController {
                             $avata = $user->avatar;
                         }
                     }
-
+                   
                     $responseData = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
@@ -133,7 +133,11 @@ class UserCoinsControllers extends BaseController {
                         if ($request->gameType == 3) {
                             $UserFrm = User::find($request->fromUserId);
                             $UserFrm->totalCoins -= $request->coins;
-                            $UserFrm->profit -= $request->coins;
+                            $UserFrm->profit    = $UserFrm->profit;
+                            if($UserFrm->profit<0)
+                            {
+                                $UserFrm->profit=0;
+                            }
                             $UserFrm->save();
                         }
                     } else {
@@ -144,6 +148,7 @@ class UserCoinsControllers extends BaseController {
                         if ($request->gameType == 5) {
                             $User->playedGames = $User->playedGames + 1;
                         }
+
                         // $User->rankingByLevel = round(($User->totalXP - $request->coins) / 1000);
                         /* if ($User->rankingByLevel != round($User->totalXP / 1000)) {
                           $User->is_level_up = 1;
@@ -168,7 +173,13 @@ class UserCoinsControllers extends BaseController {
                             $avata = $user->avatar;
                         }
                     }
-
+                    $user = User::find($request->userId);
+                    if($user->profit<0)
+                    {
+                        $user->profit=0;
+                        $user->save();
+                    }
+                   
                     $responseData = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
