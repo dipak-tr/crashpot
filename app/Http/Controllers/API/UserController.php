@@ -329,12 +329,30 @@ class UserController extends BaseController {
             return $this->sendResponse(true, $status_code, trans('message.no_records_found'));
         } else {
 
-            $muteUser = new Muteusers;
-            $muteUser->user_id = $request->userId;
-            $muteUser->mute_user_id = $request->reportUserId;
-            $muteUser->save();
+            
             
             if ($request->reportType == 1) {
+
+                $muteUser = new Muteusers;
+                $muteUser->user_id = $request->userId;
+                $muteUser->mute_user_id = $request->reportUserId;
+                $muteUser->save();
+                $reportUser = new Reportusers;
+                $reportUser->user_id = $request->reportUserId;
+                $reportUser->chat_message = $request->chatMessage;
+                $reportUser->created_by = $request->userId;
+                $reportUser->save();
+            }
+                 if ($request->reportType == 2) {
+
+                $muteUser = new Muteusers;
+                $muteUser->user_id = $request->userId;
+                $muteUser->mute_user_id = $request->reportUserId;
+                $muteUser->save();
+               
+            }
+
+            if ($request->reportType == 3) {
                 $reportUser = new Reportusers;
                 $reportUser->user_id = $request->reportUserId;
                 $reportUser->chat_message = $request->chatMessage;
