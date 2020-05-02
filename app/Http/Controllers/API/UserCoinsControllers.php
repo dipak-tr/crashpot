@@ -118,8 +118,14 @@ class UserCoinsControllers extends BaseController {
                         $User = User::find($request->userId);
                         $User->totalCoins += $request->coins;
                         //$User->rankingByProfit += $request->coins;
-                        $User->profit += $request->coins;
+                        if($request->gameType == 8)
+                        {
+                        $User->profit= $User->profit;
 
+                        }
+                        else{
+                        $User->profit += $request->coins;
+                            }
                         if ($request->gameType == 5) {
                             $User->playedGames = $User->playedGames + 1;
                         }
@@ -140,6 +146,9 @@ class UserCoinsControllers extends BaseController {
                             }
                             $UserFrm->save();
                         }
+
+
+
                     } else {
                         $User = User::find($request->userId);
                         $User->totalCoins -= $request->coins;

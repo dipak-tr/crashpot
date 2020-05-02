@@ -176,6 +176,8 @@
                                                     Welcome bonus
                                                     @elseif($data->{$row->field}=='7')
                                                     Social login
+                                                    @elseif($data->{$row->field}=='8')
+                                                    in App
                                                      @endif
                                                      @elseif($row->field=='is_xp_or_coin')
                                                      @if($data->{$row->field}=='1')
