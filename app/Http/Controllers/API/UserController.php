@@ -121,7 +121,10 @@ class UserController extends BaseController {
         } else {
 
             $user = User::find($request->userId);
-
+            if($user->profit<0)
+            {
+                $user->profit=0;
+            }
             if ($user != NULL) {
                 $userLevel = intdiv($user->totalXP, 1000);
                 $userLevelnew = round(($user->totalXP / 1000), 3);
@@ -248,6 +251,10 @@ class UserController extends BaseController {
         } else {
 
             $user = User::find($request->userId);
+             if($user->profit<0)
+            {
+                $user->profit=0;
+            }
 
             if ($user != NULL) {
                 $userLevel = intdiv($user->totalXP, 1000);
@@ -493,6 +500,10 @@ class UserController extends BaseController {
                       }
 
                       $rank++; */
+                       if($user->profit<0)
+            {
+                $user->profit=0;
+            }
                     $responseData[] = ["guestNumber" => $user->name,
                         "userID" => $user->id,
                         "userName" => $user->name,
