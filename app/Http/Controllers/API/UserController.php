@@ -459,14 +459,16 @@ class UserController extends BaseController {
                         ->limit(50)
                         ->get();
             }
-            $myposition=0;
+            $myposition=1;
             if (count($users) > 0 && $users != NULL) {
                 foreach ($users as $user) {
                     $userData = User::find($user->id);
                     $userLevel = intdiv($user->totalXP, 1000);
                     $userLevelnew = round(($user->totalXP / 1000), 3);
                     $remainXP = round(($userLevelnew - $userLevel) * 1000);
+                    $user->ranking=$myposition;
                     $myposition++;
+
                     $avata = url('/') . '/images/users/default.png';
 
                     if (!empty($user->avatar)) {
@@ -516,7 +518,7 @@ class UserController extends BaseController {
                         "ranking" => $user->ranking,
                         "rankingByProfit" => $user->rankingByProfit,
                         "remainXP" => $remainXP,
-                        "RankingByLevelPostion" => $myposition,
+                        "RankingByLevelPostion" => $user->ranking,
                         "rankingByProfitPosition" => $rankingByProfitPosition
                     ];
                     
