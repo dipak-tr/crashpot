@@ -454,12 +454,11 @@ class UserController extends BaseController {
             } else {
                 $users = DB::table('users')
                         ->where('is_active', '=', 1)
-                        ->orderByRaw('ranking ASC')
+                        ->orderByRaw('rankingByLevel DESC')->orderByRaw('totalXP DESC')
                         ->offset($page)
                         ->limit(50)
                         ->get();
             }
-
             if (count($users) > 0 && $users != NULL) {
                 foreach ($users as $user) {
                     $userData = User::find($user->id);
@@ -479,6 +478,7 @@ class UserController extends BaseController {
                             $avata = $user->avatar;
                         }
                     }
+                    
                     /*
                       if ($request->levelType == 1) {
                       $userData->rankingByProfit = $rank;
@@ -501,7 +501,7 @@ class UserController extends BaseController {
 
                       $rank++; */
                        if($user->profit<0)
-            {
+            {               
                 $user->profit=0;
             }
                     $responseData[] = ["guestNumber" => $user->name,
@@ -518,6 +518,7 @@ class UserController extends BaseController {
                         "RankingByLevelPostion" => $RankingByLevelPostion,
                         "rankingByProfitPosition" => $rankingByProfitPosition
                     ];
+                    
                 }
             } else {
                 $status_code = config('response_status_code.no_records_found');
