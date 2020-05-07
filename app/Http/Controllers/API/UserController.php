@@ -409,7 +409,7 @@ class UserController extends BaseController {
             } else {
                 $users = DB::table('users')
                         ->where('is_active', '=', 1)
-                        ->orderByRaw('rankingByLevel DESC')
+                        ->orderByRaw('ranking DESC')
                         ->offset($page)
                         ->limit(500)
                         ->get();
