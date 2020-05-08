@@ -214,30 +214,7 @@ class UserController extends BaseController {
                 $user->rankingByProfit=$count;
             }
 
-         else{
-                $users = DB::table('users')
-                        ->where('is_active', '=', 1)
-                        ->orderByRaw('totalCoins DESC')
-                        
-                        ->get();
-         
-                       
-            $rank=1;
-            if (count($users) > 0 && $users != NULL) {
-                foreach ($users as $userProfit) {
-
-                   
-                        $userData = User::find($userProfit->id);
-                        $userData->rankingByProfit = $rank;
-                        $userData->save();
-                     
-                    $rank++;
-                    $user=User::where('id',$request->userId)->first();
-                    
-                }
-               
-            }
-                }
+     
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
