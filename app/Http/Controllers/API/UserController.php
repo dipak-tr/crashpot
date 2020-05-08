@@ -197,7 +197,7 @@ class UserController extends BaseController {
                         $avata = $user->avatar;
                     }
                 }
-
+                print_r($user);
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
@@ -374,6 +374,7 @@ class UserController extends BaseController {
 }
     public function userByLevel(Request $request) {
 
+           
 
         $validator = Validator::make($request->all(), [
                     'userId' => 'required|digits_between:1,11',
@@ -409,7 +410,7 @@ class UserController extends BaseController {
             } else {
                 $users = DB::table('users')
                         ->where('is_active', '=', 1)
-                        ->orderByRaw('ranking DESC')
+                        ->orderByRaw('totalXP DESC')
                         ->offset($page)
                         ->limit(500)
                         ->get();
@@ -438,10 +439,13 @@ class UserController extends BaseController {
 
             $RankingByLevelPostion = $rankingByProfitPosition = 1;
             $userLogData = User::find($request->userId);
+           
             $RankingByLevelPostion = $userLogData->ranking;
+
             $rankingByProfitPosition = $userLogData->rankingByProfit;
 
             $rank = 1;
+
             if ($request->levelType == 1) {
                 $users = DB::table('users')
                         //->where('id', '>', $request->last_read_id)
@@ -454,22 +458,21 @@ class UserController extends BaseController {
             } else {
                 $users = DB::table('users')
                         ->where('is_active', '=', 1)
-                        ->orderByRaw('rankingByLevel DESC')->orderByRaw('totalXP DESC')
+                        ->orderByRaw('totalXP DESC')
                         ->offset($page)
                         ->limit(50)
                         ->get();
             }
-            $myposition=1;
+          $myposition=1;
             if (count($users) > 0 && $users != NULL) {
                 foreach ($users as $user) {
                     $userData = User::find($user->id);
                     $userLevel = intdiv($user->totalXP, 1000);
                     $userLevelnew = round(($user->totalXP / 1000), 3);
                     $remainXP = round(($userLevelnew - $userLevel) * 1000);
-                    $user->ranking=$myposition;
-                    $myposition++;
-
+                 
                     $avata = url('/') . '/images/users/default.png';
+                        
 
                     if (!empty($user->avatar)) {
                         $userImage = array();
@@ -518,7 +521,7 @@ class UserController extends BaseController {
                         "ranking" => $user->ranking,
                         "rankingByProfit" => $user->rankingByProfit,
                         "remainXP" => $remainXP,
-                        "RankingByLevelPostion" => $user->ranking,
+                        "RankingByLevelPostion" => $RankingByLevelPostion,
                         "rankingByProfitPosition" => $rankingByProfitPosition
                     ];
                     
