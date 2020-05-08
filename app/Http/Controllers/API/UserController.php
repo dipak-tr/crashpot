@@ -199,12 +199,45 @@ class UserController extends BaseController {
                     }
                 }
 
-               if($user->ranking==0)
+               if($user->ranking==0 && $user->totalXP==0)
             {
                 
                 $count=User::count();
+                
                 $user->ranking=$count;
             }
+              if($user->profit==0 && $user->totalCoins==100000)
+            {
+                
+                $count=User::count();
+                
+                $user->rankingByProfit=$count;
+            }
+
+         else{
+                $users = DB::table('users')
+                        ->where('is_active', '=', 1)
+                        ->orderByRaw('totalCoins DESC')
+                        
+                        ->get();
+         
+                       
+            $rank=1;
+            if (count($users) > 0 && $users != NULL) {
+                foreach ($users as $userProfit) {
+
+                   
+                        $userData = User::find($userProfit->id);
+                        $userData->rankingByProfit = $rank;
+                        $userData->save();
+                     
+                    $rank++;
+                    $user=User::where('id',$request->userId)->first();
+                    
+                }
+               
+            }
+                }
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
