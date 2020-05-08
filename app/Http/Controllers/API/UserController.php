@@ -197,7 +197,7 @@ class UserController extends BaseController {
                         $avata = $user->avatar;
                     }
                 }
-                print_r($user);
+               
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
