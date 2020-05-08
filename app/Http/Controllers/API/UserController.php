@@ -121,6 +121,7 @@ class UserController extends BaseController {
         } else {
 
             $user = User::find($request->userId);
+
             if($user->profit<0)
             {
                 $user->profit=0;
@@ -197,7 +198,13 @@ class UserController extends BaseController {
                         $avata = $user->avatar;
                     }
                 }
-               
+
+               if($user->ranking==0)
+            {
+                
+                $count=User::count();
+                $user->ranking=$count;
+            }
                 $responseData = ["guestNumber" => $user->name,
                     "userID" => $user->id,
                     "userName" => $user->name,
@@ -463,7 +470,7 @@ class UserController extends BaseController {
                         ->limit(50)
                         ->get();
             }
-          $myposition=1;
+         
             if (count($users) > 0 && $users != NULL) {
                 foreach ($users as $user) {
                     $userData = User::find($user->id);
