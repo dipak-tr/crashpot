@@ -147,7 +147,7 @@ else{
                 $userCoind->save();
             } else {
                 $usercoins=User::where('id',$request['userID'])->value('totalCoins');
-                $usercoins_withbonus=$usercoins+500;
+                $usercoins_withbonus=$usercoins+10000;
 
                 DB::table('users')
                         ->where('id', $request['userID'])
@@ -255,6 +255,7 @@ else{
             "last_read_id" => $user->last_read_id,
             "remainXP" => $remainXP,
             "is_level_up" => $user->is_level_up,
+            
              //"sucsess" =>$success,
             
         ];
